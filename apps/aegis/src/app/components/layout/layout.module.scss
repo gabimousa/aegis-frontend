@@ -1,0 +1,9 @@
+.bodyWrapper {
+  min-height: calc(100vh - 56px); /* Account for navbar height */
+  margin: 0 auto;
+  overflow-x: hidden;
+  overflow-y: auto;
+  background-color: var(--bs-dark); /* Bootstrap dark color */
+  color: var(--bs-light); /* Bootstrap light text */
+  padding: 1rem;
+}

@@ -1,6 +1,6 @@
 /// <reference types='vitest' />
-import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import { defineConfig } from 'vite';
 
 export default defineConfig(() => ({
   root: __dirname,
@@ -8,6 +8,13 @@ export default defineConfig(() => ({
   server: {
     port: 4200,
     host: 'localhost',
+    proxy: {
+      '/graphql': {
+        target: 'http://localhost:5098',
+        changeOrigin: true,
+        secure: false,
+      },
+    },
   },
   preview: {
     port: 4300,

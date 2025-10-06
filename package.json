@@ -2,15 +2,27 @@
   "name": "@aegis-frontend/source",
   "version": "0.0.0",
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+    "codegen": "graphql-codegen --config codegen.ts"
+  },
   "private": true,
   "dependencies": {
+    "bootstrap": "^5.3.8",
+    "graphql": "^16.11.0",
+    "i": "^0.3.7",
+    "npm": "^11.6.1",
     "react": "19.0.0",
+    "react-bootstrap": "^2.10.10",
     "react-dom": "19.0.0",
-    "react-router-dom": "6.29.0"
+    "react-router-dom": "6.29.0",
+    "tabler-icons-react": "^1.56.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.8.0",
+    "@graphql-codegen/cli": "6.0.0",
+    "@graphql-codegen/client-preset": "5.1.0",
+    "@graphql-codegen/introspection": "5.0.0",
+    "@graphql-codegen/near-operation-file-preset": "^3.1.0",
     "@nx/devkit": "21.6.3",
     "@nx/eslint": "21.6.3",
     "@nx/eslint-plugin": "21.6.3",

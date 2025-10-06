@@ -13,6 +13,7 @@
     ],
     "sharedGlobals": []
   },
+  "defaultProject": "aegis",
   "plugins": [
     {
       "plugin": "@nx/js/typescript",
