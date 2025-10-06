@@ -1,22 +1,14 @@
-import type { CodegenConfig } from '@graphql-codegen/cli';
+import { type CodegenConfig } from '@graphql-codegen/cli';
 
 const config: CodegenConfig = {
-  overwrite: true,
   schema: 'http://localhost:5098/graphql',
-  documents: 'apps/**/*.graphql',
+  documents: ['apps/**/*.tsx', 'apps/**/*.ts'],
   generates: {
-    'src/gql/': {
-      preset: 'near-operation-file',
-      presetConfig: {
-        extension: '.generated.ts',
-        baseTypesPath: '~@workspace/aegis/graphql-types',
-      },
-      plugins: [],
-    },
-    './graphql.schema.json': {
-      plugins: ['introspection'],
+    './apps/aegis/src/app/gql/': {
+      preset: 'client',
     },
   },
+  hooks: { afterAllFileWrite: ['prettier --write'] },
 };
 
 export default config;

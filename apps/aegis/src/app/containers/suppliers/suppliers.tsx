@@ -9,11 +9,13 @@ import {
   Spinner,
   Table,
 } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
 import { Plus, Search, TruckDelivery } from 'tabler-icons-react';
-import { useSuppliers } from '../../hooks/useSuppliers';
+import { useSuppliers } from './useSuppliers';
 
 export function Suppliers() {
-  const { data, loading, error, refetch } = useSuppliers({ first: 10 });
+  const { t } = useTranslation();
+  const { data, loading, error, refetch, nextPage, prevPage } = useSuppliers(1);
 
   const handleFilterSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -26,7 +28,7 @@ export function Suppliers() {
         <Col>
           <div className="d-flex align-items-center mb-3">
             <TruckDelivery size={32} className="me-3" />
-            <h2 className="mb-0">Suppliers</h2>
+            <h2 className="mb-0">{t('suppliers.title')}</h2>
           </div>
         </Col>
       </Row>
@@ -37,7 +39,7 @@ export function Suppliers() {
             <div className="d-flex">
               <Form.Control
                 type="text"
-                placeholder="Search suppliers by name or code..."
+                placeholder={t('suppliers.searchPlaceholder')}
                 className="me-2"
               />
               <Button type="submit" variant="outline-primary">
@@ -49,7 +51,7 @@ export function Suppliers() {
         <Col md={4} className="text-end">
           <Button variant="primary">
             <Plus size={16} className="me-2" />
-            Add Supplier
+            {t('suppliers.addButton')}
           </Button>
         </Col>
       </Row>
@@ -57,7 +59,9 @@ export function Suppliers() {
       {error && (
         <Row className="mb-3">
           <Col>
-            <Alert variant="danger">Error loading suppliers: {error}</Alert>
+            <Alert variant="danger">
+              {t('suppliers.errorLoading', { error: error.message })}
+            </Alert>
           </Col>
         </Row>
       )}
@@ -66,30 +70,30 @@ export function Suppliers() {
         <Col>
           <Card>
             <Card.Header>
-              <h5 className="mb-0">Suppliers List</h5>
+              <h5 className="mb-0">{t('suppliers.listTitle')}</h5>
             </Card.Header>
             <Card.Body>
               {loading ? (
                 <div className="text-center p-4">
                   <Spinner animation="border" role="status">
-                    <span className="visually-hidden">Loading...</span>
+                    <span className="visually-hidden">{t('loading')}</span>
                   </Spinner>
                 </div>
-              ) : data?.suppliers.edges.length === 0 ? (
+              ) : data?.suppliers?.edges?.length === 0 ? (
                 <p className="text-muted text-center p-4">
-                  No suppliers found.
+                  {t('suppliers.noResults')}
                 </p>
               ) : (
                 <Table responsive hover>
                   <thead>
                     <tr>
-                      <th>Code</th>
-                      <th>Name</th>
-                      <th>Actions</th>
+                      <th>{t('suppliers.table.code')}</th>
+                      <th>{t('suppliers.table.name')}</th>
+                      <th>{t('suppliers.table.actions')}</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {data?.suppliers.edges.map(({ node: supplier }) => (
+                    {data?.suppliers?.edges?.map(({ node: supplier }) => (
                       <tr key={supplier.id}>
                         <td>
                           <code>{supplier.code}</code>
@@ -101,10 +105,10 @@ export function Suppliers() {
                             size="sm"
                             className="me-2"
                           >
-                            Edit
+                            {t('suppliers.table.edit')}
                           </Button>
                           <Button variant="outline-danger" size="sm">
-                            Delete
+                            {t('suppliers.table.delete')}
                           </Button>
                         </td>
                       </tr>
@@ -113,31 +117,35 @@ export function Suppliers() {
                 </Table>
               )}
             </Card.Body>
-            {data?.suppliers.pageInfo && (
+            {data?.suppliers?.pageInfo && (
               <Card.Footer>
                 <div className="d-flex justify-content-between align-items-center">
                   <div>
                     {data.suppliers.totalCount && (
                       <small className="text-muted">
-                        Total: {data.suppliers.totalCount} suppliers
+                        {t('suppliers.totalCount', {
+                          count: data.suppliers.totalCount,
+                        })}
                       </small>
                     )}
                   </div>
                   <div>
                     <Button
+                      onClick={prevPage}
                       variant="outline-secondary"
                       size="sm"
                       disabled={!data.suppliers.pageInfo.hasPreviousPage}
                       className="me-2"
                     >
-                      Previous
+                      {t('suppliers.previous')}
                     </Button>
                     <Button
+                      onClick={nextPage}
                       variant="outline-secondary"
                       size="sm"
                       disabled={!data.suppliers.pageInfo.hasNextPage}
                     >
-                      Next
+                      {t('suppliers.next')}
                     </Button>
                   </div>
                 </div>

@@ -1,0 +1,965 @@
+/* eslint-disable */
+import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
+export type Maybe<T> = T | null;
+export type InputMaybe<T> = T | null | undefined;
+export type Exact<T extends { [key: string]: unknown }> = {
+  [K in keyof T]: T[K];
+};
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
+  [SubKey in K]?: Maybe<T[SubKey]>;
+};
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
+  [SubKey in K]: Maybe<T[SubKey]>;
+};
+export type MakeEmpty<
+  T extends { [key: string]: unknown },
+  K extends keyof T
+> = { [_ in K]?: never };
+export type Incremental<T> =
+  | T
+  | {
+      [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never;
+    };
+/** All built-in and custom scalars, mapped to their actual values */
+export type Scalars = {
+  ID: { input: string; output: string };
+  String: { input: string; output: string };
+  Boolean: { input: boolean; output: boolean };
+  Int: { input: number; output: number };
+  Float: { input: number; output: number };
+  /** The `DateTime` scalar represents an ISO-8601 compliant date time type. */
+  DateTime: { input: any; output: any };
+  /** The `Decimal` scalar type represents a decimal floating-point number. */
+  Decimal: { input: any; output: any };
+  UUID: { input: any; output: any };
+};
+
+export type AddAddressToCustomerError = ApplicationError;
+
+export type AddAddressToCustomerInput = {
+  address: CreateAddressInput;
+  customerId: Scalars['ID']['input'];
+};
+
+export type AddAddressToCustomerPayload = {
+  __typename?: 'AddAddressToCustomerPayload';
+  customer?: Maybe<Customer>;
+  errors?: Maybe<Array<AddAddressToCustomerError>>;
+};
+
+export type AddAddressToSupplierError = ApplicationError;
+
+export type AddAddressToSupplierInput = {
+  address: CreateAddressInput;
+  supplierId: Scalars['ID']['input'];
+};
+
+export type AddAddressToSupplierPayload = {
+  __typename?: 'AddAddressToSupplierPayload';
+  errors?: Maybe<Array<AddAddressToSupplierError>>;
+  supplier?: Maybe<Supplier>;
+};
+
+export type Address = {
+  __typename?: 'Address';
+  city?: Maybe<Scalars['String']['output']>;
+  country?: Maybe<Country>;
+  dateTimeRemoved?: Maybe<Scalars['DateTime']['output']>;
+  id: Scalars['UUID']['output'];
+  number?: Maybe<Scalars['String']['output']>;
+  removed: Scalars['Boolean']['output'];
+  state?: Maybe<Scalars['String']['output']>;
+  street?: Maybe<Scalars['String']['output']>;
+  zipCode?: Maybe<Scalars['String']['output']>;
+};
+
+export type AddressSortInput = {
+  city?: InputMaybe<SortEnumType>;
+  country?: InputMaybe<CountrySortInput>;
+  dateTimeRemoved?: InputMaybe<SortEnumType>;
+  id?: InputMaybe<SortEnumType>;
+  number?: InputMaybe<SortEnumType>;
+  removed?: InputMaybe<SortEnumType>;
+  state?: InputMaybe<SortEnumType>;
+  street?: InputMaybe<SortEnumType>;
+  zipCode?: InputMaybe<SortEnumType>;
+};
+
+export type ApplicationError = Error & {
+  __typename?: 'ApplicationError';
+  code: Scalars['String']['output'];
+  description: Scalars['String']['output'];
+  type: ErrorType;
+};
+
+export type Article = Node & {
+  __typename?: 'Article';
+  code: Scalars['String']['output'];
+  description?: Maybe<Scalars['String']['output']>;
+  discontinued: Scalars['Boolean']['output'];
+  id: Scalars['ID']['output'];
+  name: Scalars['String']['output'];
+  price: Scalars['Decimal']['output'];
+  sellingUnit: Scalars['Decimal']['output'];
+  suppliers?: Maybe<SuppliersConnection>;
+};
+
+export type ArticleSuppliersArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  before?: InputMaybe<Scalars['String']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  order?: InputMaybe<Array<SupplierSortInput>>;
+  where?: InputMaybe<SupplierFilterInput>;
+};
+
+export type ArticleFilterInput = {
+  and?: InputMaybe<Array<ArticleFilterInput>>;
+  code?: InputMaybe<StringOperationFilterInput>;
+  description?: InputMaybe<StringOperationFilterInput>;
+  discontinued?: InputMaybe<BooleanOperationFilterInput>;
+  id?: InputMaybe<UuidOperationFilterInput>;
+  name?: InputMaybe<StringOperationFilterInput>;
+  or?: InputMaybe<Array<ArticleFilterInput>>;
+  price?: InputMaybe<DecimalOperationFilterInput>;
+  sellingUnit?: InputMaybe<DecimalOperationFilterInput>;
+};
+
+export type ArticleSortInput = {
+  code?: InputMaybe<SortEnumType>;
+  description?: InputMaybe<SortEnumType>;
+  discontinued?: InputMaybe<SortEnumType>;
+  id?: InputMaybe<SortEnumType>;
+  name?: InputMaybe<SortEnumType>;
+  price?: InputMaybe<SortEnumType>;
+  sellingUnit?: InputMaybe<SortEnumType>;
+};
+
+/** A connection to a list of items. */
+export type ArticlesConnection = {
+  __typename?: 'ArticlesConnection';
+  /** A list of edges. */
+  edges?: Maybe<Array<ArticlesEdge>>;
+  /** A flattened list of the nodes. */
+  nodes?: Maybe<Array<Article>>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** Identifies the total count of items in the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** An edge in a connection. */
+export type ArticlesEdge = {
+  __typename?: 'ArticlesEdge';
+  /** A cursor for use in pagination. */
+  cursor: Scalars['String']['output'];
+  /** The item at the end of the edge. */
+  node: Article;
+};
+
+export type BooleanOperationFilterInput = {
+  eq?: InputMaybe<Scalars['Boolean']['input']>;
+  neq?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+export type Country = {
+  __typename?: 'Country';
+  id: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+};
+
+export type CountrySortInput = {
+  id?: InputMaybe<SortEnumType>;
+  name?: InputMaybe<SortEnumType>;
+};
+
+export type CreateAddressInput = {
+  city?: InputMaybe<Scalars['String']['input']>;
+  countryCode?: InputMaybe<Scalars['String']['input']>;
+  number?: InputMaybe<Scalars['String']['input']>;
+  state?: InputMaybe<Scalars['String']['input']>;
+  street?: InputMaybe<Scalars['String']['input']>;
+  zipCode?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type Customer = Node & {
+  __typename?: 'Customer';
+  active: Scalars['Boolean']['output'];
+  addresses: Array<Address>;
+  code: Scalars['String']['output'];
+  dateTimeDeactivated?: Maybe<Scalars['DateTime']['output']>;
+  email?: Maybe<Scalars['String']['output']>;
+  id: Scalars['ID']['output'];
+  name: Scalars['String']['output'];
+  website?: Maybe<Scalars['String']['output']>;
+};
+
+export type CustomerAddressesArgs = {
+  order?: InputMaybe<Array<AddressSortInput>>;
+};
+
+export type CustomerFilterInput = {
+  active?: InputMaybe<BooleanOperationFilterInput>;
+  and?: InputMaybe<Array<CustomerFilterInput>>;
+  code?: InputMaybe<StringOperationFilterInput>;
+  dateTimeDeactivated?: InputMaybe<DateTimeOperationFilterInput>;
+  email?: InputMaybe<StringOperationFilterInput>;
+  id?: InputMaybe<UuidOperationFilterInput>;
+  name?: InputMaybe<StringOperationFilterInput>;
+  or?: InputMaybe<Array<CustomerFilterInput>>;
+  website?: InputMaybe<StringOperationFilterInput>;
+};
+
+export type CustomerSortInput = {
+  active?: InputMaybe<SortEnumType>;
+  code?: InputMaybe<SortEnumType>;
+  dateTimeDeactivated?: InputMaybe<SortEnumType>;
+  email?: InputMaybe<SortEnumType>;
+  id?: InputMaybe<SortEnumType>;
+  name?: InputMaybe<SortEnumType>;
+  website?: InputMaybe<SortEnumType>;
+};
+
+/** A connection to a list of items. */
+export type CustomersConnection = {
+  __typename?: 'CustomersConnection';
+  /** A list of edges. */
+  edges?: Maybe<Array<CustomersEdge>>;
+  /** A flattened list of the nodes. */
+  nodes?: Maybe<Array<Customer>>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** Identifies the total count of items in the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** An edge in a connection. */
+export type CustomersEdge = {
+  __typename?: 'CustomersEdge';
+  /** A cursor for use in pagination. */
+  cursor: Scalars['String']['output'];
+  /** The item at the end of the edge. */
+  node: Customer;
+};
+
+export type DateTimeOperationFilterInput = {
+  eq?: InputMaybe<Scalars['DateTime']['input']>;
+  gt?: InputMaybe<Scalars['DateTime']['input']>;
+  gte?: InputMaybe<Scalars['DateTime']['input']>;
+  in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']['input']>>>;
+  lt?: InputMaybe<Scalars['DateTime']['input']>;
+  lte?: InputMaybe<Scalars['DateTime']['input']>;
+  neq?: InputMaybe<Scalars['DateTime']['input']>;
+  ngt?: InputMaybe<Scalars['DateTime']['input']>;
+  ngte?: InputMaybe<Scalars['DateTime']['input']>;
+  nin?: InputMaybe<Array<InputMaybe<Scalars['DateTime']['input']>>>;
+  nlt?: InputMaybe<Scalars['DateTime']['input']>;
+  nlte?: InputMaybe<Scalars['DateTime']['input']>;
+};
+
+export type DeactivateCustomerError = ApplicationError;
+
+export type DeactivateCustomerInput = {
+  id: Scalars['UUID']['input'];
+};
+
+export type DeactivateCustomerPayload = {
+  __typename?: 'DeactivateCustomerPayload';
+  boolean?: Maybe<Scalars['Boolean']['output']>;
+  errors?: Maybe<Array<DeactivateCustomerError>>;
+};
+
+export type DeactivateSupplierError = ApplicationError;
+
+export type DeactivateSupplierInput = {
+  id: Scalars['UUID']['input'];
+};
+
+export type DeactivateSupplierPayload = {
+  __typename?: 'DeactivateSupplierPayload';
+  boolean?: Maybe<Scalars['Boolean']['output']>;
+  errors?: Maybe<Array<DeactivateSupplierError>>;
+};
+
+export type DecimalOperationFilterInput = {
+  eq?: InputMaybe<Scalars['Decimal']['input']>;
+  gt?: InputMaybe<Scalars['Decimal']['input']>;
+  gte?: InputMaybe<Scalars['Decimal']['input']>;
+  in?: InputMaybe<Array<InputMaybe<Scalars['Decimal']['input']>>>;
+  lt?: InputMaybe<Scalars['Decimal']['input']>;
+  lte?: InputMaybe<Scalars['Decimal']['input']>;
+  neq?: InputMaybe<Scalars['Decimal']['input']>;
+  ngt?: InputMaybe<Scalars['Decimal']['input']>;
+  ngte?: InputMaybe<Scalars['Decimal']['input']>;
+  nin?: InputMaybe<Array<InputMaybe<Scalars['Decimal']['input']>>>;
+  nlt?: InputMaybe<Scalars['Decimal']['input']>;
+  nlte?: InputMaybe<Scalars['Decimal']['input']>;
+};
+
+export type DiscontinueArticleError = ApplicationError;
+
+export type DiscontinueArticleInput = {
+  input: IdInputOfGuidInput;
+};
+
+export type DiscontinueArticlePayload = {
+  __typename?: 'DiscontinueArticlePayload';
+  boolean?: Maybe<Scalars['Boolean']['output']>;
+  errors?: Maybe<Array<DiscontinueArticleError>>;
+};
+
+export type Error = {
+  code: Scalars['String']['output'];
+  description: Scalars['String']['output'];
+  type: ErrorType;
+};
+
+export enum ErrorType {
+  Conflict = 'CONFLICT',
+  Failure = 'FAILURE',
+  NotFound = 'NOT_FOUND',
+  Problem = 'PROBLEM',
+  Validation = 'VALIDATION',
+}
+
+export type IdInputOfGuidInput = {
+  id: Scalars['ID']['input'];
+};
+
+export type LinkToSupplierError = ApplicationError;
+
+export type LinkToSupplierInput = {
+  articleId: Scalars['ID']['input'];
+  supplierId: Scalars['ID']['input'];
+};
+
+export type LinkToSupplierPayload = {
+  __typename?: 'LinkToSupplierPayload';
+  article?: Maybe<Article>;
+  errors?: Maybe<Array<LinkToSupplierError>>;
+};
+
+export type Mutation = {
+  __typename?: 'Mutation';
+  addAddressToCustomer: AddAddressToCustomerPayload;
+  addAddressToSupplier: AddAddressToSupplierPayload;
+  deactivateCustomer: DeactivateCustomerPayload;
+  deactivateSupplier: DeactivateSupplierPayload;
+  discontinueArticle: DiscontinueArticlePayload;
+  linkToSupplier: LinkToSupplierPayload;
+  registerArticle: RegisterArticlePayload;
+  registerCustomer: RegisterCustomerPayload;
+  registerSupplier: RegisterSupplierPayload;
+  removeAddressFromCustomer: RemoveAddressFromCustomerPayload;
+  removeAddressFromSupplier: RemoveAddressFromSupplierPayload;
+  unlinkFromSupplier: UnlinkFromSupplierPayload;
+  updateArticleDetails: UpdateArticleDetailsPayload;
+  updateCustomerAddress: UpdateCustomerAddressPayload;
+  updateCustomerDetails: UpdateCustomerDetailsPayload;
+  updateSupplierAddress: UpdateSupplierAddressPayload;
+  updateSupplierDetails: UpdateSupplierDetailsPayload;
+};
+
+export type MutationAddAddressToCustomerArgs = {
+  input: AddAddressToCustomerInput;
+};
+
+export type MutationAddAddressToSupplierArgs = {
+  input: AddAddressToSupplierInput;
+};
+
+export type MutationDeactivateCustomerArgs = {
+  input: DeactivateCustomerInput;
+};
+
+export type MutationDeactivateSupplierArgs = {
+  input: DeactivateSupplierInput;
+};
+
+export type MutationDiscontinueArticleArgs = {
+  input: DiscontinueArticleInput;
+};
+
+export type MutationLinkToSupplierArgs = {
+  input: LinkToSupplierInput;
+};
+
+export type MutationRegisterArticleArgs = {
+  input: RegisterArticleInput;
+};
+
+export type MutationRegisterCustomerArgs = {
+  input: RegisterCustomerInput;
+};
+
+export type MutationRegisterSupplierArgs = {
+  input: RegisterSupplierInput;
+};
+
+export type MutationRemoveAddressFromCustomerArgs = {
+  input: RemoveAddressFromCustomerInput;
+};
+
+export type MutationRemoveAddressFromSupplierArgs = {
+  input: RemoveAddressFromSupplierInput;
+};
+
+export type MutationUnlinkFromSupplierArgs = {
+  input: UnlinkFromSupplierInput;
+};
+
+export type MutationUpdateArticleDetailsArgs = {
+  input: UpdateArticleDetailsInput;
+};
+
+export type MutationUpdateCustomerAddressArgs = {
+  input: UpdateCustomerAddressInput;
+};
+
+export type MutationUpdateCustomerDetailsArgs = {
+  input: UpdateCustomerDetailsInput;
+};
+
+export type MutationUpdateSupplierAddressArgs = {
+  input: UpdateSupplierAddressInput;
+};
+
+export type MutationUpdateSupplierDetailsArgs = {
+  input: UpdateSupplierDetailsInput;
+};
+
+/** The node interface is implemented by entities that have a global unique identifier. */
+export type Node = {
+  id: Scalars['ID']['output'];
+};
+
+/** Information about pagination in a connection. */
+export type PageInfo = {
+  __typename?: 'PageInfo';
+  /** When paginating forwards, the cursor to continue. */
+  endCursor?: Maybe<Scalars['String']['output']>;
+  /** Indicates whether more edges exist following the set defined by the clients arguments. */
+  hasNextPage: Scalars['Boolean']['output'];
+  /** Indicates whether more edges exist prior the set defined by the clients arguments. */
+  hasPreviousPage: Scalars['Boolean']['output'];
+  /** When paginating backwards, the cursor to continue. */
+  startCursor?: Maybe<Scalars['String']['output']>;
+};
+
+export type Query = {
+  __typename?: 'Query';
+  articleById?: Maybe<Article>;
+  articles?: Maybe<ArticlesConnection>;
+  customerById?: Maybe<Customer>;
+  customers?: Maybe<CustomersConnection>;
+  /** Fetches an object given its ID. */
+  node?: Maybe<Node>;
+  supplierById?: Maybe<Supplier>;
+  suppliers?: Maybe<SuppliersConnection>;
+};
+
+export type QueryArticleByIdArgs = {
+  id: Scalars['ID']['input'];
+};
+
+export type QueryArticlesArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  before?: InputMaybe<Scalars['String']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  order?: InputMaybe<Array<ArticleSortInput>>;
+  where?: InputMaybe<ArticleFilterInput>;
+};
+
+export type QueryCustomerByIdArgs = {
+  id: Scalars['ID']['input'];
+};
+
+export type QueryCustomersArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  before?: InputMaybe<Scalars['String']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  order?: InputMaybe<Array<CustomerSortInput>>;
+  where?: InputMaybe<CustomerFilterInput>;
+};
+
+export type QueryNodeArgs = {
+  id: Scalars['ID']['input'];
+};
+
+export type QuerySupplierByIdArgs = {
+  id: Scalars['ID']['input'];
+};
+
+export type QuerySuppliersArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  before?: InputMaybe<Scalars['String']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  order?: InputMaybe<Array<SupplierSortInput>>;
+  where?: InputMaybe<SupplierFilterInput>;
+};
+
+export type RegisterArticleError = ApplicationError;
+
+export type RegisterArticleInput = {
+  code: Scalars['String']['input'];
+  description?: InputMaybe<Scalars['String']['input']>;
+  name: Scalars['String']['input'];
+  price: Scalars['Decimal']['input'];
+  sellingUnit: Scalars['Decimal']['input'];
+  suppliers?: InputMaybe<Array<IdInputOfGuidInput>>;
+};
+
+export type RegisterArticlePayload = {
+  __typename?: 'RegisterArticlePayload';
+  article?: Maybe<Article>;
+  errors?: Maybe<Array<RegisterArticleError>>;
+};
+
+export type RegisterCustomerError = ApplicationError;
+
+export type RegisterCustomerInput = {
+  addresses?: InputMaybe<Array<CreateAddressInput>>;
+  code: Scalars['String']['input'];
+  email?: InputMaybe<Scalars['String']['input']>;
+  name: Scalars['String']['input'];
+  website?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type RegisterCustomerPayload = {
+  __typename?: 'RegisterCustomerPayload';
+  customer?: Maybe<Customer>;
+  errors?: Maybe<Array<RegisterCustomerError>>;
+};
+
+export type RegisterSupplierError = ApplicationError;
+
+export type RegisterSupplierInput = {
+  addresses?: InputMaybe<Array<CreateAddressInput>>;
+  code: Scalars['String']['input'];
+  email?: InputMaybe<Scalars['String']['input']>;
+  name: Scalars['String']['input'];
+  website?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type RegisterSupplierPayload = {
+  __typename?: 'RegisterSupplierPayload';
+  errors?: Maybe<Array<RegisterSupplierError>>;
+  supplier?: Maybe<Supplier>;
+};
+
+export type RemoveAddressFromCustomerError = ApplicationError;
+
+export type RemoveAddressFromCustomerInput = {
+  addressId: Scalars['ID']['input'];
+  customerId: Scalars['ID']['input'];
+};
+
+export type RemoveAddressFromCustomerPayload = {
+  __typename?: 'RemoveAddressFromCustomerPayload';
+  customer?: Maybe<Customer>;
+  errors?: Maybe<Array<RemoveAddressFromCustomerError>>;
+};
+
+export type RemoveAddressFromSupplierError = ApplicationError;
+
+export type RemoveAddressFromSupplierInput = {
+  addressId: Scalars['ID']['input'];
+  supplierId: Scalars['ID']['input'];
+};
+
+export type RemoveAddressFromSupplierPayload = {
+  __typename?: 'RemoveAddressFromSupplierPayload';
+  errors?: Maybe<Array<RemoveAddressFromSupplierError>>;
+  supplier?: Maybe<Supplier>;
+};
+
+export enum SortEnumType {
+  Asc = 'ASC',
+  Desc = 'DESC',
+}
+
+export type StringOperationFilterInput = {
+  and?: InputMaybe<Array<StringOperationFilterInput>>;
+  contains?: InputMaybe<Scalars['String']['input']>;
+  endsWith?: InputMaybe<Scalars['String']['input']>;
+  eq?: InputMaybe<Scalars['String']['input']>;
+  in?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  ncontains?: InputMaybe<Scalars['String']['input']>;
+  nendsWith?: InputMaybe<Scalars['String']['input']>;
+  neq?: InputMaybe<Scalars['String']['input']>;
+  nin?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  nstartsWith?: InputMaybe<Scalars['String']['input']>;
+  or?: InputMaybe<Array<StringOperationFilterInput>>;
+  startsWith?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type Subscription = {
+  __typename?: 'Subscription';
+  onArticleRegistered: Article;
+  onCustomerRegistered: Customer;
+  onDeactivateCustomer: Scalars['UUID']['output'];
+  onDeactivateSupplier: Scalars['UUID']['output'];
+  onDiscontinueArticle: Scalars['Int']['output'];
+  onSupplierLinkedToArticle: Article;
+  onSupplierRegistered: Supplier;
+  onSupplierUnlinkedFromArticle: Article;
+  onUpdateArticleDetails: Article;
+  onUpdateCustomerDetails: Customer;
+  onUpdateSupplierDetails: Supplier;
+};
+
+export type Supplier = Node & {
+  __typename?: 'Supplier';
+  active: Scalars['Boolean']['output'];
+  addresses: Array<Address>;
+  code: Scalars['String']['output'];
+  dateTimeDeactivated?: Maybe<Scalars['DateTime']['output']>;
+  email?: Maybe<Scalars['String']['output']>;
+  id: Scalars['ID']['output'];
+  name: Scalars['String']['output'];
+  website?: Maybe<Scalars['String']['output']>;
+};
+
+export type SupplierAddressesArgs = {
+  order?: InputMaybe<Array<AddressSortInput>>;
+};
+
+export type SupplierFilterInput = {
+  active?: InputMaybe<BooleanOperationFilterInput>;
+  and?: InputMaybe<Array<SupplierFilterInput>>;
+  code?: InputMaybe<StringOperationFilterInput>;
+  dateTimeDeactivated?: InputMaybe<DateTimeOperationFilterInput>;
+  email?: InputMaybe<StringOperationFilterInput>;
+  id?: InputMaybe<UuidOperationFilterInput>;
+  name?: InputMaybe<StringOperationFilterInput>;
+  or?: InputMaybe<Array<SupplierFilterInput>>;
+  website?: InputMaybe<StringOperationFilterInput>;
+};
+
+export type SupplierSortInput = {
+  active?: InputMaybe<SortEnumType>;
+  code?: InputMaybe<SortEnumType>;
+  dateTimeDeactivated?: InputMaybe<SortEnumType>;
+  email?: InputMaybe<SortEnumType>;
+  id?: InputMaybe<SortEnumType>;
+  name?: InputMaybe<SortEnumType>;
+  website?: InputMaybe<SortEnumType>;
+};
+
+/** A connection to a list of items. */
+export type SuppliersConnection = {
+  __typename?: 'SuppliersConnection';
+  /** A list of edges. */
+  edges?: Maybe<Array<SuppliersEdge>>;
+  /** A flattened list of the nodes. */
+  nodes?: Maybe<Array<Supplier>>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** Identifies the total count of items in the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** An edge in a connection. */
+export type SuppliersEdge = {
+  __typename?: 'SuppliersEdge';
+  /** A cursor for use in pagination. */
+  cursor: Scalars['String']['output'];
+  /** The item at the end of the edge. */
+  node: Supplier;
+};
+
+export type UnlinkFromSupplierError = ApplicationError;
+
+export type UnlinkFromSupplierInput = {
+  articleId: Scalars['ID']['input'];
+  supplierId: Scalars['ID']['input'];
+};
+
+export type UnlinkFromSupplierPayload = {
+  __typename?: 'UnlinkFromSupplierPayload';
+  article?: Maybe<Article>;
+  errors?: Maybe<Array<UnlinkFromSupplierError>>;
+};
+
+export type UpdateAddressInput = {
+  city?: InputMaybe<Scalars['String']['input']>;
+  countryCode?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['ID']['input'];
+  number?: InputMaybe<Scalars['String']['input']>;
+  state?: InputMaybe<Scalars['String']['input']>;
+  street?: InputMaybe<Scalars['String']['input']>;
+  zipCode?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type UpdateArticleDetailsError = ApplicationError;
+
+export type UpdateArticleDetailsInput = {
+  addedSuppliers?: InputMaybe<Array<IdInputOfGuidInput>>;
+  code: Scalars['String']['input'];
+  description?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['ID']['input'];
+  name: Scalars['String']['input'];
+  price: Scalars['Decimal']['input'];
+  removedSuppliers?: InputMaybe<Array<IdInputOfGuidInput>>;
+  sellingUnit: Scalars['Decimal']['input'];
+};
+
+export type UpdateArticleDetailsPayload = {
+  __typename?: 'UpdateArticleDetailsPayload';
+  article?: Maybe<Article>;
+  errors?: Maybe<Array<UpdateArticleDetailsError>>;
+};
+
+export type UpdateCustomerAddressError = ApplicationError;
+
+export type UpdateCustomerAddressInput = {
+  address: UpdateAddressInput;
+  customerId: Scalars['ID']['input'];
+};
+
+export type UpdateCustomerAddressPayload = {
+  __typename?: 'UpdateCustomerAddressPayload';
+  customer?: Maybe<Customer>;
+  errors?: Maybe<Array<UpdateCustomerAddressError>>;
+};
+
+export type UpdateCustomerDetailsError = ApplicationError;
+
+export type UpdateCustomerDetailsInput = {
+  addedAddresses?: InputMaybe<Array<CreateAddressInput>>;
+  code: Scalars['String']['input'];
+  email?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['ID']['input'];
+  name: Scalars['String']['input'];
+  removedAddresses?: InputMaybe<Array<IdInputOfGuidInput>>;
+  updatedAddresses?: InputMaybe<Array<UpdateAddressInput>>;
+  website?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type UpdateCustomerDetailsPayload = {
+  __typename?: 'UpdateCustomerDetailsPayload';
+  customer?: Maybe<Customer>;
+  errors?: Maybe<Array<UpdateCustomerDetailsError>>;
+};
+
+export type UpdateSupplierAddressError = ApplicationError;
+
+export type UpdateSupplierAddressInput = {
+  address: UpdateAddressInput;
+  supplierId: Scalars['ID']['input'];
+};
+
+export type UpdateSupplierAddressPayload = {
+  __typename?: 'UpdateSupplierAddressPayload';
+  errors?: Maybe<Array<UpdateSupplierAddressError>>;
+  supplier?: Maybe<Supplier>;
+};
+
+export type UpdateSupplierDetailsError = ApplicationError;
+
+export type UpdateSupplierDetailsInput = {
+  addedAddresses?: InputMaybe<Array<CreateAddressInput>>;
+  code: Scalars['String']['input'];
+  email?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['ID']['input'];
+  name: Scalars['String']['input'];
+  removedAddresses?: InputMaybe<Array<IdInputOfGuidInput>>;
+  updatedAddresses?: InputMaybe<Array<UpdateAddressInput>>;
+  website?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type UpdateSupplierDetailsPayload = {
+  __typename?: 'UpdateSupplierDetailsPayload';
+  errors?: Maybe<Array<UpdateSupplierDetailsError>>;
+  supplier?: Maybe<Supplier>;
+};
+
+export type UuidOperationFilterInput = {
+  eq?: InputMaybe<Scalars['UUID']['input']>;
+  gt?: InputMaybe<Scalars['UUID']['input']>;
+  gte?: InputMaybe<Scalars['UUID']['input']>;
+  in?: InputMaybe<Array<InputMaybe<Scalars['UUID']['input']>>>;
+  lt?: InputMaybe<Scalars['UUID']['input']>;
+  lte?: InputMaybe<Scalars['UUID']['input']>;
+  neq?: InputMaybe<Scalars['UUID']['input']>;
+  ngt?: InputMaybe<Scalars['UUID']['input']>;
+  ngte?: InputMaybe<Scalars['UUID']['input']>;
+  nin?: InputMaybe<Array<InputMaybe<Scalars['UUID']['input']>>>;
+  nlt?: InputMaybe<Scalars['UUID']['input']>;
+  nlte?: InputMaybe<Scalars['UUID']['input']>;
+};
+
+export type SuppliersQueryVariables = Exact<{
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  after?: InputMaybe<Scalars['String']['input']>;
+  before?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+export type SuppliersQuery = {
+  __typename?: 'Query';
+  suppliers?: {
+    __typename?: 'SuppliersConnection';
+    totalCount: number;
+    edges?: Array<{
+      __typename?: 'SuppliersEdge';
+      node: { __typename?: 'Supplier'; id: string; code: string; name: string };
+    }> | null;
+    pageInfo: {
+      __typename?: 'PageInfo';
+      hasNextPage: boolean;
+      hasPreviousPage: boolean;
+      startCursor?: string | null;
+      endCursor?: string | null;
+    };
+  } | null;
+};
+
+export const SuppliersDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'Suppliers' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'first' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'last' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'after' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'before' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'suppliers' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'first' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'first' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'last' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'last' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'after' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'after' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'before' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'before' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'edges' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'node' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'code' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'name' },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'pageInfo' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'hasNextPage' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'hasPreviousPage' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'startCursor' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'endCursor' },
+                      },
+                    ],
+                  },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'totalCount' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<SuppliersQuery, SuppliersQueryVariables>;

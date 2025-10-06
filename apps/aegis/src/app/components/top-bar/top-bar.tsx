@@ -1,10 +1,12 @@
-import { Container } from 'react-bootstrap';
+import { Container, Dropdown } from 'react-bootstrap';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
+import { useTranslation } from 'react-i18next';
 import { Link, useLocation } from 'react-router-dom';
 import { Package, TruckDelivery, Users } from 'tabler-icons-react';
 
 export const TopBar = () => {
+  const { t, i18n } = useTranslation();
   const location = useLocation();
 
   return (
@@ -32,6 +34,21 @@ export const TopBar = () => {
               Customers
             </Nav.Link>
           </Nav>
+          <div className="d-flex align-items-center">
+            <Dropdown>
+              <Dropdown.Toggle variant="outline-light" id="language-dropdown">
+                {t('common.language')}
+              </Dropdown.Toggle>
+              <Dropdown.Menu align="end">
+                <Dropdown.Item onClick={() => i18n.changeLanguage('en')}>
+                  {t('common.english')}
+                </Dropdown.Item>
+                <Dropdown.Item onClick={() => i18n.changeLanguage('nl')}>
+                  {t('common.dutch')}
+                </Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown>
+          </div>
         </Navbar.Collapse>
       </Container>
     </Navbar>
