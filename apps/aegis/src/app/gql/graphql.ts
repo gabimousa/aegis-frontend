@@ -63,27 +63,288 @@ export type AddAddressToSupplierPayload = {
 export type Address = {
   __typename?: 'Address';
   city?: Maybe<Scalars['String']['output']>;
-  country?: Maybe<Country>;
+  countryCode?: Maybe<Alpha3Code>;
   dateTimeRemoved?: Maybe<Scalars['DateTime']['output']>;
   id: Scalars['UUID']['output'];
   number?: Maybe<Scalars['String']['output']>;
   removed: Scalars['Boolean']['output'];
   state?: Maybe<Scalars['String']['output']>;
   street?: Maybe<Scalars['String']['output']>;
+  type: AddressType;
   zipCode?: Maybe<Scalars['String']['output']>;
 };
 
 export type AddressSortInput = {
   city?: InputMaybe<SortEnumType>;
-  country?: InputMaybe<CountrySortInput>;
+  countryCode?: InputMaybe<SortEnumType>;
   dateTimeRemoved?: InputMaybe<SortEnumType>;
   id?: InputMaybe<SortEnumType>;
   number?: InputMaybe<SortEnumType>;
   removed?: InputMaybe<SortEnumType>;
   state?: InputMaybe<SortEnumType>;
   street?: InputMaybe<SortEnumType>;
+  type?: InputMaybe<SortEnumType>;
   zipCode?: InputMaybe<SortEnumType>;
 };
+
+export enum AddressType {
+  Delivery = 'DELIVERY',
+  Mailing = 'MAILING',
+  Visiting = 'VISITING',
+}
+
+export enum Alpha3Code {
+  Abw = 'ABW',
+  Afg = 'AFG',
+  Ago = 'AGO',
+  Aia = 'AIA',
+  Ala = 'ALA',
+  Alb = 'ALB',
+  And = 'AND',
+  Are = 'ARE',
+  Arg = 'ARG',
+  Arm = 'ARM',
+  Asm = 'ASM',
+  Ata = 'ATA',
+  Atf = 'ATF',
+  Atg = 'ATG',
+  Aus = 'AUS',
+  Aut = 'AUT',
+  Aze = 'AZE',
+  Bdi = 'BDI',
+  Bel = 'BEL',
+  Ben = 'BEN',
+  Bes = 'BES',
+  Bfa = 'BFA',
+  Bgd = 'BGD',
+  Bgr = 'BGR',
+  Bhr = 'BHR',
+  Bhs = 'BHS',
+  Bih = 'BIH',
+  Blm = 'BLM',
+  Blr = 'BLR',
+  Blz = 'BLZ',
+  Bmu = 'BMU',
+  Bol = 'BOL',
+  Bra = 'BRA',
+  Brb = 'BRB',
+  Brn = 'BRN',
+  Btn = 'BTN',
+  Bvt = 'BVT',
+  Bwa = 'BWA',
+  Caf = 'CAF',
+  Can = 'CAN',
+  Cck = 'CCK',
+  Che = 'CHE',
+  Chl = 'CHL',
+  Chn = 'CHN',
+  Civ = 'CIV',
+  Cmr = 'CMR',
+  Cod = 'COD',
+  Cog = 'COG',
+  Cok = 'COK',
+  Col = 'COL',
+  Com = 'COM',
+  Cpv = 'CPV',
+  Cri = 'CRI',
+  Cub = 'CUB',
+  Cuw = 'CUW',
+  Cxr = 'CXR',
+  Cym = 'CYM',
+  Cyp = 'CYP',
+  Cze = 'CZE',
+  Deu = 'DEU',
+  Dji = 'DJI',
+  Dma = 'DMA',
+  Dnk = 'DNK',
+  Dom = 'DOM',
+  Dza = 'DZA',
+  Ecu = 'ECU',
+  Egy = 'EGY',
+  Eri = 'ERI',
+  Esh = 'ESH',
+  Esp = 'ESP',
+  Est = 'EST',
+  Eth = 'ETH',
+  Fin = 'FIN',
+  Fji = 'FJI',
+  Flk = 'FLK',
+  Fra = 'FRA',
+  Fro = 'FRO',
+  Fsm = 'FSM',
+  Gab = 'GAB',
+  Gbr = 'GBR',
+  Geo = 'GEO',
+  Ggy = 'GGY',
+  Gha = 'GHA',
+  Gib = 'GIB',
+  Gin = 'GIN',
+  Glp = 'GLP',
+  Gmb = 'GMB',
+  Gnb = 'GNB',
+  Gnq = 'GNQ',
+  Grc = 'GRC',
+  Grd = 'GRD',
+  Grl = 'GRL',
+  Gtm = 'GTM',
+  Guf = 'GUF',
+  Gum = 'GUM',
+  Guy = 'GUY',
+  Hkg = 'HKG',
+  Hmd = 'HMD',
+  Hnd = 'HND',
+  Hrv = 'HRV',
+  Hti = 'HTI',
+  Hun = 'HUN',
+  Idn = 'IDN',
+  Imn = 'IMN',
+  Ind = 'IND',
+  Iot = 'IOT',
+  Irl = 'IRL',
+  Irn = 'IRN',
+  Irq = 'IRQ',
+  Isl = 'ISL',
+  Isr = 'ISR',
+  Ita = 'ITA',
+  Jam = 'JAM',
+  Jey = 'JEY',
+  Jor = 'JOR',
+  Jpn = 'JPN',
+  Kaz = 'KAZ',
+  Ken = 'KEN',
+  Kgz = 'KGZ',
+  Khm = 'KHM',
+  Kir = 'KIR',
+  Kna = 'KNA',
+  Kor = 'KOR',
+  Kwt = 'KWT',
+  Lao = 'LAO',
+  Lbn = 'LBN',
+  Lbr = 'LBR',
+  Lby = 'LBY',
+  Lca = 'LCA',
+  Lie = 'LIE',
+  Lka = 'LKA',
+  Lso = 'LSO',
+  Ltu = 'LTU',
+  Lux = 'LUX',
+  Lva = 'LVA',
+  Mac = 'MAC',
+  Maf = 'MAF',
+  Mar = 'MAR',
+  Mco = 'MCO',
+  Mda = 'MDA',
+  Mdg = 'MDG',
+  Mdv = 'MDV',
+  Mex = 'MEX',
+  Mhl = 'MHL',
+  Mkd = 'MKD',
+  Mli = 'MLI',
+  Mlt = 'MLT',
+  Mmr = 'MMR',
+  Mne = 'MNE',
+  Mng = 'MNG',
+  Mnp = 'MNP',
+  Moz = 'MOZ',
+  Mrt = 'MRT',
+  Msr = 'MSR',
+  Mtq = 'MTQ',
+  Mus = 'MUS',
+  Mwi = 'MWI',
+  Mys = 'MYS',
+  Myt = 'MYT',
+  Nam = 'NAM',
+  Ncl = 'NCL',
+  Ner = 'NER',
+  Nfk = 'NFK',
+  Nga = 'NGA',
+  Nic = 'NIC',
+  Niu = 'NIU',
+  Nld = 'NLD',
+  Nor = 'NOR',
+  Npl = 'NPL',
+  Nru = 'NRU',
+  Nzl = 'NZL',
+  Omn = 'OMN',
+  Pak = 'PAK',
+  Pan = 'PAN',
+  Pcn = 'PCN',
+  Per = 'PER',
+  Phl = 'PHL',
+  Plw = 'PLW',
+  Png = 'PNG',
+  Pol = 'POL',
+  Pri = 'PRI',
+  Prk = 'PRK',
+  Prt = 'PRT',
+  Pry = 'PRY',
+  Pse = 'PSE',
+  Pyf = 'PYF',
+  Qat = 'QAT',
+  Reu = 'REU',
+  Rou = 'ROU',
+  Rus = 'RUS',
+  Rwa = 'RWA',
+  Sau = 'SAU',
+  Sdn = 'SDN',
+  Sen = 'SEN',
+  Sgp = 'SGP',
+  Sgs = 'SGS',
+  Shn = 'SHN',
+  Sjm = 'SJM',
+  Slb = 'SLB',
+  Sle = 'SLE',
+  Slv = 'SLV',
+  Smr = 'SMR',
+  Som = 'SOM',
+  Spm = 'SPM',
+  Srb = 'SRB',
+  Ssd = 'SSD',
+  Stp = 'STP',
+  Sur = 'SUR',
+  Svk = 'SVK',
+  Svn = 'SVN',
+  Swe = 'SWE',
+  Swz = 'SWZ',
+  Sxm = 'SXM',
+  Syc = 'SYC',
+  Syr = 'SYR',
+  Tca = 'TCA',
+  Tcd = 'TCD',
+  Tgo = 'TGO',
+  Tha = 'THA',
+  Tjk = 'TJK',
+  Tkl = 'TKL',
+  Tkm = 'TKM',
+  Tls = 'TLS',
+  Ton = 'TON',
+  Tto = 'TTO',
+  Tun = 'TUN',
+  Tur = 'TUR',
+  Tuv = 'TUV',
+  Twn = 'TWN',
+  Tza = 'TZA',
+  Uga = 'UGA',
+  Ukr = 'UKR',
+  Umi = 'UMI',
+  Ury = 'URY',
+  Usa = 'USA',
+  Uzb = 'UZB',
+  Vat = 'VAT',
+  Vct = 'VCT',
+  Ven = 'VEN',
+  Vgb = 'VGB',
+  Vir = 'VIR',
+  Vnm = 'VNM',
+  Vut = 'VUT',
+  Wlf = 'WLF',
+  Wsm = 'WSM',
+  Xkx = 'XKX',
+  Yem = 'YEM',
+  Zaf = 'ZAF',
+  Zmb = 'ZMB',
+  Zwe = 'ZWE',
+}
 
 export type ApplicationError = Error & {
   __typename?: 'ApplicationError';
@@ -162,23 +423,13 @@ export type BooleanOperationFilterInput = {
   neq?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
-export type Country = {
-  __typename?: 'Country';
-  id: Scalars['String']['output'];
-  name: Scalars['String']['output'];
-};
-
-export type CountrySortInput = {
-  id?: InputMaybe<SortEnumType>;
-  name?: InputMaybe<SortEnumType>;
-};
-
 export type CreateAddressInput = {
   city?: InputMaybe<Scalars['String']['input']>;
-  countryCode?: InputMaybe<Scalars['String']['input']>;
+  countryCode?: InputMaybe<Alpha3Code>;
   number?: InputMaybe<Scalars['String']['input']>;
   state?: InputMaybe<Scalars['String']['input']>;
   street?: InputMaybe<Scalars['String']['input']>;
+  type: AddressType;
   zipCode?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -186,11 +437,14 @@ export type Customer = Node & {
   __typename?: 'Customer';
   active: Scalars['Boolean']['output'];
   addresses: Array<Address>;
+  bic?: Maybe<Scalars['String']['output']>;
   code: Scalars['String']['output'];
   dateTimeDeactivated?: Maybe<Scalars['DateTime']['output']>;
   email?: Maybe<Scalars['String']['output']>;
+  iban?: Maybe<Scalars['String']['output']>;
   id: Scalars['ID']['output'];
   name: Scalars['String']['output'];
+  phoneNumber?: Maybe<Scalars['String']['output']>;
   website?: Maybe<Scalars['String']['output']>;
 };
 
@@ -201,22 +455,28 @@ export type CustomerAddressesArgs = {
 export type CustomerFilterInput = {
   active?: InputMaybe<BooleanOperationFilterInput>;
   and?: InputMaybe<Array<CustomerFilterInput>>;
+  bic?: InputMaybe<StringOperationFilterInput>;
   code?: InputMaybe<StringOperationFilterInput>;
   dateTimeDeactivated?: InputMaybe<DateTimeOperationFilterInput>;
   email?: InputMaybe<StringOperationFilterInput>;
+  iban?: InputMaybe<StringOperationFilterInput>;
   id?: InputMaybe<UuidOperationFilterInput>;
   name?: InputMaybe<StringOperationFilterInput>;
   or?: InputMaybe<Array<CustomerFilterInput>>;
+  phoneNumber?: InputMaybe<StringOperationFilterInput>;
   website?: InputMaybe<StringOperationFilterInput>;
 };
 
 export type CustomerSortInput = {
   active?: InputMaybe<SortEnumType>;
+  bic?: InputMaybe<SortEnumType>;
   code?: InputMaybe<SortEnumType>;
   dateTimeDeactivated?: InputMaybe<SortEnumType>;
   email?: InputMaybe<SortEnumType>;
+  iban?: InputMaybe<SortEnumType>;
   id?: InputMaybe<SortEnumType>;
   name?: InputMaybe<SortEnumType>;
+  phoneNumber?: InputMaybe<SortEnumType>;
   website?: InputMaybe<SortEnumType>;
 };
 
@@ -522,9 +782,12 @@ export type RegisterCustomerError = ApplicationError;
 
 export type RegisterCustomerInput = {
   addresses?: InputMaybe<Array<CreateAddressInput>>;
+  bic?: InputMaybe<Scalars['String']['input']>;
   code: Scalars['String']['input'];
   email?: InputMaybe<Scalars['String']['input']>;
+  iban?: InputMaybe<Scalars['String']['input']>;
   name: Scalars['String']['input'];
+  phoneNumber?: InputMaybe<Scalars['String']['input']>;
   website?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -538,9 +801,12 @@ export type RegisterSupplierError = ApplicationError;
 
 export type RegisterSupplierInput = {
   addresses?: InputMaybe<Array<CreateAddressInput>>;
+  bic?: InputMaybe<Scalars['String']['input']>;
   code: Scalars['String']['input'];
   email?: InputMaybe<Scalars['String']['input']>;
+  iban?: InputMaybe<Scalars['String']['input']>;
   name: Scalars['String']['input'];
+  phoneNumber?: InputMaybe<Scalars['String']['input']>;
   website?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -615,11 +881,14 @@ export type Supplier = Node & {
   __typename?: 'Supplier';
   active: Scalars['Boolean']['output'];
   addresses: Array<Address>;
+  bic?: Maybe<Scalars['String']['output']>;
   code: Scalars['String']['output'];
   dateTimeDeactivated?: Maybe<Scalars['DateTime']['output']>;
   email?: Maybe<Scalars['String']['output']>;
+  iban?: Maybe<Scalars['String']['output']>;
   id: Scalars['ID']['output'];
   name: Scalars['String']['output'];
+  phoneNumber?: Maybe<Scalars['String']['output']>;
   website?: Maybe<Scalars['String']['output']>;
 };
 
@@ -630,22 +899,28 @@ export type SupplierAddressesArgs = {
 export type SupplierFilterInput = {
   active?: InputMaybe<BooleanOperationFilterInput>;
   and?: InputMaybe<Array<SupplierFilterInput>>;
+  bic?: InputMaybe<StringOperationFilterInput>;
   code?: InputMaybe<StringOperationFilterInput>;
   dateTimeDeactivated?: InputMaybe<DateTimeOperationFilterInput>;
   email?: InputMaybe<StringOperationFilterInput>;
+  iban?: InputMaybe<StringOperationFilterInput>;
   id?: InputMaybe<UuidOperationFilterInput>;
   name?: InputMaybe<StringOperationFilterInput>;
   or?: InputMaybe<Array<SupplierFilterInput>>;
+  phoneNumber?: InputMaybe<StringOperationFilterInput>;
   website?: InputMaybe<StringOperationFilterInput>;
 };
 
 export type SupplierSortInput = {
   active?: InputMaybe<SortEnumType>;
+  bic?: InputMaybe<SortEnumType>;
   code?: InputMaybe<SortEnumType>;
   dateTimeDeactivated?: InputMaybe<SortEnumType>;
   email?: InputMaybe<SortEnumType>;
+  iban?: InputMaybe<SortEnumType>;
   id?: InputMaybe<SortEnumType>;
   name?: InputMaybe<SortEnumType>;
+  phoneNumber?: InputMaybe<SortEnumType>;
   website?: InputMaybe<SortEnumType>;
 };
 
@@ -686,7 +961,7 @@ export type UnlinkFromSupplierPayload = {
 
 export type UpdateAddressInput = {
   city?: InputMaybe<Scalars['String']['input']>;
-  countryCode?: InputMaybe<Scalars['String']['input']>;
+  countryCode?: InputMaybe<Alpha3Code>;
   id: Scalars['ID']['input'];
   number?: InputMaybe<Scalars['String']['input']>;
   state?: InputMaybe<Scalars['String']['input']>;
@@ -730,10 +1005,13 @@ export type UpdateCustomerDetailsError = ApplicationError;
 
 export type UpdateCustomerDetailsInput = {
   addedAddresses?: InputMaybe<Array<CreateAddressInput>>;
+  bic?: InputMaybe<Scalars['String']['input']>;
   code: Scalars['String']['input'];
   email?: InputMaybe<Scalars['String']['input']>;
+  iban?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['ID']['input'];
   name: Scalars['String']['input'];
+  phoneNumber?: InputMaybe<Scalars['String']['input']>;
   removedAddresses?: InputMaybe<Array<IdInputOfGuidInput>>;
   updatedAddresses?: InputMaybe<Array<UpdateAddressInput>>;
   website?: InputMaybe<Scalars['String']['input']>;
@@ -762,10 +1040,13 @@ export type UpdateSupplierDetailsError = ApplicationError;
 
 export type UpdateSupplierDetailsInput = {
   addedAddresses?: InputMaybe<Array<CreateAddressInput>>;
+  bic?: InputMaybe<Scalars['String']['input']>;
   code: Scalars['String']['input'];
   email?: InputMaybe<Scalars['String']['input']>;
+  iban?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['ID']['input'];
   name: Scalars['String']['input'];
+  phoneNumber?: InputMaybe<Scalars['String']['input']>;
   removedAddresses?: InputMaybe<Array<IdInputOfGuidInput>>;
   updatedAddresses?: InputMaybe<Array<UpdateAddressInput>>;
   website?: InputMaybe<Scalars['String']['input']>;

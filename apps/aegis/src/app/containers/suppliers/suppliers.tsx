@@ -14,12 +14,14 @@ import { Plus, Search, TruckDelivery } from 'tabler-icons-react';
 import { useSuppliers } from './useSuppliers';
 
 export function Suppliers() {
+  const pageSize = 10;
   const { t } = useTranslation();
-  const { data, loading, error, refetch, nextPage, prevPage } = useSuppliers(1);
+  const { data, loading, error, refetch, nextPage, prevPage } =
+    useSuppliers(pageSize);
 
   const handleFilterSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    refetch({ first: 10 });
+    refetch({ first: pageSize });
   };
 
   return (

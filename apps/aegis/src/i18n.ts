@@ -13,6 +13,10 @@ i18n
             language: 'Language',
             english: 'English',
             dutch: 'Dutch',
+            home: 'Home',
+            suppliers: 'Suppliers',
+            articles: 'Articles',
+            customers: 'Customers',
           },
           suppliers: {
             title: 'Suppliers',
@@ -41,6 +45,10 @@ i18n
             language: 'Taal',
             english: 'Engels',
             dutch: 'Nederlands',
+            home: 'Startpagina',
+            articles: 'Artikelen',
+            customers: 'Klanten',
+            suppliers: 'Leveranciers',
           },
           suppliers: {
             title: 'Leveranciers',

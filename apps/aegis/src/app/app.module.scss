@@ -1,16 +1,16 @@
 .app {
-  background-color: var(--bs-dark);
-  color: var(--bs-light);
+  // background-color: var(--bs-dark);
+  // color: var(--bs-light);
   min-height: 100vh;
 }
 
 /* Apply Bootstrap dark theme globally */
-:global(html) {
-  background-color: var(--bs-dark);
-  color: var(--bs-light);
-}
+// :global(html) {
+//   background-color: var(--bs-dark);
+//   color: var(--bs-light);
+// }
 
-:global(body) {
-  background-color: var(--bs-dark);
-  color: var(--bs-light);
-}
+// :global(body) {
+//   background-color: var(--bs-dark);
+//   color: var(--bs-light);
+// }
