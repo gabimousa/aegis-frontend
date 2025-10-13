@@ -29,6 +29,11 @@ i18n
             table: {
               code: 'Code',
               name: 'Name',
+              website: 'Website',
+              email: 'Email',
+              phoneNumber: 'Phone Number',
+              iban: 'IBAN',
+              bic: 'BIC',
               actions: 'Actions',
               edit: 'Edit',
               delete: 'Delete',
@@ -61,6 +66,11 @@ i18n
             table: {
               code: 'Code',
               name: 'Naam',
+              website: 'Website',
+              email: 'E-mail',
+              phoneNumber: 'Telefoonnummer',
+              iban: 'IBAN',
+              bic: 'BIC',
               actions: 'Acties',
               edit: 'Bewerken',
               delete: 'Verwijderen',

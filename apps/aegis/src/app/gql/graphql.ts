@@ -1087,7 +1087,17 @@ export type SuppliersQuery = {
     totalCount: number;
     edges?: Array<{
       __typename?: 'SuppliersEdge';
-      node: { __typename?: 'Supplier'; id: string; code: string; name: string };
+      node: {
+        __typename?: 'Supplier';
+        id: string;
+        code: string;
+        name: string;
+        website?: string | null;
+        email?: string | null;
+        phoneNumber?: string | null;
+        iban?: string | null;
+        bic?: string | null;
+      };
     }> | null;
     pageInfo: {
       __typename?: 'PageInfo';
@@ -1203,6 +1213,26 @@ export const SuppliersDocument = {
                             {
                               kind: 'Field',
                               name: { kind: 'Name', value: 'name' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'website' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'email' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'phoneNumber' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'iban' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'bic' },
                             },
                           ],
                         },

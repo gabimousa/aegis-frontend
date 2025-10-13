@@ -10,7 +10,7 @@ import {
   Table,
 } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
-import { Plus, Search, TruckDelivery } from 'tabler-icons-react';
+import { Edit, Plus, Search, Trash, TruckDelivery } from 'tabler-icons-react';
 import { useSuppliers } from './useSuppliers';
 
 export function Suppliers() {
@@ -91,6 +91,11 @@ export function Suppliers() {
                     <tr>
                       <th>{t('suppliers.table.code')}</th>
                       <th>{t('suppliers.table.name')}</th>
+                      <th>{t('suppliers.table.website')}</th>
+                      <th>{t('suppliers.table.email')}</th>
+                      <th>{t('suppliers.table.phoneNumber')}</th>
+                      <th>{t('suppliers.table.iban')}</th>
+                      <th>{t('suppliers.table.bic')}</th>
                       <th>{t('suppliers.table.actions')}</th>
                     </tr>
                   </thead>
@@ -101,16 +106,21 @@ export function Suppliers() {
                           <code>{supplier.code}</code>
                         </td>
                         <td>{supplier.name}</td>
-                        <td>
+                        <td>{supplier.website}</td>
+                        <td>{supplier.email}</td>
+                        <td>{supplier.phoneNumber}</td>
+                        <td>{supplier.iban}</td>
+                        <td>{supplier.bic}</td>
+                        <td width={100}>
                           <Button
                             variant="outline-primary"
                             size="sm"
                             className="me-2"
                           >
-                            {t('suppliers.table.edit')}
+                            <Edit size={16} />
                           </Button>
                           <Button variant="outline-danger" size="sm">
-                            {t('suppliers.table.delete')}
+                            <Trash size={16} />
                           </Button>
                         </td>
                       </tr>

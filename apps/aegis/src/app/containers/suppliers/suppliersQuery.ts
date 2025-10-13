@@ -8,6 +8,11 @@ export const SuppliersQuery = graphql(`
           id
           code
           name
+          website
+          email
+          phoneNumber
+          iban
+          bic
         }
       }
       pageInfo {
