@@ -1,172 +1,104 @@
-import {
-  Alert,
-  Button,
-  Card,
-  Col,
-  Container,
-  Form,
-  Row,
-  Spinner,
-  Table,
-} from 'react-bootstrap';
+import { useState } from 'react';
+import { Button } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
-import { Edit, Plus, Search, Trash, TruckDelivery } from 'tabler-icons-react';
-import { useSuppliers } from './useSuppliers';
+import { Edit, Plus, Trash, TruckDelivery } from 'tabler-icons-react';
+import DataGrid, { DataGridProps } from '../../components/data-grid/data-grid';
+import { DataGridColumn } from '../../components/data-grid/data-grid-column';
+import ListView from '../../components/list-view/list-view';
+import { useSuppliers } from './hook/useSuppliers';
+import { Supplier } from './model/supplier';
 
 export function Suppliers() {
   const pageSize = 10;
   const { t } = useTranslation();
-  const { data, loading, error, refetch, nextPage, prevPage } =
-    useSuppliers(pageSize);
+  const [searchTerm, setSearchTerm] = useState('');
+  const { data, loading, error, nextPage, prevPage } = useSuppliers(
+    pageSize,
+    searchTerm
+  );
 
-  const handleFilterSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    refetch({ first: pageSize });
+  const columns: DataGridColumn<Supplier>[] = [
+    { header: t('suppliers.table.code'), field: 'code', width: 150 },
+    { header: t('suppliers.table.name'), field: 'name' },
+    { header: t('suppliers.table.website'), field: 'website', width: 200 },
+    { header: t('suppliers.table.email'), field: 'email', width: 200 },
+    {
+      header: t('suppliers.table.phoneNumber'),
+      field: 'phoneNumber',
+      width: 150,
+    },
+    { header: t('suppliers.table.iban'), field: 'iban', width: 200 },
+    { header: t('suppliers.table.bic'), field: 'bic', width: 100 },
+    {
+      header: '',
+      width: 100,
+      cellTemplate: (supplier) => {
+        return (
+          <>
+            <Button
+              variant="outline-primary"
+              size="sm"
+              className="me-2"
+              onClick={() => alert(supplier.name)}
+            >
+              <Edit size={16} />
+            </Button>
+            <Button variant="outline-danger" size="sm">
+              <Trash size={16} />
+            </Button>
+          </>
+        );
+      },
+    },
+  ];
+
+  const dataGridProps: DataGridProps<Supplier> = {
+    keyAccessor: 'id',
+    columns,
+    data: data?.suppliers?.nodes ?? [],
   };
 
+  const title = (
+    <div className="d-flex align-items-center mb-3">
+      <TruckDelivery size={32} className="me-3" />
+      <h2 className="mb-0">{t('suppliers.title')}</h2>
+    </div>
+  );
+
+  const actions = [
+    <Button variant="primary" className="w-100">
+      <Plus size={16} className="me-2" />
+      {t('suppliers.addButton')}
+    </Button>,
+  ];
+
+  const footerLabel = data?.suppliers?.totalCount
+    ? t('suppliers.totalCount', {
+        count: data.suppliers.totalCount,
+      })
+    : '';
+
   return (
-    <Container fluid>
-      <Row className="mb-4">
-        <Col>
-          <div className="d-flex align-items-center mb-3">
-            <TruckDelivery size={32} className="me-3" />
-            <h2 className="mb-0">{t('suppliers.title')}</h2>
-          </div>
-        </Col>
-      </Row>
-
-      <Row className="mb-3">
-        <Col md={8}>
-          <Form onSubmit={handleFilterSubmit}>
-            <div className="d-flex">
-              <Form.Control
-                type="text"
-                placeholder={t('suppliers.searchPlaceholder')}
-                className="me-2"
-              />
-              <Button type="submit" variant="outline-primary">
-                <Search size={16} />
-              </Button>
-            </div>
-          </Form>
-        </Col>
-        <Col md={4} className="text-end">
-          <Button variant="primary">
-            <Plus size={16} className="me-2" />
-            {t('suppliers.addButton')}
-          </Button>
-        </Col>
-      </Row>
-
-      {error && (
-        <Row className="mb-3">
-          <Col>
-            <Alert variant="danger">
-              {t('suppliers.errorLoading', { error: error.message })}
-            </Alert>
-          </Col>
-        </Row>
-      )}
-
-      <Row>
-        <Col>
-          <Card>
-            <Card.Header>
-              <h5 className="mb-0">{t('suppliers.listTitle')}</h5>
-            </Card.Header>
-            <Card.Body>
-              {loading ? (
-                <div className="text-center p-4">
-                  <Spinner animation="border" role="status">
-                    <span className="visually-hidden">{t('loading')}</span>
-                  </Spinner>
-                </div>
-              ) : data?.suppliers?.edges?.length === 0 ? (
-                <p className="text-muted text-center p-4">
-                  {t('suppliers.noResults')}
-                </p>
-              ) : (
-                <Table responsive hover>
-                  <thead>
-                    <tr>
-                      <th>{t('suppliers.table.code')}</th>
-                      <th>{t('suppliers.table.name')}</th>
-                      <th>{t('suppliers.table.website')}</th>
-                      <th>{t('suppliers.table.email')}</th>
-                      <th>{t('suppliers.table.phoneNumber')}</th>
-                      <th>{t('suppliers.table.iban')}</th>
-                      <th>{t('suppliers.table.bic')}</th>
-                      <th>{t('suppliers.table.actions')}</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {data?.suppliers?.edges?.map(({ node: supplier }) => (
-                      <tr key={supplier.id}>
-                        <td>
-                          <code>{supplier.code}</code>
-                        </td>
-                        <td>{supplier.name}</td>
-                        <td>{supplier.website}</td>
-                        <td>{supplier.email}</td>
-                        <td>{supplier.phoneNumber}</td>
-                        <td>{supplier.iban}</td>
-                        <td>{supplier.bic}</td>
-                        <td width={100}>
-                          <Button
-                            variant="outline-primary"
-                            size="sm"
-                            className="me-2"
-                          >
-                            <Edit size={16} />
-                          </Button>
-                          <Button variant="outline-danger" size="sm">
-                            <Trash size={16} />
-                          </Button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </Table>
-              )}
-            </Card.Body>
-            {data?.suppliers?.pageInfo && (
-              <Card.Footer>
-                <div className="d-flex justify-content-between align-items-center">
-                  <div>
-                    {data.suppliers.totalCount && (
-                      <small className="text-muted">
-                        {t('suppliers.totalCount', {
-                          count: data.suppliers.totalCount,
-                        })}
-                      </small>
-                    )}
-                  </div>
-                  <div>
-                    <Button
-                      onClick={prevPage}
-                      variant="outline-secondary"
-                      size="sm"
-                      disabled={!data.suppliers.pageInfo.hasPreviousPage}
-                      className="me-2"
-                    >
-                      {t('suppliers.previous')}
-                    </Button>
-                    <Button
-                      onClick={nextPage}
-                      variant="outline-secondary"
-                      size="sm"
-                      disabled={!data.suppliers.pageInfo.hasNextPage}
-                    >
-                      {t('suppliers.next')}
-                    </Button>
-                  </div>
-                </div>
-              </Card.Footer>
-            )}
-          </Card>
-        </Col>
-      </Row>
-    </Container>
+    <ListView
+      header={title}
+      searchPlaceholder={t('suppliers.searchPlaceholder')}
+      onSearchChange={setSearchTerm}
+      actions={actions}
+      loading={loading}
+      loadingLabel={t('loading')}
+      errorMessage={
+        error && t('suppliers.errorLoading', { error: error?.message })
+      }
+      cardTitle={t('suppliers.listTitle')}
+      showFooter={!!data?.suppliers?.pageInfo}
+      footerLabel={footerLabel}
+      onNextPage={nextPage}
+      onPrevPage={prevPage}
+      isNextPageDisabled={!data?.suppliers?.pageInfo?.hasNextPage}
+      isPrevPageDisabled={!data?.suppliers?.pageInfo?.hasPreviousPage}
+    >
+      <DataGrid {...dataGridProps} />
+    </ListView>
   );
 }
 export default Suppliers;

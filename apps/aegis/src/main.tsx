@@ -10,6 +10,17 @@ import './i18n';
 const client = new ApolloClient({
   link: new HttpLink({ uri: '/graphql' }),
   cache: new InMemoryCache(),
+  defaultOptions: {
+    watchQuery: {
+      fetchPolicy: 'no-cache',
+    },
+    query: {
+      fetchPolicy: 'no-cache',
+    },
+    mutate: {
+      fetchPolicy: 'no-cache',
+    },
+  },
 });
 
 const root = ReactDOM.createRoot(

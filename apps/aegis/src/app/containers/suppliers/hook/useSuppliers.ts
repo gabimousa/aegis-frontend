@@ -1,9 +1,14 @@
 import { useQuery } from '@apollo/client/react';
+import { SuppliersQueryVariables } from '../../../gql/graphql';
 import { SuppliersQuery } from './suppliersQuery';
 
-export const useSuppliers = (pageSize: number) => {
+export const useSuppliers = (pageSize: number, searchTerm?: string) => {
+  const variables: SuppliersQueryVariables = { first: pageSize };
+  if (searchTerm) {
+    variables.where = { name: { contains: searchTerm } };
+  }
   const { data, loading, error, refetch } = useQuery(SuppliersQuery, {
-    variables: { first: pageSize },
+    variables,
   });
 
   const nextPage = () => {
