@@ -13,7 +13,7 @@ import SearchInput from '../search-input/search-input';
 type ListViewProps = {
   header: string | ReactElement;
   searchPlaceholder?: string;
-  actions?: ReactElement[];
+  actions?: ReactElement;
   errorMessage?: string;
   loading: boolean;
   cardTitle: string | ReactElement;
@@ -75,6 +75,10 @@ function ListView({
           </div>
         </Col>
         <Col md={2} className="text-end">
+          {/* {actions?.map((action, index) => (
+            <span key={index}>{action}</span>
+          ))} */}
+
           {actions}
         </Col>
       </Row>
@@ -115,7 +119,7 @@ function ListView({
                       onClick={onPrevPage}
                       variant="outline-secondary"
                       size="sm"
-                      disabled={!isPrevPageDisabled}
+                      disabled={isPrevPageDisabled}
                       className="me-2"
                     >
                       {prevPageLabel}
@@ -124,7 +128,7 @@ function ListView({
                       onClick={onNextPage}
                       variant="outline-secondary"
                       size="sm"
-                      disabled={!isNextPageDisabled}
+                      disabled={isNextPageDisabled}
                     >
                       {nextPageLabel}
                     </Button>

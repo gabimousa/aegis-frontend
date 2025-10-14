@@ -5,7 +5,7 @@ import { Edit, Plus, Trash, TruckDelivery } from 'tabler-icons-react';
 import DataGrid, { DataGridProps } from '../../components/data-grid/data-grid';
 import { DataGridColumn } from '../../components/data-grid/data-grid-column';
 import ListView from '../../components/list-view/list-view';
-import { useSuppliers } from './hook/useSuppliers';
+import { useSuppliers } from './data/useSuppliers';
 import { Supplier } from './model/supplier';
 
 export function Suppliers() {
@@ -18,17 +18,17 @@ export function Suppliers() {
   );
 
   const columns: DataGridColumn<Supplier>[] = [
-    { header: t('suppliers.table.code'), field: 'code', width: 150 },
-    { header: t('suppliers.table.name'), field: 'name' },
-    { header: t('suppliers.table.website'), field: 'website', width: 200 },
-    { header: t('suppliers.table.email'), field: 'email', width: 200 },
+    { header: t('common.code'), field: 'code', width: 150 },
+    { header: t('common.name'), field: 'name' },
+    { header: t('common.website'), field: 'website', width: 200 },
+    { header: t('common.email'), field: 'email', width: 200 },
     {
-      header: t('suppliers.table.phoneNumber'),
+      header: t('common.phoneNumber'),
       field: 'phoneNumber',
       width: 150,
     },
-    { header: t('suppliers.table.iban'), field: 'iban', width: 200 },
-    { header: t('suppliers.table.bic'), field: 'bic', width: 100 },
+    { header: t('common.iban'), field: 'iban', width: 200 },
+    { header: t('common.bic'), field: 'bic', width: 100 },
     {
       header: '',
       width: 100,
@@ -65,13 +65,12 @@ export function Suppliers() {
     </div>
   );
 
-  const actions = [
+  const actions = (
     <Button variant="primary" className="w-100">
       <Plus size={16} className="me-2" />
       {t('suppliers.addButton')}
-    </Button>,
-  ];
-
+    </Button>
+  );
   const footerLabel = data?.suppliers?.totalCount
     ? t('suppliers.totalCount', {
         count: data.suppliers.totalCount,
@@ -93,7 +92,9 @@ export function Suppliers() {
       showFooter={!!data?.suppliers?.pageInfo}
       footerLabel={footerLabel}
       onNextPage={nextPage}
+      nextPageLabel={t('common.next')}
       onPrevPage={prevPage}
+      prevPageLabel={t('common.previous')}
       isNextPageDisabled={!data?.suppliers?.pageInfo?.hasNextPage}
       isPrevPageDisabled={!data?.suppliers?.pageInfo?.hasPreviousPage}
     >

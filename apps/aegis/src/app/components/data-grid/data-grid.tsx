@@ -30,9 +30,9 @@ function DataGrid<T>({ columns, data, keyAccessor }: DataGridProps<T>) {
     <Table responsive hover>
       <thead>
         <tr>
-          {columns.map((column) => (
+          {columns.map((column, index) => (
             <th
-              key={column.field as string}
+              key={`${column.field?.toString()}-${index}`}
               style={{ width: getWidth(column.width), textAlign: column.align }}
             >
               {column.header}
@@ -42,10 +42,10 @@ function DataGrid<T>({ columns, data, keyAccessor }: DataGridProps<T>) {
       </thead>
       <tbody>
         {data?.map((item, index) => (
-          <tr key={getKey(item, index)}>
+          <tr key={`${getKey(item, index)}-${index}`}>
             {columns.map((column) => (
               <td
-                key={column.field as string}
+                key={`${index}-${column.field?.toString()}`}
                 style={{
                   width: getWidth(column.width),
                   textAlign: column.align,

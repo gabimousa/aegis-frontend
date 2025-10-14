@@ -14,9 +14,12 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  * Learn more about it here: https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#reducing-bundle-size
  */
 type Documents = {
+  '\n  query Customers(\n    $first: Int\n    $last: Int\n    $after: String\n    $before: String\n    $where: CustomerFilterInput\n    $order: [CustomerSortInput!]\n  ) {\n    customers(\n      first: $first\n      last: $last\n      after: $after\n      before: $before\n      where: $where\n      order: $order\n    ) {\n      nodes {\n        id\n        code\n        name\n        website\n        email\n        phoneNumber\n        iban\n        bic\n      }\n      pageInfo {\n        hasNextPage\n        hasPreviousPage\n        startCursor\n        endCursor\n      }\n      totalCount\n    }\n  }\n': typeof types.CustomersDocument;
   '\n  query Suppliers(\n    $first: Int\n    $last: Int\n    $after: String\n    $before: String\n    $where: SupplierFilterInput\n    $order: [SupplierSortInput!]\n  ) {\n    suppliers(\n      first: $first\n      last: $last\n      after: $after\n      before: $before\n      where: $where\n      order: $order\n    ) {\n      nodes {\n        id\n        code\n        name\n        website\n        email\n        phoneNumber\n        iban\n        bic\n      }\n      pageInfo {\n        hasNextPage\n        hasPreviousPage\n        startCursor\n        endCursor\n      }\n      totalCount\n    }\n  }\n': typeof types.SuppliersDocument;
 };
 const documents: Documents = {
+  '\n  query Customers(\n    $first: Int\n    $last: Int\n    $after: String\n    $before: String\n    $where: CustomerFilterInput\n    $order: [CustomerSortInput!]\n  ) {\n    customers(\n      first: $first\n      last: $last\n      after: $after\n      before: $before\n      where: $where\n      order: $order\n    ) {\n      nodes {\n        id\n        code\n        name\n        website\n        email\n        phoneNumber\n        iban\n        bic\n      }\n      pageInfo {\n        hasNextPage\n        hasPreviousPage\n        startCursor\n        endCursor\n      }\n      totalCount\n    }\n  }\n':
+    types.CustomersDocument,
   '\n  query Suppliers(\n    $first: Int\n    $last: Int\n    $after: String\n    $before: String\n    $where: SupplierFilterInput\n    $order: [SupplierSortInput!]\n  ) {\n    suppliers(\n      first: $first\n      last: $last\n      after: $after\n      before: $before\n      where: $where\n      order: $order\n    ) {\n      nodes {\n        id\n        code\n        name\n        website\n        email\n        phoneNumber\n        iban\n        bic\n      }\n      pageInfo {\n        hasNextPage\n        hasPreviousPage\n        startCursor\n        endCursor\n      }\n      totalCount\n    }\n  }\n':
     types.SuppliersDocument,
 };
@@ -35,6 +38,12 @@ const documents: Documents = {
  */
 export function graphql(source: string): unknown;
 
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
+  source: '\n  query Customers(\n    $first: Int\n    $last: Int\n    $after: String\n    $before: String\n    $where: CustomerFilterInput\n    $order: [CustomerSortInput!]\n  ) {\n    customers(\n      first: $first\n      last: $last\n      after: $after\n      before: $before\n      where: $where\n      order: $order\n    ) {\n      nodes {\n        id\n        code\n        name\n        website\n        email\n        phoneNumber\n        iban\n        bic\n      }\n      pageInfo {\n        hasNextPage\n        hasPreviousPage\n        startCursor\n        endCursor\n      }\n      totalCount\n    }\n  }\n'
+): (typeof documents)['\n  query Customers(\n    $first: Int\n    $last: Int\n    $after: String\n    $before: String\n    $where: CustomerFilterInput\n    $order: [CustomerSortInput!]\n  ) {\n    customers(\n      first: $first\n      last: $last\n      after: $after\n      before: $before\n      where: $where\n      order: $order\n    ) {\n      nodes {\n        id\n        code\n        name\n        website\n        email\n        phoneNumber\n        iban\n        bic\n      }\n      pageInfo {\n        hasNextPage\n        hasPreviousPage\n        startCursor\n        endCursor\n      }\n      totalCount\n    }\n  }\n'];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
