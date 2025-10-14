@@ -75,10 +75,6 @@ function ListView({
           </div>
         </Col>
         <Col md={2} className="text-end">
-          {/* {actions?.map((action, index) => (
-            <span key={index}>{action}</span>
-          ))} */}
-
           {actions}
         </Col>
       </Row>
