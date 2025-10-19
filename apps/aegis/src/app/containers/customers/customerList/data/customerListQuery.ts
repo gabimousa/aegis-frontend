@@ -1,6 +1,6 @@
-import { graphql } from '../../../gql';
+import { graphql } from '../../../../gql';
 
-export const CustomersQuery = graphql(`
+export const CustomerListQuery = graphql(`
   query Customers(
     $first: Int
     $last: Int

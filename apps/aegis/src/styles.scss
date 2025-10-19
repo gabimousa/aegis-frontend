@@ -1,4 +1,16 @@
 /* You can add global styles to this file, and also import other style files */
 
 // Import Bootstrap CSS
-@import '../../../node_modules/bootstrap/dist/css/bootstrap.css';
+// @import '../../../node_modules/bootstrap/scss/bootstrap';
+@import './theme/bootstrap-overrides.scss';
+
+// @import './theme/custom.scss';
+
+html,
+body {
+  overflow: hidden;
+}
+
+.no-wrap {
+  white-space: nowrap;
+}

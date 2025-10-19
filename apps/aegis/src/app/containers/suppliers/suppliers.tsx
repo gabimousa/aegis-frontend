@@ -43,7 +43,11 @@ export function Suppliers() {
             >
               <Edit size={16} />
             </Button>
-            <Button variant="outline-danger" size="sm">
+            <Button
+              variant="outline-primary"
+              size="sm"
+              onClick={() => alert(supplier.name)}
+            >
               <Trash size={16} />
             </Button>
           </>
@@ -68,7 +72,7 @@ export function Suppliers() {
   const actions = (
     <Button variant="primary" className="w-100">
       <Plus size={16} className="me-2" />
-      {t('suppliers.addButton')}
+      {t('common.add')}
     </Button>
   );
   const footerLabel = data?.suppliers?.totalCount

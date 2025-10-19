@@ -1077,6 +1077,36 @@ export type UuidOperationFilterInput = {
   nlte?: InputMaybe<Scalars['UUID']['input']>;
 };
 
+export type CustomerByIdQueryVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+export type CustomerByIdQuery = {
+  __typename?: 'Query';
+  customerById?: {
+    __typename?: 'Customer';
+    id: string;
+    code: string;
+    name: string;
+    website?: string | null;
+    email?: string | null;
+    phoneNumber?: string | null;
+    iban?: string | null;
+    bic?: string | null;
+    addresses: Array<{
+      __typename?: 'Address';
+      id: any;
+      type: AddressType;
+      street?: string | null;
+      number?: string | null;
+      zipCode?: string | null;
+      city?: string | null;
+      state?: string | null;
+      countryCode?: Alpha3Code | null;
+    }>;
+  } | null;
+};
+
 export type CustomersQueryVariables = Exact<{
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
@@ -1147,6 +1177,87 @@ export type SuppliersQuery = {
   } | null;
 };
 
+export const CustomerByIdDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'CustomerById' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'customerById' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'id' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'id' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'code' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'website' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'email' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'phoneNumber' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'iban' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'bic' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'addresses' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'street' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'number' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'zipCode' },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'city' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'state' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'countryCode' },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<CustomerByIdQuery, CustomerByIdQueryVariables>;
 export const CustomersDocument = {
   kind: 'Document',
   definitions: [

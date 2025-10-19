@@ -1,13 +1,13 @@
 import { useQuery } from '@apollo/client/react';
-import { CustomersQueryVariables } from '../../../gql/graphql';
-import { CustomersQuery } from './customersQuery';
+import { CustomersQueryVariables } from '../../../../gql/graphql';
+import { CustomerListQuery } from './customerListQuery';
 
-export const useCustomers = (pageSize: number, searchTerm?: string) => {
+export const useCustomerList = (pageSize: number, searchTerm?: string) => {
   const variables: CustomersQueryVariables = { first: pageSize };
   if (searchTerm) {
     variables.where = { name: { contains: searchTerm } };
   }
-  const { data, loading, error, refetch } = useQuery(CustomersQuery, {
+  const { data, loading, error, refetch } = useQuery(CustomerListQuery, {
     variables,
   });
 

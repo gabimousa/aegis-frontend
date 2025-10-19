@@ -1,5 +1,6 @@
 /// <reference types='vitest' />
 import react from '@vitejs/plugin-react';
+import { deprecations } from 'sass';
 import { defineConfig } from 'vite';
 
 export default defineConfig(() => ({
@@ -43,6 +44,17 @@ export default defineConfig(() => ({
     coverage: {
       reportsDirectory: './test-output/vitest/coverage',
       provider: 'v8' as const,
+    },
+  },
+  css: {
+    preprocessorOptions: {
+      scss: {
+        silenceDeprecations: [
+          deprecations['color-functions'],
+          deprecations['global-builtin'],
+          deprecations['import'],
+        ],
+      },
     },
   },
 }));

@@ -27,11 +27,12 @@ function DataGrid<T>({ columns, data, keyAccessor }: DataGridProps<T>) {
   };
 
   return (
-    <Table responsive hover>
+    <Table responsive hover striped>
       <thead>
         <tr>
           {columns.map((column, index) => (
             <th
+              className="no-wrap"
               key={`${column.field?.toString()}-${index}`}
               style={{ width: getWidth(column.width), textAlign: column.align }}
             >
@@ -45,6 +46,7 @@ function DataGrid<T>({ columns, data, keyAccessor }: DataGridProps<T>) {
           <tr key={`${getKey(item, index)}-${index}`}>
             {columns.map((column) => (
               <td
+                className="no-wrap"
                 key={`${index}-${column.field?.toString()}`}
                 style={{
                   width: getWidth(column.width),

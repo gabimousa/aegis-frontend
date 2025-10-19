@@ -1,38 +1,44 @@
+import { useState } from 'react';
 import { Container, NavDropdown } from 'react-bootstrap';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import { useTranslation } from 'react-i18next';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useMatch } from 'react-router';
 import { Package, TruckDelivery, Users } from 'tabler-icons-react';
-import { useColorMode } from './theme/useColorMode';
-import styles from './topBar.module.scss';
+import { useColorMode } from '../theme/useColorMode';
 
 export const TopBar = () => {
   const { mode, setMode, isDark } = useColorMode();
   const { t, i18n } = useTranslation();
-  const location = useLocation();
+  const [expanded, setExpanded] = useState(false);
+  const homeIsActive = useMatch('/');
+  const customersIsActive = useMatch('/customers/*');
+  const articlesIsActive = useMatch('/articles/*');
+  const suppliersIsActive = useMatch('/suppliers/*');
 
   return (
-    <Navbar expand="lg" sticky="top" className={styles.navbar}>
+    <Navbar
+      expanded={expanded}
+      expand="lg"
+      bg="primary"
+      variant="dark"
+      onToggle={setExpanded}
+    >
       <Container fluid>
-        <Navbar.Brand as={Link} to="/" className={styles.brandLink}>
+        <Navbar.Brand as={Link} to="/">
           Aegis
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
-          <Nav
-            variant="underline"
-            className="me-auto"
-            activeKey={location.pathname}
-          >
-            <Nav.Link as={Link} to="/" eventKey="/" className={styles.navLink}>
+          <Nav variant="underline" className="me-auto">
+            <Nav.Link as={Link} to="/" eventKey="/" active={!!homeIsActive}>
               {t('common.home')}
             </Nav.Link>
             <Nav.Link
               as={Link}
               to="/suppliers"
               eventKey="/suppliers"
-              className={styles.navLink}
+              active={!!suppliersIsActive}
             >
               <TruckDelivery size={16} className="me-2" />
               {t('common.suppliers')}
@@ -41,7 +47,7 @@ export const TopBar = () => {
               as={Link}
               to="/articles"
               eventKey="/articles"
-              className={styles.navLink}
+              active={!!articlesIsActive}
             >
               <Package size={16} className="me-2" />
               {t('common.articles')}
@@ -50,15 +56,19 @@ export const TopBar = () => {
               as={Link}
               to="/customers"
               eventKey="/customers"
-              className={styles.navLink}
+              active={!!customersIsActive}
             >
               <Users size={16} className="me-2" />
               {t('common.customers')}
             </Nav.Link>
           </Nav>
-          <div className="d-flex gap-2 align-items-center">
+          <div
+            className={
+              'd-flex gap-3 align-items-center text-white px-2 mt-2 mt-lg-0'
+            }
+          >
             <NavDropdown
-              align="end"
+              align={expanded ? 'start' : 'end'}
               title={
                 i18n.language === 'nl' ? t('common.dutch') : t('common.english')
               }
@@ -75,7 +85,7 @@ export const TopBar = () => {
             <NavDropdown
               title={isDark ? t('Dark') : t('Light')}
               id="theme-dropdown"
-              align="end"
+              align={expanded ? 'start' : 'end'}
             >
               <NavDropdown.Item
                 onClick={() => setMode('light')}

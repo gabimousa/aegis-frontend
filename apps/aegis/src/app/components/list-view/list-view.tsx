@@ -1,4 +1,4 @@
-import { ReactElement, useState } from 'react';
+import { PropsWithChildren, ReactElement, useState } from 'react';
 import {
   Alert,
   Button,
@@ -10,7 +10,7 @@ import {
 } from 'react-bootstrap';
 import SearchInput from '../search-input/search-input';
 
-type ListViewProps = {
+type ListViewProps = PropsWithChildren<{
   header: string | ReactElement;
   searchPlaceholder?: string;
   actions?: ReactElement;
@@ -18,7 +18,6 @@ type ListViewProps = {
   loading: boolean;
   cardTitle: string | ReactElement;
   loadingLabel?: string;
-  children: ReactElement;
   showFooter?: boolean;
   nextPageLabel?: string | ReactElement;
   prevPageLabel?: string | ReactElement;
@@ -28,7 +27,7 @@ type ListViewProps = {
   onSearchChange: (value: string) => void;
   onPrevPage?: () => void;
   onNextPage?: () => void;
-};
+}>;
 
 function ListView({
   header,
@@ -59,13 +58,16 @@ function ListView({
   return (
     <Container fluid>
       <Row className="mb-4">
-        <Col>
-          <div className="d-flex align-items-center mb-3">{header}</div>
+        <Col md={10}>
+          <div className="d-flex align-items-center">{header}</div>
+        </Col>
+        <Col md={2} className="text-end">
+          {actions}
         </Col>
       </Row>
 
       <Row className="mb-3">
-        <Col md={10}>
+        <Col>
           <div className="d-flex">
             <SearchInput
               placeholder={searchPlaceholder}
@@ -73,9 +75,6 @@ function ListView({
               onSearchChange={handleSearchChange}
             />
           </div>
-        </Col>
-        <Col md={2} className="text-end">
-          {actions}
         </Col>
       </Row>
 

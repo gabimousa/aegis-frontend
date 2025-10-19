@@ -1,21 +1,27 @@
 import { useState } from 'react';
 import { Button } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
+import { useMatch, useNavigate } from 'react-router';
 import { Edit, Plus, Trash, Users } from 'tabler-icons-react';
-import DataGrid, { DataGridProps } from '../../components/data-grid/data-grid';
-import { DataGridColumn } from '../../components/data-grid/data-grid-column';
-import ListView from '../../components/list-view/list-view';
-import { useCustomers } from './data/useCustomers';
+import DataGrid, {
+  DataGridProps,
+} from '../../../components/data-grid/data-grid';
+import { DataGridColumn } from '../../../components/data-grid/data-grid-column';
+import MasterDetail from '../../../components/layout/master-detail/master-detail';
+import ListView from '../../../components/list-view/list-view';
+import { useCustomerList } from './data/useCustomerList';
 import { Customer } from './model/customer';
 
-export function Customers() {
+export function CustomerList() {
   const pageSize = 10;
+  const match = useMatch('/customers/:id');
   const { t } = useTranslation();
   const [searchTerm, setSearchTerm] = useState('');
-  const { data, loading, error, nextPage, prevPage } = useCustomers(
+  const { data, loading, error, nextPage, prevPage } = useCustomerList(
     pageSize,
     searchTerm
   );
+  const navigate = useNavigate();
 
   const columns: DataGridColumn<Customer>[] = [
     { header: t('common.code'), field: 'code', width: 150 },
@@ -39,11 +45,11 @@ export function Customers() {
               variant="outline-primary"
               size="sm"
               className="me-2"
-              onClick={() => alert(customer.name)}
+              onClick={() => navigate(`./${customer.id}`)}
             >
               <Edit size={16} />
             </Button>
-            <Button variant="outline-danger" size="sm">
+            <Button variant="outline-primary" size="sm">
               <Trash size={16} />
             </Button>
           </>
@@ -68,7 +74,7 @@ export function Customers() {
   const actions = (
     <Button variant="primary" className="w-100">
       <Plus size={16} className="me-2" />
-      {t('customers.addButton')}
+      {t('common.add')}
     </Button>
   );
   const footerLabel = data?.customers?.totalCount
@@ -78,28 +84,30 @@ export function Customers() {
     : '';
 
   return (
-    <ListView
-      header={title}
-      searchPlaceholder={t('customers.searchPlaceholder')}
-      onSearchChange={setSearchTerm}
-      actions={actions}
-      loading={loading}
-      loadingLabel={t('loading')}
-      errorMessage={
-        error && t('customers.errorLoading', { error: error?.message })
-      }
-      cardTitle={t('customers.listTitle')}
-      showFooter={!!data?.customers?.pageInfo}
-      footerLabel={footerLabel}
-      onNextPage={nextPage}
-      nextPageLabel={t('common.next')}
-      onPrevPage={prevPage}
-      prevPageLabel={t('common.previous')}
-      isNextPageDisabled={!data?.customers?.pageInfo?.hasNextPage}
-      isPrevPageDisabled={!data?.customers?.pageInfo?.hasPreviousPage}
-    >
-      <DataGrid {...dataGridProps} />
-    </ListView>
+    <MasterDetail detailsOpen={!!match}>
+      <ListView
+        header={title}
+        searchPlaceholder={t('customers.searchPlaceholder')}
+        onSearchChange={setSearchTerm}
+        actions={actions}
+        loading={loading}
+        loadingLabel={t('loading')}
+        errorMessage={
+          error && t('customers.errorLoading', { error: error?.message })
+        }
+        cardTitle={t('customers.listTitle')}
+        showFooter={!!data?.customers?.pageInfo}
+        footerLabel={footerLabel}
+        onNextPage={nextPage}
+        nextPageLabel={t('common.next')}
+        onPrevPage={prevPage}
+        prevPageLabel={t('common.previous')}
+        isNextPageDisabled={!data?.customers?.pageInfo?.hasNextPage}
+        isPrevPageDisabled={!data?.customers?.pageInfo?.hasPreviousPage}
+      >
+        <DataGrid {...dataGridProps} />
+      </ListView>
+    </MasterDetail>
   );
 }
-export default Customers;
+export default CustomerList;
