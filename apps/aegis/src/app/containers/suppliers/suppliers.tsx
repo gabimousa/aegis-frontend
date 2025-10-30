@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { Edit, Plus, Trash, TruckDelivery } from 'tabler-icons-react';
 import DataGrid, { DataGridProps } from '../../components/data-grid/data-grid';
 import { DataGridColumn } from '../../components/data-grid/data-grid-column';
-import ListView from '../../components/list-view/list-view';
+import ListView from '../../components/listView/listView';
 import { useSuppliers } from './data/useSuppliers';
 import { Supplier } from './model/supplier';
 

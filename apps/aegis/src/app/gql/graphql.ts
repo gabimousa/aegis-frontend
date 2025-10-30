@@ -2,24 +2,15 @@
 import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = T | null | undefined;
-export type Exact<T extends { [key: string]: unknown }> = {
-  [K in keyof T]: T[K];
+export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = {
+  [_ in K]?: never;
 };
-export type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
-  [SubKey in K]?: Maybe<T[SubKey]>;
-};
-export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
-  [SubKey in K]: Maybe<T[SubKey]>;
-};
-export type MakeEmpty<
-  T extends { [key: string]: unknown },
-  K extends keyof T
-> = { [_ in K]?: never };
 export type Incremental<T> =
   | T
-  | {
-      [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never;
-    };
+  | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: { input: string; output: string };
@@ -1077,35 +1068,110 @@ export type UuidOperationFilterInput = {
   nlte?: InputMaybe<Scalars['UUID']['input']>;
 };
 
+export type CustomerDetailsFieldsFragment = {
+  __typename?: 'Customer';
+  id: string;
+  code: string;
+  name: string;
+  website?: string | null;
+  email?: string | null;
+  phoneNumber?: string | null;
+  iban?: string | null;
+  bic?: string | null;
+} & { ' $fragmentName'?: 'CustomerDetailsFieldsFragment' };
+
+export type CustomerAddressesFieldsFragment = {
+  __typename?: 'Customer';
+  addresses: Array<{
+    __typename?: 'Address';
+    id: any;
+    type: AddressType;
+    street?: string | null;
+    number?: string | null;
+    zipCode?: string | null;
+    city?: string | null;
+    state?: string | null;
+    countryCode?: Alpha3Code | null;
+  }>;
+} & { ' $fragmentName'?: 'CustomerAddressesFieldsFragment' };
+
+export type UpdateCustomerDetailsMutationVariables = Exact<{
+  input: UpdateCustomerDetailsInput;
+}>;
+
+export type UpdateCustomerDetailsMutation = {
+  __typename?: 'Mutation';
+  updateCustomerDetails: {
+    __typename?: 'UpdateCustomerDetailsPayload';
+    customer?:
+      | ({ __typename?: 'Customer' } & {
+          ' $fragmentRefs'?: {
+            CustomerDetailsFieldsFragment: CustomerDetailsFieldsFragment;
+            CustomerAddressesFieldsFragment: CustomerAddressesFieldsFragment;
+          };
+        })
+      | null;
+    errors?: Array<{
+      __typename?: 'ApplicationError';
+      code: string;
+      description: string;
+      type: ErrorType;
+    }> | null;
+  };
+};
+
+export type RegisterCustomerMutationVariables = Exact<{
+  input: RegisterCustomerInput;
+}>;
+
+export type RegisterCustomerMutation = {
+  __typename?: 'Mutation';
+  registerCustomer: {
+    __typename?: 'RegisterCustomerPayload';
+    customer?:
+      | ({ __typename?: 'Customer' } & {
+          ' $fragmentRefs'?: {
+            CustomerDetailsFieldsFragment: CustomerDetailsFieldsFragment;
+            CustomerAddressesFieldsFragment: CustomerAddressesFieldsFragment;
+          };
+        })
+      | null;
+    errors?: Array<{
+      __typename?: 'ApplicationError';
+      code: string;
+      description: string;
+      type: ErrorType;
+    }> | null;
+  };
+};
+
 export type CustomerByIdQueryVariables = Exact<{
   id: Scalars['ID']['input'];
 }>;
 
 export type CustomerByIdQuery = {
   __typename?: 'Query';
-  customerById?: {
-    __typename?: 'Customer';
-    id: string;
-    code: string;
-    name: string;
-    website?: string | null;
-    email?: string | null;
-    phoneNumber?: string | null;
-    iban?: string | null;
-    bic?: string | null;
-    addresses: Array<{
-      __typename?: 'Address';
-      id: any;
-      type: AddressType;
-      street?: string | null;
-      number?: string | null;
-      zipCode?: string | null;
-      city?: string | null;
-      state?: string | null;
-      countryCode?: Alpha3Code | null;
-    }>;
-  } | null;
+  customerById?:
+    | ({ __typename?: 'Customer' } & {
+        ' $fragmentRefs'?: {
+          CustomerDetailsFieldsFragment: CustomerDetailsFieldsFragment;
+          CustomerAddressesFieldsFragment: CustomerAddressesFieldsFragment;
+        };
+      })
+    | null;
 };
+
+export type CustomerListFieldsFragment = {
+  __typename?: 'Customer';
+  id: string;
+  code: string;
+  name: string;
+  website?: string | null;
+  email?: string | null;
+  phoneNumber?: string | null;
+  iban?: string | null;
+  bic?: string | null;
+} & { ' $fragmentName'?: 'CustomerListFieldsFragment' };
 
 export type CustomersQueryVariables = Exact<{
   first?: InputMaybe<Scalars['Int']['input']>;
@@ -1121,17 +1187,11 @@ export type CustomersQuery = {
   customers?: {
     __typename?: 'CustomersConnection';
     totalCount: number;
-    nodes?: Array<{
-      __typename?: 'Customer';
-      id: string;
-      code: string;
-      name: string;
-      website?: string | null;
-      email?: string | null;
-      phoneNumber?: string | null;
-      iban?: string | null;
-      bic?: string | null;
-    }> | null;
+    nodes?: Array<
+      { __typename?: 'Customer' } & {
+        ' $fragmentRefs'?: { CustomerListFieldsFragment: CustomerListFieldsFragment };
+      }
+    > | null;
     pageInfo: {
       __typename?: 'PageInfo';
       hasNextPage: boolean;
@@ -1140,6 +1200,24 @@ export type CustomersQuery = {
       endCursor?: string | null;
     };
   } | null;
+};
+
+export type OnCustomerRegisteredSubscriptionVariables = Exact<{ [key: string]: never }>;
+
+export type OnCustomerRegisteredSubscription = {
+  __typename?: 'Subscription';
+  onCustomerRegistered: { __typename?: 'Customer' } & {
+    ' $fragmentRefs'?: { CustomerListFieldsFragment: CustomerListFieldsFragment };
+  };
+};
+
+export type OnUpdateCustomerDetailsSubscriptionVariables = Exact<{ [key: string]: never }>;
+
+export type OnUpdateCustomerDetailsSubscription = {
+  __typename?: 'Subscription';
+  onUpdateCustomerDetails: { __typename?: 'Customer' } & {
+    ' $fragmentRefs'?: { CustomerListFieldsFragment: CustomerListFieldsFragment };
+  };
 };
 
 export type SuppliersQueryVariables = Exact<{
@@ -1177,6 +1255,341 @@ export type SuppliersQuery = {
   } | null;
 };
 
+export const CustomerDetailsFieldsFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'CustomerDetailsFields' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Customer' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'code' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'website' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'email' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'phoneNumber' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'iban' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'bic' } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<CustomerDetailsFieldsFragment, unknown>;
+export const CustomerAddressesFieldsFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'CustomerAddressesFields' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Customer' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'addresses' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'street' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'number' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'zipCode' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'city' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'state' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'countryCode' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<CustomerAddressesFieldsFragment, unknown>;
+export const CustomerListFieldsFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'CustomerListFields' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Customer' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'code' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'website' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'email' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'phoneNumber' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'iban' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'bic' } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<CustomerListFieldsFragment, unknown>;
+export const UpdateCustomerDetailsDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'UpdateCustomerDetails' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'input' } },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'UpdateCustomerDetailsInput' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'updateCustomerDetails' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'input' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'input' } },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'customer' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'CustomerDetailsFields' },
+                      },
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'CustomerAddressesFields' },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'errors' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'InlineFragment',
+                        typeCondition: {
+                          kind: 'NamedType',
+                          name: { kind: 'Name', value: 'ApplicationError' },
+                        },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            { kind: 'Field', name: { kind: 'Name', value: 'code' } },
+                            { kind: 'Field', name: { kind: 'Name', value: 'description' } },
+                            { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'CustomerDetailsFields' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Customer' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'code' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'website' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'email' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'phoneNumber' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'iban' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'bic' } },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'CustomerAddressesFields' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Customer' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'addresses' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'street' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'number' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'zipCode' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'city' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'state' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'countryCode' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<UpdateCustomerDetailsMutation, UpdateCustomerDetailsMutationVariables>;
+export const RegisterCustomerDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'RegisterCustomer' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'input' } },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'RegisterCustomerInput' } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'registerCustomer' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'input' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'input' } },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'customer' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'CustomerDetailsFields' },
+                      },
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'CustomerAddressesFields' },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'errors' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'InlineFragment',
+                        typeCondition: {
+                          kind: 'NamedType',
+                          name: { kind: 'Name', value: 'ApplicationError' },
+                        },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            { kind: 'Field', name: { kind: 'Name', value: 'code' } },
+                            { kind: 'Field', name: { kind: 'Name', value: 'description' } },
+                            { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'CustomerDetailsFields' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Customer' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'code' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'website' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'email' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'phoneNumber' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'iban' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'bic' } },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'CustomerAddressesFields' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Customer' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'addresses' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'street' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'number' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'zipCode' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'city' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'state' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'countryCode' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<RegisterCustomerMutation, RegisterCustomerMutationVariables>;
 export const CustomerByIdDocument = {
   kind: 'Document',
   definitions: [
@@ -1204,52 +1617,62 @@ export const CustomerByIdDocument = {
               {
                 kind: 'Argument',
                 name: { kind: 'Name', value: 'id' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'id' },
-                },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
               },
             ],
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'code' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'website' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'email' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'phoneNumber' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'iban' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'bic' } },
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'CustomerDetailsFields' } },
                 {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'addresses' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'type' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'street' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'number' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'zipCode' },
-                      },
-                      { kind: 'Field', name: { kind: 'Name', value: 'city' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'state' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'countryCode' },
-                      },
-                    ],
-                  },
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'CustomerAddressesFields' },
                 },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'CustomerDetailsFields' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Customer' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'code' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'website' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'email' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'phoneNumber' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'iban' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'bic' } },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'CustomerAddressesFields' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Customer' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'addresses' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'street' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'number' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'zipCode' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'city' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'state' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'countryCode' } },
               ],
             },
           },
@@ -1268,10 +1691,7 @@ export const CustomersDocument = {
       variableDefinitions: [
         {
           kind: 'VariableDefinition',
-          variable: {
-            kind: 'Variable',
-            name: { kind: 'Name', value: 'first' },
-          },
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'first' } },
           type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
         },
         {
@@ -1281,45 +1701,27 @@ export const CustomersDocument = {
         },
         {
           kind: 'VariableDefinition',
-          variable: {
-            kind: 'Variable',
-            name: { kind: 'Name', value: 'after' },
-          },
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'after' } },
           type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
         },
         {
           kind: 'VariableDefinition',
-          variable: {
-            kind: 'Variable',
-            name: { kind: 'Name', value: 'before' },
-          },
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'before' } },
           type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
         },
         {
           kind: 'VariableDefinition',
-          variable: {
-            kind: 'Variable',
-            name: { kind: 'Name', value: 'where' },
-          },
-          type: {
-            kind: 'NamedType',
-            name: { kind: 'Name', value: 'CustomerFilterInput' },
-          },
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'where' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'CustomerFilterInput' } },
         },
         {
           kind: 'VariableDefinition',
-          variable: {
-            kind: 'Variable',
-            name: { kind: 'Name', value: 'order' },
-          },
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'order' } },
           type: {
             kind: 'ListType',
             type: {
               kind: 'NonNullType',
-              type: {
-                kind: 'NamedType',
-                name: { kind: 'Name', value: 'CustomerSortInput' },
-              },
+              type: { kind: 'NamedType', name: { kind: 'Name', value: 'CustomerSortInput' } },
             },
           },
         },
@@ -1334,50 +1736,32 @@ export const CustomersDocument = {
               {
                 kind: 'Argument',
                 name: { kind: 'Name', value: 'first' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'first' },
-                },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'first' } },
               },
               {
                 kind: 'Argument',
                 name: { kind: 'Name', value: 'last' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'last' },
-                },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'last' } },
               },
               {
                 kind: 'Argument',
                 name: { kind: 'Name', value: 'after' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'after' },
-                },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'after' } },
               },
               {
                 kind: 'Argument',
                 name: { kind: 'Name', value: 'before' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'before' },
-                },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'before' } },
               },
               {
                 kind: 'Argument',
                 name: { kind: 'Name', value: 'where' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'where' },
-                },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'where' } },
               },
               {
                 kind: 'Argument',
                 name: { kind: 'Name', value: 'order' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'order' },
-                },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'order' } },
               },
             ],
             selectionSet: {
@@ -1389,20 +1773,10 @@ export const CustomersDocument = {
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'code' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
                       {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'website' },
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'CustomerListFields' },
                       },
-                      { kind: 'Field', name: { kind: 'Name', value: 'email' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'phoneNumber' },
-                      },
-                      { kind: 'Field', name: { kind: 'Name', value: 'iban' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'bic' } },
                     ],
                   },
                 },
@@ -1412,22 +1786,10 @@ export const CustomersDocument = {
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'hasNextPage' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'hasPreviousPage' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'startCursor' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'endCursor' },
-                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'hasNextPage' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'hasPreviousPage' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'startCursor' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'endCursor' } },
                     ],
                   },
                 },
@@ -1438,8 +1800,118 @@ export const CustomersDocument = {
         ],
       },
     },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'CustomerListFields' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Customer' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'code' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'website' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'email' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'phoneNumber' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'iban' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'bic' } },
+        ],
+      },
+    },
   ],
 } as unknown as DocumentNode<CustomersQuery, CustomersQueryVariables>;
+export const OnCustomerRegisteredDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'subscription',
+      name: { kind: 'Name', value: 'OnCustomerRegistered' },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'onCustomerRegistered' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'CustomerListFields' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'CustomerListFields' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Customer' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'code' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'website' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'email' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'phoneNumber' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'iban' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'bic' } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  OnCustomerRegisteredSubscription,
+  OnCustomerRegisteredSubscriptionVariables
+>;
+export const OnUpdateCustomerDetailsDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'subscription',
+      name: { kind: 'Name', value: 'onUpdateCustomerDetails' },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'onUpdateCustomerDetails' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'CustomerListFields' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'CustomerListFields' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Customer' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'code' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'website' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'email' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'phoneNumber' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'iban' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'bic' } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  OnUpdateCustomerDetailsSubscription,
+  OnUpdateCustomerDetailsSubscriptionVariables
+>;
 export const SuppliersDocument = {
   kind: 'Document',
   definitions: [
@@ -1450,10 +1922,7 @@ export const SuppliersDocument = {
       variableDefinitions: [
         {
           kind: 'VariableDefinition',
-          variable: {
-            kind: 'Variable',
-            name: { kind: 'Name', value: 'first' },
-          },
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'first' } },
           type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
         },
         {
@@ -1463,45 +1932,27 @@ export const SuppliersDocument = {
         },
         {
           kind: 'VariableDefinition',
-          variable: {
-            kind: 'Variable',
-            name: { kind: 'Name', value: 'after' },
-          },
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'after' } },
           type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
         },
         {
           kind: 'VariableDefinition',
-          variable: {
-            kind: 'Variable',
-            name: { kind: 'Name', value: 'before' },
-          },
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'before' } },
           type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
         },
         {
           kind: 'VariableDefinition',
-          variable: {
-            kind: 'Variable',
-            name: { kind: 'Name', value: 'where' },
-          },
-          type: {
-            kind: 'NamedType',
-            name: { kind: 'Name', value: 'SupplierFilterInput' },
-          },
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'where' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'SupplierFilterInput' } },
         },
         {
           kind: 'VariableDefinition',
-          variable: {
-            kind: 'Variable',
-            name: { kind: 'Name', value: 'order' },
-          },
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'order' } },
           type: {
             kind: 'ListType',
             type: {
               kind: 'NonNullType',
-              type: {
-                kind: 'NamedType',
-                name: { kind: 'Name', value: 'SupplierSortInput' },
-              },
+              type: { kind: 'NamedType', name: { kind: 'Name', value: 'SupplierSortInput' } },
             },
           },
         },
@@ -1516,50 +1967,32 @@ export const SuppliersDocument = {
               {
                 kind: 'Argument',
                 name: { kind: 'Name', value: 'first' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'first' },
-                },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'first' } },
               },
               {
                 kind: 'Argument',
                 name: { kind: 'Name', value: 'last' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'last' },
-                },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'last' } },
               },
               {
                 kind: 'Argument',
                 name: { kind: 'Name', value: 'after' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'after' },
-                },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'after' } },
               },
               {
                 kind: 'Argument',
                 name: { kind: 'Name', value: 'before' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'before' },
-                },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'before' } },
               },
               {
                 kind: 'Argument',
                 name: { kind: 'Name', value: 'where' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'where' },
-                },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'where' } },
               },
               {
                 kind: 'Argument',
                 name: { kind: 'Name', value: 'order' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'order' },
-                },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'order' } },
               },
             ],
             selectionSet: {
@@ -1574,15 +2007,9 @@ export const SuppliersDocument = {
                       { kind: 'Field', name: { kind: 'Name', value: 'id' } },
                       { kind: 'Field', name: { kind: 'Name', value: 'code' } },
                       { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'website' },
-                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'website' } },
                       { kind: 'Field', name: { kind: 'Name', value: 'email' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'phoneNumber' },
-                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'phoneNumber' } },
                       { kind: 'Field', name: { kind: 'Name', value: 'iban' } },
                       { kind: 'Field', name: { kind: 'Name', value: 'bic' } },
                     ],
@@ -1594,22 +2021,10 @@ export const SuppliersDocument = {
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'hasNextPage' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'hasPreviousPage' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'startCursor' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'endCursor' },
-                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'hasNextPage' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'hasPreviousPage' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'startCursor' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'endCursor' } },
                     ],
                   },
                 },

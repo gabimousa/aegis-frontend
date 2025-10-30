@@ -18,14 +18,7 @@ export const CustomerListQuery = graphql(`
       order: $order
     ) {
       nodes {
-        id
-        code
-        name
-        website
-        email
-        phoneNumber
-        iban
-        bic
+        ...CustomerListFields
       }
       pageInfo {
         hasNextPage

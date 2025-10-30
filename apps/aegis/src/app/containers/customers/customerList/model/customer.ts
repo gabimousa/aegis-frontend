@@ -1,5 +1,3 @@
-import { CustomersQuery } from '../../../../gql/graphql';
+import { CustomerListFieldsFragment, CustomersQuery } from '../../../../gql/graphql';
 
-export type Customer = NonNullable<
-  NonNullable<CustomersQuery['customers']>['nodes']
->[0];
+export type Customer = CustomerListFieldsFragment;

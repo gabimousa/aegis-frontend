@@ -1,7 +1,7 @@
 import { Outlet } from 'react-router';
 import styles from './app-shell.module.scss';
-import BodyWrapper from './body-wrapper/body-wrapper';
-import TopBar from './top-bar/top-bar';
+import BodyWrapper from './bodyWrapper/bodyWrapper';
+import TopBar from './topBar/topBar';
 function AppShell() {
   return (
     <div className={styles.layout}>

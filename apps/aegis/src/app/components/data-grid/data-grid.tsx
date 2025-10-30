@@ -1,13 +1,17 @@
-import { Table } from 'react-bootstrap';
+import { Button, Table } from 'react-bootstrap';
+import { Edit, Trash } from 'tabler-icons-react';
 import { DataGridColumn } from './data-grid-column';
+import styles from './data-grid.module.scss';
 
 export type DataGridProps<T> = {
   keyAccessor: keyof T | ((item: T) => string | number);
   columns: DataGridColumn<T>[];
   data: T[] | undefined;
+  onEdit?: (item: T) => void;
+  onDelete?: (item: T) => void;
 };
 
-function DataGrid<T>({ columns, data, keyAccessor }: DataGridProps<T>) {
+function DataGrid<T>({ columns, data, keyAccessor, onEdit, onDelete }: DataGridProps<T>) {
   const getKey = (item: T, index: number): string | number => {
     if (typeof item === 'object' && item !== null) {
       if (typeof keyAccessor === 'function') {
@@ -27,18 +31,19 @@ function DataGrid<T>({ columns, data, keyAccessor }: DataGridProps<T>) {
   };
 
   return (
-    <Table responsive hover striped>
+    <Table responsive hover striped className={styles.table}>
       <thead>
         <tr>
           {columns.map((column, index) => (
             <th
               className="no-wrap"
               key={`${column.field?.toString()}-${index}`}
-              style={{ width: getWidth(column.width), textAlign: column.align }}
+              style={{ minWidth: getWidth(column.width), textAlign: column.align }}
             >
               {column.header}
             </th>
           ))}
+          <th className="sticky-column" style={{ minWidth: '80px' }} />
         </tr>
       </thead>
       <tbody>
@@ -58,6 +63,21 @@ function DataGrid<T>({ columns, data, keyAccessor }: DataGridProps<T>) {
                   : column.field && String(item[column.field] ?? '')}
               </td>
             ))}
+            <td
+              className={styles.stickyColumn}
+              style={{ whiteSpace: 'nowrap', display: 'flex', gap: '8px' }}
+            >
+              {onEdit ? (
+                <Button variant="outline-secondary" size="sm" onClick={() => onEdit(item)}>
+                  <Edit size="16" />
+                </Button>
+              ) : null}
+              {onDelete ? (
+                <Button variant="outline-danger" size="sm" onClick={() => onDelete(item)}>
+                  <Trash size="16" />
+                </Button>
+              ) : null}
+            </td>
           </tr>
         ))}
       </tbody>

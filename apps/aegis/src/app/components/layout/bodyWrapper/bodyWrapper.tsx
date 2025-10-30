@@ -1,5 +1,5 @@
 import { PropsWithChildren } from 'react';
-import styles from './body-wrapper.module.scss';
+import styles from './bodyWrapper.module.scss';
 
 const BodyWrapper = ({ children }: PropsWithChildren) => (
   <div className={`${styles.bodyWrapper}`}>{children}</div>

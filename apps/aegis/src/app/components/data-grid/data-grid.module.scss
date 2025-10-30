@@ -1,0 +1,10 @@
+.table {
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.stickyColumn {
+  position: sticky;
+  right: 0;
+  z-index: 1;
+}

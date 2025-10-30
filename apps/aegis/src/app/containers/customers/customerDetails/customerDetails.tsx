@@ -1,29 +1,204 @@
-import { useMatch } from 'react-router';
+import { useEffect, useState } from 'react';
+import { Button, Col, Form, Row, Spinner } from 'react-bootstrap';
+import { useMatch, useNavigate } from 'react-router';
+import DetailsPanel from '../../../components/layout/detailsPanel/detailsPanel';
+import { RegisterCustomerInput, UpdateCustomerDetailsInput } from '../../../gql/graphql';
 import { useCustomerDetails } from './data/useCustomerDetails';
+import { Customer } from './model/customer';
 
 function CustomerDetails() {
+  const navigate = useNavigate();
   const match = useMatch('/customers/:id');
-  const { customer, loading, error } = useCustomerDetails(
+  const { customer, loading, error, saveError, save, saving } = useCustomerDetails(
     match?.params.id || ''
+  );
+  const [customerDetails, setCustomerDetails] = useState<Partial<Customer> | null>(null);
+  useEffect(() => {
+    setCustomerDetails({
+      name: customer?.name ?? '',
+      code: customer?.code ?? '',
+      website: customer?.website ?? undefined,
+      email: customer?.email ?? undefined,
+      phoneNumber: customer?.phoneNumber ?? undefined,
+      iban: customer?.iban ?? undefined,
+      bic: customer?.bic ?? undefined,
+    });
+  }, [customer]);
+  const [validated, setValidated] = useState(false);
+
+  const handleInputChange = (field: keyof Customer) => (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    setCustomerDetails((prevDetails) => ({
+      ...prevDetails,
+      [field]: value,
+    }));
+  };
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    event.stopPropagation();
+    const form = event.currentTarget;
+    setValidated(true);
+    if (!form.checkValidity()) {
+      return;
+    }
+
+    const idInput = customer?.id ? { id: customer.id } : {};
+    const result = await save({
+      ...idInput,
+      ...customerDetails,
+    } as RegisterCustomerInput | UpdateCustomerDetailsInput);
+    if (result) {
+      navigate('..');
+    }
+  };
+
+  const actions = (
+    <>
+      <Button variant="primary" type="submit">
+        {saving ? <Spinner animation="border" size="sm" className="me-2" /> : null}
+        Save Changes
+      </Button>
+      <Button variant="secondary" onClick={() => navigate('..')}>
+        Cancel
+      </Button>
+    </>
   );
 
   return (
-    <div>
-      {customer && (
-        <div>
-          <p>ID: {customer.id}</p>
-          <p>Name: {customer.name}</p>
-          <p>Code: {customer.code}</p>
-          <p>Website: {customer.website}</p>
-          <p>Email: {customer.email}</p>
-          <p>Phone Number: {customer.phoneNumber}</p>
-          <p>IBAN: {customer.iban}</p>
-          <p>BIC: {customer.bic}</p>
-        </div>
-      )}
-      {loading && <p>Loading...</p>}
-      {error && <p>Error: {error.message}</p>}
-    </div>
+    <Form className="h-100" noValidate validated={validated} onSubmit={handleSubmit}>
+      <DetailsPanel
+        title={customer?.name || 'New Customer'}
+        onClose={() => navigate('..')}
+        actions={actions}
+        loading={loading || saving}
+      >
+        {
+          <>
+            <Form.Group as={Row} className="mb-3" controlId="customerCode">
+              <Form.Label column sm={3}>
+                Code
+              </Form.Label>
+              <Col sm={9}>
+                <Form.Control
+                  required
+                  type="text"
+                  placeholder="Enter customer code"
+                  value={customerDetails?.code || ''}
+                  onChange={handleInputChange('code')}
+                />
+              </Col>
+              <Form.Control.Feedback type="invalid">
+                Please provide a valid code.
+              </Form.Control.Feedback>
+            </Form.Group>
+
+            <Form.Group as={Row} className="mb-3" controlId="customerName">
+              <Form.Label column sm={3}>
+                Name
+              </Form.Label>
+              <Col sm={9}>
+                <Form.Control
+                  required
+                  type="text"
+                  placeholder="Enter customer name"
+                  value={customerDetails?.name || ''}
+                  onChange={handleInputChange('name')}
+                />
+              </Col>
+              <Form.Control.Feedback type="invalid">
+                Please provide a valid name.
+              </Form.Control.Feedback>
+            </Form.Group>
+
+            <Form.Group as={Row} className="mb-3" controlId="customerWebsite">
+              <Form.Label column sm={3}>
+                Website
+              </Form.Label>
+              <Col sm={9}>
+                <Form.Control
+                  type="text"
+                  placeholder="Enter customer website"
+                  value={customerDetails?.website || ''}
+                  onChange={handleInputChange('website')}
+                />
+              </Col>
+            </Form.Group>
+
+            <Form.Group as={Row} className="mb-3" controlId="customerEmail">
+              <Form.Label column sm={3}>
+                Email
+              </Form.Label>
+              <Col sm={9}>
+                <Form.Control
+                  type="email"
+                  placeholder="Enter customer email"
+                  value={customerDetails?.email || ''}
+                  onChange={handleInputChange('email')}
+                />
+              </Col>
+              <Form.Control.Feedback type="invalid">
+                Please provide a valid email.
+              </Form.Control.Feedback>
+            </Form.Group>
+
+            <Form.Group as={Row} className="mb-3" controlId="customerPhoneNumber">
+              <Form.Label column sm={3}>
+                Phone Number
+              </Form.Label>
+              <Col sm={9}>
+                <Form.Control
+                  type="tel"
+                  placeholder="Enter customer phone number"
+                  value={customerDetails?.phoneNumber || ''}
+                  onChange={handleInputChange('phoneNumber')}
+                />
+              </Col>
+              <Form.Control.Feedback type="invalid">
+                Please provide a valid phone number.
+              </Form.Control.Feedback>
+            </Form.Group>
+
+            <Form.Group as={Row} className="mb-3" controlId="customerIban">
+              <Form.Label column sm={3}>
+                IBAN
+              </Form.Label>
+              <Col sm={9}>
+                <Form.Control
+                  type="text"
+                  placeholder="Enter customer IBAN"
+                  value={customerDetails?.iban || ''}
+                  onChange={handleInputChange('iban')}
+                />
+              </Col>
+              <Form.Control.Feedback type="invalid">
+                Please provide a valid IBAN.
+              </Form.Control.Feedback>
+            </Form.Group>
+
+            <Form.Group as={Row} className="mb-3" controlId="customerBic">
+              <Form.Label column sm={3}>
+                BIC
+              </Form.Label>
+              <Col sm={9}>
+                <Form.Control
+                  type="text"
+                  placeholder="Enter customer BIC"
+                  value={customerDetails?.bic || ''}
+                  onChange={handleInputChange('bic')}
+                />
+              </Col>
+              <Form.Control.Feedback type="invalid">
+                Please provide a valid BIC.
+              </Form.Control.Feedback>
+            </Form.Group>
+          </>
+        }
+
+        {error && <p>Error: {error.message}</p>}
+        {saveError && <p>Error: {saveError.description}</p>}
+      </DetailsPanel>
+    </Form>
   );
 }
 export default CustomerDetails;

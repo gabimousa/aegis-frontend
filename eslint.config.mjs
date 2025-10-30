@@ -42,6 +42,21 @@ export default [
       '**/*.mjs',
     ],
     // Override or add rules here
-    rules: {},
+    rules: {
+      'max-len': [
+        'warn',
+        {
+          code: 100, // Maximum line length
+          tabWidth: 2, // Tab width for calculating line length
+          ignoreComments: true, // Ignore comments
+          ignoreTrailingComments: true, // Ignore trailing comments
+          ignoreUrls: true, // Ignore URLs
+          ignoreStrings: true, // Ignore string literals
+          ignoreTemplateLiterals: true, // Ignore template literals
+          ignoreRegExpLiterals: true, // Ignore RegExp literals
+          ignorePattern: '^import\\s.+\\sfrom\\s.+;?$', // Ignore import statements
+        },
+      ],
+    },
   },
 ];

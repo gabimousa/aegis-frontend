@@ -1,14 +1,20 @@
 import { PropsWithChildren } from 'react';
-import { Link, Outlet, useNavigate } from 'react-router';
-import styles from './master-detail.module.scss';
+import { Outlet } from 'react-router';
+import styles from './masterDetail.module.scss';
 
-type MasterDetailProps = PropsWithChildren<{
+type MasterDetailProps = {
+  // title?: string;
   detailsOpen: boolean;
-}>;
+  // closeOnBackdropClick?: boolean;
+  // onClose?: () => void;
+  onBackdropClick?: () => void;
+};
 
-function MasterDetail({ detailsOpen, children }: MasterDetailProps) {
-  const navigate = useNavigate();
-
+function MasterDetail({
+  detailsOpen,
+  onBackdropClick,
+  children,
+}: PropsWithChildren<MasterDetailProps>) {
   return (
     <div className={styles.wrap}>
       {/* Full-screen list behind the panel */}
@@ -19,27 +25,30 @@ function MasterDetail({ detailsOpen, children }: MasterDetailProps) {
       <button
         className={`${styles.backdrop} ${detailsOpen ? styles.show : ''}`}
         aria-hidden={!detailsOpen}
-        onClick={() => navigate({ pathname: '' })}
+        onClick={() => onBackdropClick && onBackdropClick()}
       />
       {/* Sliding details panel (renders Outlet when :id matches) */}
       <section
         className={`${styles.panel} ${detailsOpen ? styles.open : ''}`}
         aria-hidden={!detailsOpen}
       >
-        <div className={styles.panelHeader}>
-          <Link
-            to=""
-            relative="path"
+        <Outlet />
+        {/* <div
+          className={`${styles.panelHeader} d-flex justify-content-between align-items-center`}
+        >
+          <h2>{title}</h2>
+          <Button
             aria-label="Close details"
-            className={styles.close}
+            variant="outline-primary"
+            size="sm"
+            onClick={() => onClose && onClose()}
           >
             ✕
-          </Link>
-          <h2>Details</h2>
+          </Button>
         </div>
         <div className={styles.panelBody}>
           <Outlet />
-        </div>
+        </div> */}
       </section>
     </div>
   );

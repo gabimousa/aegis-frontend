@@ -1,5 +1,5 @@
 import { Link, useMatch } from 'react-router';
-import MasterDetail from '../../../components/layout/master-detail/master-detail';
+import MasterDetail from '../../../components/layout/masterDetail/masterDetail';
 
 export function ArticleList() {
   const match = useMatch('/articles/:id');
