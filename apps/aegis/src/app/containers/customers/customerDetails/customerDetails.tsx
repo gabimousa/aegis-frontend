@@ -1,17 +1,31 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Button, Col, Form, Row, Spinner } from 'react-bootstrap';
 import { useMatch, useNavigate } from 'react-router';
 import DetailsPanel from '../../../components/layout/detailsPanel/detailsPanel';
 import { RegisterCustomerInput, UpdateCustomerDetailsInput } from '../../../gql/graphql';
-import { useCustomerDetails } from './data/useCustomerDetails';
-import { Customer } from './model/customer';
+import CustomersDataContext from '../customersContext';
+import { Customer } from '../model/customer';
 
 function CustomerDetails() {
   const navigate = useNavigate();
   const match = useMatch('/customers/:id');
-  const { customer, loading, error, saveError, save, saving } = useCustomerDetails(
-    match?.params.id || ''
-  );
+  const {
+    selectCustomer,
+    selectedCustomer: customer,
+    loadingCustomerDetails,
+    loadingCustomerDetailsError,
+    saveCustomerDetails,
+    savingCustomerDetails,
+    customerDetailsSaveErrors,
+  } = useContext(CustomersDataContext);
+
+  useEffect(() => {
+    const customerId = match?.params.id;
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    selectCustomer(customerId!);
+    return () => selectCustomer(undefined);
+  }, [match?.params.id, selectCustomer]);
+
   const [customerDetails, setCustomerDetails] = useState<Partial<Customer> | null>(null);
   useEffect(() => {
     setCustomerDetails({
@@ -44,7 +58,7 @@ function CustomerDetails() {
     }
 
     const idInput = customer?.id ? { id: customer.id } : {};
-    const result = await save({
+    const result = await saveCustomerDetails({
       ...idInput,
       ...customerDetails,
     } as RegisterCustomerInput | UpdateCustomerDetailsInput);
@@ -56,7 +70,7 @@ function CustomerDetails() {
   const actions = (
     <>
       <Button variant="primary" type="submit">
-        {saving ? <Spinner animation="border" size="sm" className="me-2" /> : null}
+        {savingCustomerDetails ? <Spinner animation="border" size="sm" className="me-2" /> : null}
         Save Changes
       </Button>
       <Button variant="secondary" onClick={() => navigate('..')}>
@@ -71,7 +85,7 @@ function CustomerDetails() {
         title={customer?.name || 'New Customer'}
         onClose={() => navigate('..')}
         actions={actions}
-        loading={loading || saving}
+        loading={loadingCustomerDetails || savingCustomerDetails}
       >
         {
           <>
@@ -195,8 +209,11 @@ function CustomerDetails() {
           </>
         }
 
-        {error && <p>Error: {error.message}</p>}
-        {saveError && <p>Error: {saveError.description}</p>}
+        {loadingCustomerDetailsError && <p>Error: {loadingCustomerDetailsError.message}</p>}
+        {customerDetailsSaveErrors &&
+          customerDetailsSaveErrors.map((error) => (
+            <p key={error.code}>Error: {error.description}</p>
+          ))}
       </DetailsPanel>
     </Form>
   );

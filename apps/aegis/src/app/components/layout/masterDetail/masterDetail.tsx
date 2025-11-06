@@ -33,22 +33,6 @@ function MasterDetail({
         aria-hidden={!detailsOpen}
       >
         <Outlet />
-        {/* <div
-          className={`${styles.panelHeader} d-flex justify-content-between align-items-center`}
-        >
-          <h2>{title}</h2>
-          <Button
-            aria-label="Close details"
-            variant="outline-primary"
-            size="sm"
-            onClick={() => onClose && onClose()}
-          >
-            ✕
-          </Button>
-        </div>
-        <div className={styles.panelBody}>
-          <Outlet />
-        </div> */}
       </section>
     </div>
   );

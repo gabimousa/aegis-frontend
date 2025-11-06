@@ -5,6 +5,7 @@ import ArticleList from './containers/articles/articleList/articleList';
 import CustomerDetails from './containers/customers/customerDetails/customerDetails';
 import CustomerList from './containers/customers/customerList/customerList';
 import Suppliers from './containers/suppliers/suppliers';
+import Customers from './containers/customers/customers';
 
 export const router = createBrowserRouter([
   {
@@ -20,7 +21,7 @@ export const router = createBrowserRouter([
       },
       {
         path: '/customers',
-        element: <CustomerList />,
+        element: <Customers />,
         children: [
           {
             path: '/customers/:id',

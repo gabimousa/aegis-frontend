@@ -1,13 +1,5 @@
 import { PropsWithChildren, ReactElement, useState } from 'react';
-import {
-  Alert,
-  Button,
-  Card,
-  Col,
-  Container,
-  Row,
-  Spinner,
-} from 'react-bootstrap';
+import { Alert, Button, Card, Col, Container, Row, Spinner } from 'react-bootstrap';
 import SearchInput from '../search-input/search-input';
 
 type ListViewProps = PropsWithChildren<{

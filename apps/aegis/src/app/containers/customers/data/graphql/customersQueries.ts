@@ -1,7 +1,7 @@
 import { graphql } from '../../../../gql';
 
-export const CustomerListQuery = graphql(`
-  query Customers(
+export const CustomersQuery = graphql(`
+  query customers(
     $first: Int
     $last: Int
     $after: String
@@ -18,7 +18,7 @@ export const CustomerListQuery = graphql(`
       order: $order
     ) {
       nodes {
-        ...CustomerListFields
+        ...CustomerFields
       }
       pageInfo {
         hasNextPage
@@ -27,6 +27,17 @@ export const CustomerListQuery = graphql(`
         endCursor
       }
       totalCount
+    }
+  }
+`);
+
+export const customerDetailsQuery = graphql(`
+  query CustomerDetails($id: ID!) {
+    customerById(id: $id) {
+      ...CustomerFields
+      addresses {
+        ...CustomerAddressFields
+      }
     }
   }
 `);

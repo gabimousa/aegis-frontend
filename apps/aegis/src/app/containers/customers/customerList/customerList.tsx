@@ -1,25 +1,30 @@
-import { useState } from 'react';
+import { useContext } from 'react';
 import { Button } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
-import { useMatch, useNavigate } from 'react-router';
+import { useNavigate } from 'react-router';
 import { Plus, Users } from 'tabler-icons-react';
 import DataGrid, { DataGridProps } from '../../../components/data-grid/data-grid';
 import { DataGridColumn } from '../../../components/data-grid/data-grid-column';
-import MasterDetail from '../../../components/layout/masterDetail/masterDetail';
 import ListView from '../../../components/listView/listView';
-import { useCustomerList } from './data/useCustomerList';
-import { Customer } from './model/customer';
+import CustomersDataContext from '../customersContext';
+import { Customer } from '../model/customer';
 
 export function CustomerList() {
-  const pageSize = 10;
-  const match = useMatch('/customers/:id');
-  const { t } = useTranslation();
-  const [searchTerm, setSearchTerm] = useState('');
-  const { customers, pageInfo, totalCount, loading, error, nextPage, prevPage } = useCustomerList(
-    pageSize,
-    searchTerm
-  );
   const navigate = useNavigate();
+  const { t } = useTranslation();
+  const {
+    customers,
+    loadingCustomers,
+    loadingCustomersError,
+    setSearchTerm,
+    pageInfo,
+    totalCount,
+    nextPage,
+    prevPage,
+    deactivate,
+    deactivatingCustomer,
+    deactivatingCustomerErrors,
+  } = useContext(CustomersDataContext);
 
   const columns: DataGridColumn<Customer>[] = [
     { header: t('common.code'), field: 'code', width: 150 },
@@ -43,7 +48,7 @@ export function CustomerList() {
     columns,
     data: customers ?? [],
     onEdit: (item) => navigate(`./${item.id}`),
-    onDelete: (item) => console.log('Delete', item),
+    onDelete: (item) => deactivate(item.id),
   };
 
   const title = (
@@ -60,28 +65,29 @@ export function CustomerList() {
     : '';
 
   return (
-    <MasterDetail detailsOpen={!!match} onBackdropClick={() => navigate('')}>
-      <ListView
-        header={title}
-        searchPlaceholder={t('customers.searchPlaceholder')}
-        onSearchChange={setSearchTerm}
-        actions={actions}
-        loading={loading}
-        loadingLabel={t('loading')}
-        errorMessage={error && t('customers.errorLoading', { error: error?.message })}
-        cardTitle={t('customers.listTitle')}
-        showFooter={!!pageInfo}
-        footerLabel={footerLabel}
-        onNextPage={nextPage}
-        nextPageLabel={t('common.next')}
-        onPrevPage={prevPage}
-        prevPageLabel={t('common.previous')}
-        isNextPageDisabled={!pageInfo?.hasNextPage}
-        isPrevPageDisabled={!pageInfo?.hasPreviousPage}
-      >
-        <DataGrid {...dataGridProps} />
-      </ListView>
-    </MasterDetail>
+    <ListView
+      header={title}
+      searchPlaceholder={t('customers.searchPlaceholder')}
+      onSearchChange={setSearchTerm}
+      actions={actions}
+      loading={loadingCustomers || deactivatingCustomer}
+      loadingLabel={t('loading')}
+      errorMessage={
+        loadingCustomersError &&
+        t('customers.errorLoading', { error: loadingCustomersError?.message })
+      }
+      cardTitle={t('customers.listTitle')}
+      showFooter={!!pageInfo}
+      footerLabel={footerLabel}
+      onNextPage={nextPage}
+      nextPageLabel={t('common.next')}
+      onPrevPage={prevPage}
+      prevPageLabel={t('common.previous')}
+      isNextPageDisabled={!pageInfo?.hasNextPage}
+      isPrevPageDisabled={!pageInfo?.hasPreviousPage}
+    >
+      <DataGrid {...dataGridProps} />
+    </ListView>
   );
 }
 export default CustomerList;

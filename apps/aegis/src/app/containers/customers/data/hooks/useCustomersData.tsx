@@ -1,0 +1,86 @@
+import { useMutation, useQuery } from '@apollo/client/react';
+import { useState } from 'react';
+import { ApplicationError, CustomersQueryVariables } from '../../../../gql/graphql';
+import { Customer } from '../../model/customer';
+import { deactivateCustomerMutation } from '../graphql/customersMutations';
+import { CustomersQuery } from '../graphql/customersQueries';
+
+type useCustomersDataProps = {
+  pageSize: number;
+  searchTerm?: string;
+  onCustomerDeactivated?: (customerId: string) => void;
+};
+
+export const useCustomersData = ({
+  pageSize,
+  searchTerm,
+  onCustomerDeactivated,
+}: useCustomersDataProps) => {
+  const variables: CustomersQueryVariables = { first: pageSize };
+  if (searchTerm) {
+    variables.where = { name: { contains: searchTerm } };
+  }
+
+  const { data, loading, error, refetch } = useQuery(CustomersQuery, {
+    variables,
+  });
+
+  const [deactivatingCustomer, setDeactivatingCustomer] = useState(false);
+  const [deactivatingCustomerErrors, setDeactivatingCustomerErrors] = useState<
+    ApplicationError[] | undefined
+  >(undefined);
+  const [deactivateCustomer] = useMutation(deactivateCustomerMutation, {});
+
+  const nextPage = () => {
+    if (data?.customers?.pageInfo?.hasNextPage) {
+      refetch({
+        first: pageSize,
+        last: null,
+        before: null,
+        after: data.customers.pageInfo.endCursor,
+      });
+    }
+  };
+
+  const prevPage = () => {
+    if (data?.customers?.pageInfo?.hasPreviousPage) {
+      refetch({
+        first: null,
+        last: pageSize,
+        before: data.customers.pageInfo.startCursor,
+        after: null,
+      });
+    }
+  };
+
+  const refetchCurrentPage = () => {
+    refetch();
+  };
+
+  const deactivate = async (customerId: string): Promise<boolean> => {
+    setDeactivatingCustomer(true);
+    const result = await deactivateCustomer({ variables: { input: { id: customerId } } });
+    setDeactivatingCustomer(false);
+    if (result.data?.deactivateCustomer.errors?.length) {
+      setDeactivatingCustomerErrors(result.data.deactivateCustomer.errors);
+    } else {
+      onCustomerDeactivated?.(customerId);
+      setDeactivatingCustomerErrors(undefined);
+    }
+    return !result.data?.deactivateCustomer.errors?.length;
+  };
+
+  return {
+    customers: (data?.customers?.nodes as Customer[]) || [],
+    pageInfo: data?.customers?.pageInfo,
+    totalCount: data?.customers?.totalCount,
+    loading,
+    error,
+    refetchCurrentPage,
+    nextPage,
+    prevPage,
+    deactivate,
+    deactivatingCustomer,
+    deactivatingCustomerErrors,
+  };
+};

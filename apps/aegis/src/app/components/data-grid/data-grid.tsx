@@ -30,6 +30,9 @@ function DataGrid<T>({ columns, data, keyAccessor, onEdit, onDelete }: DataGridP
     return width ?? 'auto';
   };
 
+  const hasActionColumn = Boolean(onEdit || onDelete);
+  const numberOfActions = (onEdit ? 1 : 0) + (onDelete ? 1 : 0);
+
   return (
     <Table responsive hover striped className={styles.table}>
       <thead>
@@ -43,7 +46,9 @@ function DataGrid<T>({ columns, data, keyAccessor, onEdit, onDelete }: DataGridP
               {column.header}
             </th>
           ))}
-          <th className="sticky-column" style={{ minWidth: '80px' }} />
+          {hasActionColumn && (
+            <th className="sticky-column" style={{ width: `${numberOfActions * 50}px` }} />
+          )}
         </tr>
       </thead>
       <tbody>
@@ -63,21 +68,27 @@ function DataGrid<T>({ columns, data, keyAccessor, onEdit, onDelete }: DataGridP
                   : column.field && String(item[column.field] ?? '')}
               </td>
             ))}
-            <td
-              className={styles.stickyColumn}
-              style={{ whiteSpace: 'nowrap', display: 'flex', gap: '8px' }}
-            >
-              {onEdit ? (
-                <Button variant="outline-secondary" size="sm" onClick={() => onEdit(item)}>
-                  <Edit size="16" />
-                </Button>
-              ) : null}
-              {onDelete ? (
-                <Button variant="outline-danger" size="sm" onClick={() => onDelete(item)}>
-                  <Trash size="16" />
-                </Button>
-              ) : null}
-            </td>
+            {hasActionColumn && (
+              <td
+                className={styles.stickyColumn}
+                style={{
+                  whiteSpace: 'nowrap',
+                  display: 'flex',
+                  gap: '8px',
+                }}
+              >
+                {onEdit ? (
+                  <Button variant="outline-primary" size="sm" onClick={() => onEdit(item)}>
+                    <Edit size="16" />
+                  </Button>
+                ) : null}
+                {onDelete ? (
+                  <Button variant="outline-danger" size="sm" onClick={() => onDelete(item)}>
+                    <Trash size="16" />
+                  </Button>
+                ) : null}
+              </td>
+            )}
           </tr>
         ))}
       </tbody>
