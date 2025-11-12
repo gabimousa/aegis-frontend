@@ -1,15 +1,16 @@
-type key = string | number | symbol;
+type Result<T> = { [key: string]: T[] };
 
 export const toGroup = <T>(
   array: Array<T>,
-  keySelector: keyof T | ((item: T) => keyof T | string)
-): Record<key, T[]> => {
+  keySelector: keyof T | ((item: T) => string)
+): Result<T> => {
   const result = array.reduce((acc, item) => {
-    const key = typeof keySelector === 'function' ? keySelector(item) : keySelector;
+    const key =
+      typeof keySelector === 'function' ? keySelector(item) : `${item[keySelector] ?? ''}`;
     const currentValue = acc[key] ?? [];
     currentValue.push(item);
     acc[key] = currentValue;
     return acc;
-  }, {} as Record<key, T[]>);
+  }, {} as Result<T>);
   return result;
 };

@@ -1,10 +1,13 @@
-import { useContext, useEffect, useState } from 'react';
-import { Button, Col, Form, Row, Spinner } from 'react-bootstrap';
+import { useContext, useEffect } from 'react';
+import { Alert, Button, Col, Form, Row, Spinner } from 'react-bootstrap';
+import { useForm } from 'react-hook-form';
 import { useMatch, useNavigate } from 'react-router';
 import DetailsPanel from '../../../components/layout/detailsPanel/detailsPanel';
 import { RegisterCustomerInput, UpdateCustomerDetailsInput } from '../../../gql/graphql';
+import { toCamelCase } from '../../../utils/toCamelCase';
 import CustomersDataContext from '../customersContext';
-import { Customer } from '../model/customer';
+import { Customer } from '../model/customer.model';
+import formConfig from './formConfig';
 
 function CustomerDetails() {
   const navigate = useNavigate();
@@ -16,60 +19,88 @@ function CustomerDetails() {
     loadingCustomerDetailsError,
     saveCustomerDetails,
     savingCustomerDetails,
-    customerDetailsSaveErrors,
   } = useContext(CustomersDataContext);
 
+  const {
+    register,
+    handleSubmit,
+    reset,
+    setError,
+    formState: { errors, isValid },
+  } = useForm<Customer>({ mode: 'all' });
   useEffect(() => {
     const customerId = match?.params.id;
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    selectCustomer(customerId!);
+    selectCustomer(customerId);
     return () => selectCustomer(undefined);
   }, [match?.params.id, selectCustomer]);
 
-  const [customerDetails, setCustomerDetails] = useState<Partial<Customer> | null>(null);
   useEffect(() => {
-    setCustomerDetails({
-      name: customer?.name ?? '',
-      code: customer?.code ?? '',
-      website: customer?.website ?? undefined,
-      email: customer?.email ?? undefined,
-      phoneNumber: customer?.phoneNumber ?? undefined,
-      iban: customer?.iban ?? undefined,
-      bic: customer?.bic ?? undefined,
-    });
-  }, [customer]);
-  const [validated, setValidated] = useState(false);
+    reset(customer);
+  }, [customer, reset]);
 
-  const handleInputChange = (field: keyof Customer) => (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = e.target;
-    setCustomerDetails((prevDetails) => ({
-      ...prevDetails,
-      [field]: value,
-    }));
+  const onSubmit = async (customer: Customer) => {
+    const idInput = customer?.id ? { id: customer.id } : {};
+    try {
+      const result = await saveCustomerDetails({
+        ...idInput,
+        code: customer.code,
+        name: customer.name,
+        website: customer.website,
+        email: customer.email,
+        phoneNumber: customer.phoneNumber,
+        iban: customer.iban,
+        bic: customer.bic,
+      } as RegisterCustomerInput | UpdateCustomerDetailsInput);
+
+      result && navigate('..');
+    } catch (error) {
+      if (error && typeof error === 'object') {
+        if ('message' in error && typeof error.message === 'string') {
+          setError('root', { message: error.message });
+        } else {
+          Object.entries(error).forEach(([fieldName, fieldErrors]) => {
+            if (Array.isArray(fieldErrors)) {
+              const types = fieldErrors.reduce((acc, curr) => {
+                acc[curr.code] = curr.description;
+                return acc;
+              }, {} as Record<string, string>);
+              const formFieldName = toCamelCase(fieldName);
+              setError(formFieldName as keyof typeof formConfig, { types });
+            }
+          });
+        }
+      }
+    }
   };
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    event.stopPropagation();
-    const form = event.currentTarget;
-    setValidated(true);
-    if (!form.checkValidity()) {
-      return;
+  const renderFieldErrors = (fieldName: string) => {
+    const fieldErrors = Object.entries(errors)
+      .filter(([key, value]) => key.toLowerCase() === fieldName.toLowerCase() && value)
+      .map(([, value]) => value);
+
+    if (fieldErrors.length > 0) {
+      return (
+        <Form.Control.Feedback type="invalid">
+          {fieldErrors.map((fieldError, fieldErrorIndex) => {
+            return (
+              <div key={fieldName + fieldErrorIndex}>
+                {fieldError.message && <div>{fieldError.message}</div>}
+                {Object.values(fieldError.types || {}).map((errorMessage, idx) => (
+                  <div key={idx}>{errorMessage}</div>
+                ))}
+              </div>
+            );
+          })}
+        </Form.Control.Feedback>
+      );
     }
 
-    const idInput = customer?.id ? { id: customer.id } : {};
-    const result = await saveCustomerDetails({
-      ...idInput,
-      ...customerDetails,
-    } as RegisterCustomerInput | UpdateCustomerDetailsInput);
-    if (result) {
-      navigate('..');
-    }
+    return null;
   };
 
   const actions = (
     <>
-      <Button variant="primary" type="submit">
+      <Button variant="primary" type="submit" disabled={savingCustomerDetails || !isValid}>
         {savingCustomerDetails ? <Spinner animation="border" size="sm" className="me-2" /> : null}
         Save Changes
       </Button>
@@ -80,7 +111,7 @@ function CustomerDetails() {
   );
 
   return (
-    <Form className="h-100" noValidate validated={validated} onSubmit={handleSubmit}>
+    <Form className="h-100" noValidate onSubmit={handleSubmit(onSubmit)}>
       <DetailsPanel
         title={customer?.name || 'New Customer'}
         onClose={() => navigate('..')}
@@ -95,16 +126,13 @@ function CustomerDetails() {
               </Form.Label>
               <Col sm={9}>
                 <Form.Control
-                  required
                   type="text"
                   placeholder="Enter customer code"
-                  value={customerDetails?.code || ''}
-                  onChange={handleInputChange('code')}
+                  {...register('code', formConfig.code.config)}
+                  isInvalid={!!errors.code}
                 />
+                {renderFieldErrors('code')}
               </Col>
-              <Form.Control.Feedback type="invalid">
-                Please provide a valid code.
-              </Form.Control.Feedback>
             </Form.Group>
 
             <Form.Group as={Row} className="mb-3" controlId="customerName">
@@ -113,16 +141,13 @@ function CustomerDetails() {
               </Form.Label>
               <Col sm={9}>
                 <Form.Control
-                  required
                   type="text"
                   placeholder="Enter customer name"
-                  value={customerDetails?.name || ''}
-                  onChange={handleInputChange('name')}
+                  {...register('name', formConfig.name.config)}
+                  isInvalid={!!errors.name}
                 />
+                {renderFieldErrors('name')}
               </Col>
-              <Form.Control.Feedback type="invalid">
-                Please provide a valid name.
-              </Form.Control.Feedback>
             </Form.Group>
 
             <Form.Group as={Row} className="mb-3" controlId="customerWebsite">
@@ -133,9 +158,10 @@ function CustomerDetails() {
                 <Form.Control
                   type="text"
                   placeholder="Enter customer website"
-                  value={customerDetails?.website || ''}
-                  onChange={handleInputChange('website')}
+                  {...register('website', formConfig.website.config)}
+                  isInvalid={!!errors.website}
                 />
+                {renderFieldErrors('website')}
               </Col>
             </Form.Group>
 
@@ -147,13 +173,11 @@ function CustomerDetails() {
                 <Form.Control
                   type="email"
                   placeholder="Enter customer email"
-                  value={customerDetails?.email || ''}
-                  onChange={handleInputChange('email')}
+                  {...register('email', formConfig.email.config)}
+                  isInvalid={!!errors.email}
                 />
+                {renderFieldErrors('email')}
               </Col>
-              <Form.Control.Feedback type="invalid">
-                Please provide a valid email.
-              </Form.Control.Feedback>
             </Form.Group>
 
             <Form.Group as={Row} className="mb-3" controlId="customerPhoneNumber">
@@ -164,13 +188,11 @@ function CustomerDetails() {
                 <Form.Control
                   type="tel"
                   placeholder="Enter customer phone number"
-                  value={customerDetails?.phoneNumber || ''}
-                  onChange={handleInputChange('phoneNumber')}
+                  {...register('phoneNumber', formConfig.phoneNumber.config)}
+                  isInvalid={!!errors.phoneNumber}
                 />
+                {renderFieldErrors('phoneNumber')}
               </Col>
-              <Form.Control.Feedback type="invalid">
-                Please provide a valid phone number.
-              </Form.Control.Feedback>
             </Form.Group>
 
             <Form.Group as={Row} className="mb-3" controlId="customerIban">
@@ -181,13 +203,11 @@ function CustomerDetails() {
                 <Form.Control
                   type="text"
                   placeholder="Enter customer IBAN"
-                  value={customerDetails?.iban || ''}
-                  onChange={handleInputChange('iban')}
+                  {...register('iban', formConfig.iban.config)}
+                  isInvalid={!!errors.iban}
                 />
+                {renderFieldErrors('iban')}
               </Col>
-              <Form.Control.Feedback type="invalid">
-                Please provide a valid IBAN.
-              </Form.Control.Feedback>
             </Form.Group>
 
             <Form.Group as={Row} className="mb-3" controlId="customerBic">
@@ -198,22 +218,24 @@ function CustomerDetails() {
                 <Form.Control
                   type="text"
                   placeholder="Enter customer BIC"
-                  value={customerDetails?.bic || ''}
-                  onChange={handleInputChange('bic')}
+                  {...register('bic', formConfig.bic.config)}
+                  isInvalid={!!errors.bic}
                 />
+                {renderFieldErrors('bic')}
               </Col>
-              <Form.Control.Feedback type="invalid">
-                Please provide a valid BIC.
-              </Form.Control.Feedback>
             </Form.Group>
           </>
         }
 
         {loadingCustomerDetailsError && <p>Error: {loadingCustomerDetailsError.message}</p>}
-        {customerDetailsSaveErrors &&
-          customerDetailsSaveErrors.map((error) => (
-            <p key={error.code}>Error: {error.description}</p>
-          ))}
+        {errors.root &&
+          Object.values(errors.root.types || {})
+            .flatMap((v) => v)
+            .map((error, idx) => (
+              <p key={idx}>
+                <Alert variant="danger">{error}</Alert>
+              </p>
+            ))}
       </DetailsPanel>
     </Form>
   );

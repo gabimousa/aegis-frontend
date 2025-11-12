@@ -1,17 +1,13 @@
 import { useMutation, useQuery } from '@apollo/client/react';
 import { useState } from 'react';
-import {
-  ApplicationError,
-  RegisterCustomerInput,
-  UpdateCustomerDetailsInput,
-} from '../../../../gql/graphql';
-import { CustomerDetails } from '../../model/customerDetails';
+import { RegisterCustomerInput, UpdateCustomerDetailsInput } from '../../../../gql/graphql';
+import { toGroup } from '../../../../utils/toGroup';
+import { CustomerDetails } from '../../model/customerDetails.model';
 import {
   registerCustomerMutation,
   updateCustomerDetailsMutation,
 } from '../graphql/customersMutations';
 import { customerDetailsQuery } from '../graphql/customersQueries';
-import { toGroup } from '../../../../utils/toGroup';
 
 type useCustomerDetailsDataOptions = {
   id?: string;
@@ -27,9 +23,6 @@ export const useCustomerDetailsData = (options: useCustomerDetailsDataOptions) =
   });
   const [updateCustomerDetails] = useMutation(updateCustomerDetailsMutation);
   const [registerCustomer] = useMutation(registerCustomerMutation);
-  const [saveErrors, setSaveErrors] = useState<
-    Record<keyof ApplicationError, ApplicationError[]> | undefined
-  >(undefined);
   const [saving, setSaving] = useState(false);
 
   const save = async (
@@ -43,26 +36,23 @@ export const useCustomerDetailsData = (options: useCustomerDetailsDataOptions) =
         });
 
         if (updateResult.data?.updateCustomerDetails.errors?.length) {
-          setSaveErrors(toGroup(updateResult.data.updateCustomerDetails.errors, 'code'));
+          throw toGroup(updateResult.data.updateCustomerDetails.errors, 'fieldName');
         } else {
           if (updateResult.data) {
             onDataSaved?.(updateResult.data.updateCustomerDetails.customer as CustomerDetails);
-            setSaveErrors(undefined);
           }
         }
-        return !updateResult.data?.updateCustomerDetails.errors?.length;
       } else {
         const registerResult = await registerCustomer({ variables: { input } });
         if (registerResult.data?.registerCustomer.errors?.length) {
-          setSaveErrors(toGroup(registerResult.data.registerCustomer.errors, 'code'));
+          throw toGroup(registerResult.data.registerCustomer.errors, 'fieldName');
         } else {
           if (registerResult.data) {
             onDataSaved?.(registerResult.data.registerCustomer.customer as CustomerDetails);
-            setSaveErrors(undefined);
           }
         }
-        return !registerResult.data?.registerCustomer.errors?.length;
       }
+      return true;
     } finally {
       setSaving(false);
     }
@@ -72,7 +62,6 @@ export const useCustomerDetailsData = (options: useCustomerDetailsDataOptions) =
     customer: data?.customerById as CustomerDetails | undefined,
     loading,
     error,
-    saveErrors,
     save,
     saving,
   };

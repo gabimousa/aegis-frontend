@@ -6,10 +6,12 @@ import { Plus, Users } from 'tabler-icons-react';
 import DataGrid, { DataGridProps } from '../../../components/data-grid/data-grid';
 import { DataGridColumn } from '../../../components/data-grid/data-grid-column';
 import ListView from '../../../components/listView/listView';
+import { useConfirm } from '../../../hooks/useConfirm';
 import CustomersDataContext from '../customersContext';
-import { Customer } from '../model/customer';
+import { Customer } from '../model/customer.model';
 
 export function CustomerList() {
+  const { confirm } = useConfirm();
   const navigate = useNavigate();
   const { t } = useTranslation();
   const {
@@ -23,7 +25,6 @@ export function CustomerList() {
     prevPage,
     deactivate,
     deactivatingCustomer,
-    deactivatingCustomerErrors,
   } = useContext(CustomersDataContext);
 
   const columns: DataGridColumn<Customer>[] = [
@@ -48,7 +49,15 @@ export function CustomerList() {
     columns,
     data: customers ?? [],
     onEdit: (item) => navigate(`./${item.id}`),
-    onDelete: (item) => deactivate(item.id),
+    onDelete: async (item) => {
+      const confirmed = await confirm(
+        t('customers.deactivateCustomerTitle'),
+        t('customers.deactivateCustomerMessage', { name: item.name })
+      );
+      if (confirmed) {
+        await deactivate(item.id);
+      }
+    },
   };
 
   const title = (

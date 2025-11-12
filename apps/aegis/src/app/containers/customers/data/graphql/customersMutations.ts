@@ -14,6 +14,8 @@ export const registerCustomerMutation = graphql(`
           code
           description
           type
+          fieldName
+          message
         }
       }
     }
@@ -34,6 +36,8 @@ export const updateCustomerDetailsMutation = graphql(`
           code
           description
           type
+          fieldName
+          message
         }
       }
     }
@@ -48,6 +52,8 @@ export const deactivateCustomerMutation = graphql(`
           code
           description
           type
+          fieldName
+          message
         }
       }
     }

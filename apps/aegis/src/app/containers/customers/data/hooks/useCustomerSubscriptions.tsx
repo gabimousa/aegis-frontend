@@ -1,5 +1,5 @@
 import { useSubscription } from '@apollo/client/react';
-import { Customer } from '../../model/customer';
+import { Customer } from '../../model/customer.model';
 import {
   onCustomerDeactivatedSubscription,
   onCustomerDetailsUpdatedSubscription,

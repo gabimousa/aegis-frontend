@@ -343,6 +343,8 @@ export type ApplicationError = Error & {
   __typename?: 'ApplicationError';
   code: Scalars['String']['output'];
   description: Scalars['String']['output'];
+  fieldName?: Maybe<Scalars['String']['output']>;
+  message: Scalars['String']['output'];
   type: ErrorType;
 };
 
@@ -564,6 +566,8 @@ export type DiscontinueArticlePayload = {
 export type Error = {
   code: Scalars['String']['output'];
   description: Scalars['String']['output'];
+  fieldName?: Maybe<Scalars['String']['output']>;
+  message: Scalars['String']['output'];
   type: ErrorType;
 };
 
@@ -976,9 +980,9 @@ export type UpdateArticleDetailsInput = {
   description?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['ID']['input'];
   name?: InputMaybe<Scalars['String']['input']>;
-  price?: InputMaybe<Scalars['Decimal']['input']>;
+  price?: Scalars['Int']['input'];
   removedSuppliers?: InputMaybe<Array<IdInputOfGuidInput>>;
-  sellingUnit?: InputMaybe<Scalars['Decimal']['input']>;
+  sellingUnit?: Scalars['Int']['input'];
 };
 
 export type UpdateArticleDetailsPayload = {
@@ -1119,6 +1123,8 @@ export type RegisterCustomerMutation = {
       code: string;
       description: string;
       type: ErrorType;
+      fieldName?: string | null;
+      message: string;
     }> | null;
   };
 };
@@ -1146,6 +1152,8 @@ export type UpdateCustomerDetailsMutation = {
       code: string;
       description: string;
       type: ErrorType;
+      fieldName?: string | null;
+      message: string;
     }> | null;
   };
 };
@@ -1163,6 +1171,8 @@ export type DeactivateCustomerMutation = {
       code: string;
       description: string;
       type: ErrorType;
+      fieldName?: string | null;
+      message: string;
     }> | null;
   };
 };
@@ -1394,6 +1404,8 @@ export const RegisterCustomerDocument = {
                             { kind: 'Field', name: { kind: 'Name', value: 'code' } },
                             { kind: 'Field', name: { kind: 'Name', value: 'description' } },
                             { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                            { kind: 'Field', name: { kind: 'Name', value: 'fieldName' } },
+                            { kind: 'Field', name: { kind: 'Name', value: 'message' } },
                           ],
                         },
                       },
@@ -1521,6 +1533,8 @@ export const UpdateCustomerDetailsDocument = {
                             { kind: 'Field', name: { kind: 'Name', value: 'code' } },
                             { kind: 'Field', name: { kind: 'Name', value: 'description' } },
                             { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                            { kind: 'Field', name: { kind: 'Name', value: 'fieldName' } },
+                            { kind: 'Field', name: { kind: 'Name', value: 'message' } },
                           ],
                         },
                       },
@@ -1622,6 +1636,8 @@ export const DeactivateCustomerDocument = {
                             { kind: 'Field', name: { kind: 'Name', value: 'code' } },
                             { kind: 'Field', name: { kind: 'Name', value: 'description' } },
                             { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                            { kind: 'Field', name: { kind: 'Name', value: 'fieldName' } },
+                            { kind: 'Field', name: { kind: 'Name', value: 'message' } },
                           ],
                         },
                       },

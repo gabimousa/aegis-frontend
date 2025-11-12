@@ -8,7 +8,7 @@ import App from './app/app';
 import { ApolloLink } from '@apollo/client';
 import { GraphQLWsLink } from '@apollo/client/link/subscriptions';
 import { getMainDefinition } from '@apollo/client/utilities';
-import './i18n';
+import './translation/i18n';
 
 const httpLink = new HttpLink({ uri: '/graphql' });
 const wsLink = new GraphQLWsLink(

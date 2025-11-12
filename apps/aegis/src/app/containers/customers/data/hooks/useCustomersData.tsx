@@ -1,7 +1,7 @@
 import { useMutation, useQuery } from '@apollo/client/react';
 import { useState } from 'react';
 import { ApplicationError, CustomersQueryVariables } from '../../../../gql/graphql';
-import { Customer } from '../../model/customer';
+import { Customer } from '../../model/customer.model';
 import { deactivateCustomerMutation } from '../graphql/customersMutations';
 import { CustomersQuery } from '../graphql/customersQueries';
 
@@ -26,9 +26,6 @@ export const useCustomersData = ({
   });
 
   const [deactivatingCustomer, setDeactivatingCustomer] = useState(false);
-  const [deactivatingCustomerErrors, setDeactivatingCustomerErrors] = useState<
-    ApplicationError[] | undefined
-  >(undefined);
   const [deactivateCustomer] = useMutation(deactivateCustomerMutation, {});
 
   const nextPage = () => {
@@ -62,12 +59,11 @@ export const useCustomersData = ({
     const result = await deactivateCustomer({ variables: { input: { id: customerId } } });
     setDeactivatingCustomer(false);
     if (result.data?.deactivateCustomer.errors?.length) {
-      setDeactivatingCustomerErrors(result.data.deactivateCustomer.errors);
-    } else {
-      onCustomerDeactivated?.(customerId);
-      setDeactivatingCustomerErrors(undefined);
+      throw result.data.deactivateCustomer.errors;
     }
-    return !result.data?.deactivateCustomer.errors?.length;
+
+    onCustomerDeactivated?.(customerId);
+    return true;
   };
 
   return {
@@ -81,6 +77,5 @@ export const useCustomersData = ({
     prevPage,
     deactivate,
     deactivatingCustomer,
-    deactivatingCustomerErrors,
   };
 };

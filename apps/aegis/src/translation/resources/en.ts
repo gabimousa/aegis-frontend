@@ -1,0 +1,47 @@
+const en = {
+  translation: {
+    common: {
+      language: 'Language',
+      english: 'English',
+      dutch: 'Dutch',
+      home: 'Home',
+      suppliers: 'Suppliers',
+      articles: 'Articles',
+      customers: 'Customers',
+      name: 'Name',
+      website: 'Website',
+      email: 'Email',
+      phoneNumber: 'Phone Number',
+      iban: 'IBAN',
+      bic: 'BIC',
+      code: 'Code',
+      notResults: 'No results found.',
+      actions: 'Actions',
+      edit: 'Edit',
+      delete: 'Delete',
+      previous: 'Previous',
+      next: 'Next',
+      add: 'Add',
+      confirm: 'Confirm',
+      cancel: 'Cancel',
+    },
+    suppliers: {
+      title: 'Suppliers',
+      searchPlaceholder: 'Search suppliers...',
+      errorLoading: 'Error loading suppliers: {{error}}',
+      listTitle: 'Supplier List',
+      totalCount: 'Total: {{count}} suppliers',
+    },
+    customers: {
+      title: 'Customers',
+      searchPlaceholder: 'Search customers...',
+      errorLoading: 'Error loading customers: {{error}}',
+      listTitle: 'Customer List',
+      totalCount: 'Total: {{count}} customers',
+      deactivateCustomerTitle: 'Deactivate Customer',
+      deactivateCustomerMessage: 'Are you sure you want to deactivate customer "{{name}}"?',
+    },
+  },
+};
+
+export default en;

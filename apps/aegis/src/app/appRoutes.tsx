@@ -3,9 +3,8 @@ import AppShell from './components/layout/app-shell';
 import ArticleDetails from './containers/articles/articleDetails/articleDetails';
 import ArticleList from './containers/articles/articleList/articleList';
 import CustomerDetails from './containers/customers/customerDetails/customerDetails';
-import CustomerList from './containers/customers/customerList/customerList';
-import Suppliers from './containers/suppliers/suppliers';
 import Customers from './containers/customers/customers';
+import Suppliers from './containers/suppliers/suppliers';
 
 export const router = createBrowserRouter([
   {

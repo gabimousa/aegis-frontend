@@ -9,8 +9,8 @@ import {
 import { useCustomerDetailsData } from './data/hooks/useCustomerDetailsData';
 import { useCustomersData } from './data/hooks/useCustomersData';
 import { useCustomerSubscriptions } from './data/hooks/useCustomerSubscriptions';
-import { Customer } from './model/customer';
-import { CustomerDetails } from './model/customerDetails';
+import { Customer } from './model/customer.model';
+import { CustomerDetails } from './model/customerDetails.model';
 
 type CustomersContextType = {
   customers: Customer[];
@@ -30,10 +30,8 @@ type CustomersContextType = {
     input: RegisterCustomerInput | UpdateCustomerDetailsInput
   ) => Promise<boolean>;
   savingCustomerDetails?: boolean;
-  customerDetailsSaveErrors?: Record<keyof ApplicationError, ApplicationError[]>;
   deactivate: (customerId: string) => Promise<boolean>;
   deactivatingCustomer: boolean;
-  deactivatingCustomerErrors?: ApplicationError[];
 };
 
 export const CustomersDataContext = createContext<CustomersContextType>({
@@ -52,10 +50,8 @@ export const CustomersDataContext = createContext<CustomersContextType>({
   loadingCustomerDetailsError: undefined,
   saveCustomerDetails: async () => false,
   savingCustomerDetails: false,
-  customerDetailsSaveErrors: undefined,
   deactivate: async () => false,
   deactivatingCustomer: false,
-  deactivatingCustomerErrors: undefined,
 });
 
 export const CustomerDataProvider = ({ children }: PropsWithChildren) => {
@@ -71,7 +67,6 @@ export const CustomerDataProvider = ({ children }: PropsWithChildren) => {
     prevPage,
     deactivate,
     deactivatingCustomer,
-    deactivatingCustomerErrors,
   } = useCustomersData({
     pageSize: 10,
     searchTerm,
@@ -97,7 +92,6 @@ export const CustomerDataProvider = ({ children }: PropsWithChildren) => {
     error: loadingCustomerDetailsError,
     save: saveCustomerDetails,
     saving: savingCustomerDetails,
-    saveErrors: customerDetailsSaveErrors,
   } = useCustomerDetailsData({ id: selectedCustomerId });
 
   return (
@@ -118,10 +112,8 @@ export const CustomerDataProvider = ({ children }: PropsWithChildren) => {
         loadingCustomerDetailsError,
         saveCustomerDetails,
         savingCustomerDetails,
-        customerDetailsSaveErrors,
         deactivate,
         deactivatingCustomer,
-        deactivatingCustomerErrors,
       }}
     >
       {children}

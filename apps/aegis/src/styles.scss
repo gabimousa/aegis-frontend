@@ -14,3 +14,14 @@ body {
 .no-wrap {
   white-space: nowrap;
 }
+
+/* Disable validation icons globally */
+.was-validated .form-control:valid,
+.form-control.is-valid {
+  background-image: none !important;
+}
+
+.was-validated .form-control:invalid,
+.form-control.is-invalid {
+  background-image: none !important;
+}
