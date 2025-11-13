@@ -50,11 +50,9 @@ function ListView({
   return (
     <Container fluid>
       <Row className="mb-4">
-        <Col md={10}>
-          <div className="d-flex align-items-center">{header}</div>
-        </Col>
-        <Col md={2} className="text-end">
-          {actions}
+        <Col md={12} className="d-flex flex-wrap">
+          <div className="flex-grow-1 d-flex align-items-center">{header}</div>
+          <div className="flex-grow-0">{actions}</div>
         </Col>
       </Row>
 

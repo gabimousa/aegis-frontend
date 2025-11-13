@@ -24,6 +24,7 @@ const nl = {
       add: 'Toevoegen',
       confirm: 'Bevestigen',
       cancel: 'Annuleren',
+      save: 'Opslaan',
     },
     suppliers: {
       title: 'Leveranciers',
@@ -40,6 +41,14 @@ const nl = {
       totalCount: 'Totaal: {{count}} klanten',
       deactivateCustomerTitle: 'Klant deactiveren',
       deactivateCustomerMessage: 'Weet u zeker dat u klant "{{name}}" wilt deactiveren?',
+      newCustomer: 'Nieuwe klant',
+      enterCustomerCode: 'Voer klantcode in',
+      enterCustomerName: 'Voer klantnaam in',
+      enterCustomerWebsite: 'Voer klantwebsite in',
+      enterCustomerEmail: 'Voer klant-e-mail in',
+      enterCustomerPhoneNumber: 'Voer klanttelefoonnummer in',
+      enterCustomerIban: 'Voer klant-IBAN in',
+      enterCustomerBic: 'Voer klant-BIC in',
     },
   },
 };

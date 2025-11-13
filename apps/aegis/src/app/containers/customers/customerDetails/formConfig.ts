@@ -35,12 +35,12 @@ export const bicFormConfig: RegisterOptions<Customer, 'bic'> = {
 };
 
 const formConfig = {
-  code: { config: codeFormConfig },
-  name: { config: nameFormConfig },
-  website: { config: websiteFormConfig },
-  email: { config: emailFormConfig },
-  phoneNumber: { config: phoneNumberFormConfig },
-  iban: { config: ibanFormConfig },
-  bic: { config: bicFormConfig },
+  code: { registerConfig: codeFormConfig },
+  name: { registerConfig: nameFormConfig },
+  website: { registerConfig: websiteFormConfig },
+  email: { registerConfig: emailFormConfig },
+  phoneNumber: { registerConfig: phoneNumberFormConfig },
+  iban: { registerConfig: ibanFormConfig },
+  bic: { registerConfig: bicFormConfig },
 };
 export default formConfig;

@@ -38,7 +38,7 @@ export function CustomerList() {
   ];
 
   const actions = (
-    <Button variant="primary" className="w-100" onClick={() => navigate('./NEW')}>
+    <Button variant="primary" className="text-nowrap" onClick={() => navigate('./NEW')}>
       <Plus size={16} className="me-2" />
       {t('common.add')}
     </Button>

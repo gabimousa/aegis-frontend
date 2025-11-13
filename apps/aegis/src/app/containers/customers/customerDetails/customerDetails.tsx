@@ -1,10 +1,12 @@
 import { useContext, useEffect } from 'react';
 import { Alert, Button, Col, Form, Row, Spinner } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 import { useMatch, useNavigate } from 'react-router';
+import FieldErrorsFeedback from '../../../components/fieldErrorsFeedback/fieldErrorsFeedback';
 import DetailsPanel from '../../../components/layout/detailsPanel/detailsPanel';
 import { RegisterCustomerInput, UpdateCustomerDetailsInput } from '../../../gql/graphql';
-import { toCamelCase } from '../../../utils/toCamelCase';
+import setErrors from '../../../utils/setErrors';
 import CustomersDataContext from '../customersContext';
 import { Customer } from '../model/customer.model';
 import formConfig from './formConfig';
@@ -12,6 +14,7 @@ import formConfig from './formConfig';
 function CustomerDetails() {
   const navigate = useNavigate();
   const match = useMatch('/customers/:id');
+  const { t } = useTranslation();
   const {
     selectCustomer,
     selectedCustomer: customer,
@@ -26,7 +29,7 @@ function CustomerDetails() {
     handleSubmit,
     reset,
     setError,
-    formState: { errors, isValid },
+    formState: { errors, isValid, isDirty },
   } = useForm<Customer>({ mode: 'all' });
   useEffect(() => {
     const customerId = match?.params.id;
@@ -54,58 +57,22 @@ function CustomerDetails() {
 
       result && navigate('..');
     } catch (error) {
-      if (error && typeof error === 'object') {
-        if ('message' in error && typeof error.message === 'string') {
-          setError('root', { message: error.message });
-        } else {
-          Object.entries(error).forEach(([fieldName, fieldErrors]) => {
-            if (Array.isArray(fieldErrors)) {
-              const types = fieldErrors.reduce((acc, curr) => {
-                acc[curr.code] = curr.description;
-                return acc;
-              }, {} as Record<string, string>);
-              const formFieldName = toCamelCase(fieldName);
-              setError(formFieldName as keyof typeof formConfig, { types });
-            }
-          });
-        }
-      }
+      setErrors(error, setError);
     }
-  };
-
-  const renderFieldErrors = (fieldName: string) => {
-    const fieldErrors = Object.entries(errors)
-      .filter(([key, value]) => key.toLowerCase() === fieldName.toLowerCase() && value)
-      .map(([, value]) => value);
-
-    if (fieldErrors.length > 0) {
-      return (
-        <Form.Control.Feedback type="invalid">
-          {fieldErrors.map((fieldError, fieldErrorIndex) => {
-            return (
-              <div key={fieldName + fieldErrorIndex}>
-                {fieldError.message && <div>{fieldError.message}</div>}
-                {Object.values(fieldError.types || {}).map((errorMessage, idx) => (
-                  <div key={idx}>{errorMessage}</div>
-                ))}
-              </div>
-            );
-          })}
-        </Form.Control.Feedback>
-      );
-    }
-
-    return null;
   };
 
   const actions = (
     <>
-      <Button variant="primary" type="submit" disabled={savingCustomerDetails || !isValid}>
+      <Button
+        variant="primary"
+        type="submit"
+        disabled={savingCustomerDetails || !isValid || !isDirty}
+      >
         {savingCustomerDetails ? <Spinner animation="border" size="sm" className="me-2" /> : null}
-        Save Changes
+        {t('common.save')}
       </Button>
       <Button variant="secondary" onClick={() => navigate('..')}>
-        Cancel
+        {t('common.cancel')}
       </Button>
     </>
   );
@@ -113,7 +80,7 @@ function CustomerDetails() {
   return (
     <Form className="h-100" noValidate onSubmit={handleSubmit(onSubmit)}>
       <DetailsPanel
-        title={customer?.name || 'New Customer'}
+        title={customer?.name || t('New Customer')}
         onClose={() => navigate('..')}
         actions={actions}
         loading={loadingCustomerDetails || savingCustomerDetails}
@@ -122,106 +89,106 @@ function CustomerDetails() {
           <>
             <Form.Group as={Row} className="mb-3" controlId="customerCode">
               <Form.Label column sm={3}>
-                Code
+                {t('code')}
               </Form.Label>
               <Col sm={9}>
                 <Form.Control
                   type="text"
-                  placeholder="Enter customer code"
-                  {...register('code', formConfig.code.config)}
+                  placeholder={t('customers.enterCustomerCode')}
+                  {...register('code', formConfig.code.registerConfig)}
                   isInvalid={!!errors.code}
                 />
-                {renderFieldErrors('code')}
+                <FieldErrorsFeedback errors={errors} fieldNames={['code', 'Code']} />
               </Col>
             </Form.Group>
 
             <Form.Group as={Row} className="mb-3" controlId="customerName">
               <Form.Label column sm={3}>
-                Name
+                {t('name')}
               </Form.Label>
               <Col sm={9}>
                 <Form.Control
                   type="text"
-                  placeholder="Enter customer name"
-                  {...register('name', formConfig.name.config)}
+                  placeholder={t('customers.enterCustomerName')}
+                  {...register('name', formConfig.name.registerConfig)}
                   isInvalid={!!errors.name}
                 />
-                {renderFieldErrors('name')}
+                <FieldErrorsFeedback errors={errors} fieldNames={['name', 'Name']} />
               </Col>
             </Form.Group>
 
             <Form.Group as={Row} className="mb-3" controlId="customerWebsite">
               <Form.Label column sm={3}>
-                Website
+                {t('website')}
               </Form.Label>
               <Col sm={9}>
                 <Form.Control
                   type="text"
-                  placeholder="Enter customer website"
-                  {...register('website', formConfig.website.config)}
+                  placeholder={t('customers.enterCustomerWebsite')}
+                  {...register('website', formConfig.website.registerConfig)}
                   isInvalid={!!errors.website}
                 />
-                {renderFieldErrors('website')}
+                <FieldErrorsFeedback errors={errors} fieldNames={['website', 'Website']} />
               </Col>
             </Form.Group>
 
             <Form.Group as={Row} className="mb-3" controlId="customerEmail">
               <Form.Label column sm={3}>
-                Email
+                {t('email')}
               </Form.Label>
               <Col sm={9}>
                 <Form.Control
                   type="email"
-                  placeholder="Enter customer email"
-                  {...register('email', formConfig.email.config)}
+                  placeholder={t('customers.enterCustomerEmail')}
+                  {...register('email', formConfig.email.registerConfig)}
                   isInvalid={!!errors.email}
                 />
-                {renderFieldErrors('email')}
+                <FieldErrorsFeedback errors={errors} fieldNames={['email', 'Email']} />
               </Col>
             </Form.Group>
 
             <Form.Group as={Row} className="mb-3" controlId="customerPhoneNumber">
               <Form.Label column sm={3}>
-                Phone Number
+                {t('phoneNumber')}
               </Form.Label>
               <Col sm={9}>
                 <Form.Control
                   type="tel"
-                  placeholder="Enter customer phone number"
-                  {...register('phoneNumber', formConfig.phoneNumber.config)}
+                  placeholder={t('customers.enterCustomerPhoneNumber')}
+                  {...register('phoneNumber', formConfig.phoneNumber.registerConfig)}
                   isInvalid={!!errors.phoneNumber}
                 />
-                {renderFieldErrors('phoneNumber')}
+                <FieldErrorsFeedback errors={errors} fieldNames={['phoneNumber', 'Phone Number']} />
               </Col>
             </Form.Group>
 
             <Form.Group as={Row} className="mb-3" controlId="customerIban">
               <Form.Label column sm={3}>
-                IBAN
+                {t('iban')}
               </Form.Label>
               <Col sm={9}>
                 <Form.Control
                   type="text"
-                  placeholder="Enter customer IBAN"
-                  {...register('iban', formConfig.iban.config)}
+                  placeholder={t('customers.enterCustomerIban')}
+                  {...register('iban', formConfig.iban.registerConfig)}
                   isInvalid={!!errors.iban}
                 />
-                {renderFieldErrors('iban')}
+                <FieldErrorsFeedback errors={errors} fieldNames={['iban', 'IBAN']} />
               </Col>
             </Form.Group>
 
             <Form.Group as={Row} className="mb-3" controlId="customerBic">
               <Form.Label column sm={3}>
-                BIC
+                {t('bic')}
               </Form.Label>
               <Col sm={9}>
                 <Form.Control
                   type="text"
-                  placeholder="Enter customer BIC"
-                  {...register('bic', formConfig.bic.config)}
+                  placeholder={t('customers.enterCustomerBic')}
+                  {...register('bic', formConfig.bic.registerConfig)}
                   isInvalid={!!errors.bic}
                 />
-                {renderFieldErrors('bic')}
+                <FieldErrorsFeedback errors={errors} fieldNames={['bic', 'BIC']} />
               </Col>
             </Form.Group>
           </>
@@ -232,7 +199,7 @@ function CustomerDetails() {
           Object.values(errors.root.types || {})
             .flatMap((v) => v)
             .map((error, idx) => (
-              <p key={idx}>
+              <p key={'root-error-' + idx}>
                 <Alert variant="danger">{error}</Alert>
               </p>
             ))}

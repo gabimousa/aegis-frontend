@@ -24,6 +24,7 @@ const en = {
       add: 'Add',
       confirm: 'Confirm',
       cancel: 'Cancel',
+      save: 'Save',
     },
     suppliers: {
       title: 'Suppliers',
@@ -40,6 +41,14 @@ const en = {
       totalCount: 'Total: {{count}} customers',
       deactivateCustomerTitle: 'Deactivate Customer',
       deactivateCustomerMessage: 'Are you sure you want to deactivate customer "{{name}}"?',
+      newCustomer: 'New Customer',
+      enterCustomerCode: 'Enter customer code',
+      enterCustomerName: 'Enter customer name',
+      enterCustomerWebsite: 'Enter customer website',
+      enterCustomerEmail: 'Enter customer email',
+      enterCustomerPhoneNumber: 'Enter customer phone number',
+      enterCustomerIban: 'Enter customer IBAN',
+      enterCustomerBic: 'Enter customer BIC',
     },
   },
 };
