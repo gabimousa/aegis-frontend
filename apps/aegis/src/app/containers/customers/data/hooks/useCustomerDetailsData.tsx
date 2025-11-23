@@ -2,7 +2,7 @@ import { useMutation, useQuery } from '@apollo/client/react';
 import { useState } from 'react';
 import { RegisterCustomerInput, UpdateCustomerDetailsInput } from '../../../../gql/graphql';
 import { toGroup } from '../../../../utils/toGroup';
-import { CustomerDetails } from '../../model/customerDetails.model';
+import { CustomerDetailsModel } from '../../model/customerDetails.model';
 import {
   registerCustomerMutation,
   updateCustomerDetailsMutation,
@@ -11,7 +11,7 @@ import { customerDetailsQuery } from '../graphql/customersQueries';
 
 type useCustomerDetailsDataOptions = {
   id?: string;
-  onDataSaved?: (customer: CustomerDetails) => void;
+  onDataSaved?: (customer: CustomerDetailsModel) => void;
 };
 
 export const useCustomerDetailsData = (options: useCustomerDetailsDataOptions) => {
@@ -39,7 +39,7 @@ export const useCustomerDetailsData = (options: useCustomerDetailsDataOptions) =
           throw toGroup(updateResult.data.updateCustomerDetails.errors, 'fieldName');
         } else {
           if (updateResult.data) {
-            onDataSaved?.(updateResult.data.updateCustomerDetails.customer as CustomerDetails);
+            onDataSaved?.(updateResult.data.updateCustomerDetails.customer as CustomerDetailsModel);
           }
         }
       } else {
@@ -48,7 +48,7 @@ export const useCustomerDetailsData = (options: useCustomerDetailsDataOptions) =
           throw toGroup(registerResult.data.registerCustomer.errors, 'fieldName');
         } else {
           if (registerResult.data) {
-            onDataSaved?.(registerResult.data.registerCustomer.customer as CustomerDetails);
+            onDataSaved?.(registerResult.data.registerCustomer.customer as CustomerDetailsModel);
           }
         }
       }
@@ -59,7 +59,7 @@ export const useCustomerDetailsData = (options: useCustomerDetailsDataOptions) =
   };
 
   return {
-    customer: data?.customerById as CustomerDetails | undefined,
+    customer: data?.customerById as CustomerDetailsModel | undefined,
     loading,
     error,
     save,

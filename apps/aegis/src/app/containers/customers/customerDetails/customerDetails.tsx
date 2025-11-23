@@ -1,17 +1,36 @@
-import { useContext, useEffect } from 'react';
-import { Alert, Button, Col, Form, Row, Spinner } from 'react-bootstrap';
-import { useForm } from 'react-hook-form';
+import { useContext, useEffect, useId, useState } from 'react';
+import { Alert, Button, Dropdown, Form, Spinner, Tab, Tabs } from 'react-bootstrap';
+import { FormProvider, useFieldArray, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useMatch, useNavigate } from 'react-router';
-import FieldErrorsFeedback from '../../../components/fieldErrorsFeedback/fieldErrorsFeedback';
+import { User } from 'tabler-icons-react';
 import DetailsPanel from '../../../components/layout/detailsPanel/detailsPanel';
-import { RegisterCustomerInput, UpdateCustomerDetailsInput } from '../../../gql/graphql';
-import setErrors from '../../../utils/setErrors';
+import {
+  Alpha3Code,
+  CreateAddressInput,
+  RegisterCustomerInput,
+  UpdateAddressInput,
+  UpdateCustomerDetailsInput,
+} from '../../../gql/graphql';
+import setFieldErrors from '../../../utils/setFieldErrors';
 import CustomersDataContext from '../customersContext';
-import { Customer } from '../model/customer.model';
-import formConfig from './formConfig';
+import { CustomerAddressModel, CustomerDetailsModel } from '../model/customerDetails.model';
+import AddressForm from './addressForm/addressForm';
+import CustomerForm from './customerForm/customerForm';
+
+const serverErrorMap: Record<string, string> = {
+  Code: 'code',
+  Name: 'name',
+  Website: 'website',
+  Email: 'email',
+  PhoneNumber: 'phoneNumber',
+  IBAN: 'iban',
+  BIC: 'bic',
+};
 
 function CustomerDetails() {
+  const [activeTab, setActiveTab] = useState('details');
+  const detailsFormId = useId();
   const navigate = useNavigate();
   const match = useMatch('/customers/:id');
   const { t } = useTranslation();
@@ -24,13 +43,32 @@ function CustomerDetails() {
     savingCustomerDetails,
   } = useContext(CustomersDataContext);
 
+  const formProps = useForm<CustomerDetailsModel>({
+    mode: 'all',
+    defaultValues: {
+      code: '',
+      name: '',
+      website: '',
+      email: '',
+      phoneNumber: '',
+      iban: '',
+      bic: '',
+      addresses: [],
+    },
+  });
   const {
-    register,
-    handleSubmit,
     reset,
     setError,
-    formState: { errors, isValid, isDirty },
-  } = useForm<Customer>({ mode: 'all' });
+    control,
+    handleSubmit,
+    formState: { isValid, isDirty, errors },
+  } = formProps;
+
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: 'addresses',
+  });
+
   useEffect(() => {
     const customerId = match?.params.id;
     selectCustomer(customerId);
@@ -41,170 +79,198 @@ function CustomerDetails() {
     reset(customer);
   }, [customer, reset]);
 
-  const onSubmit = async (customer: Customer) => {
-    const idInput = customer?.id ? { id: customer.id } : {};
+  const canAppendAddressTypes = (addressType: 'VISITING' | 'MAILING' | 'DELIVERY') => {
+    return !fields.some((address) => address.type === addressType);
+  };
+  const canAppendVisitingAddress = canAppendAddressTypes('VISITING');
+  const canAppendMailingAddress = canAppendAddressTypes('MAILING');
+  const canAppendDeliveryAddress = canAppendAddressTypes('DELIVERY');
+  const canAppendAddress =
+    canAppendVisitingAddress || canAppendMailingAddress || canAppendDeliveryAddress;
+
+  const appendAddress = (addressType: 'VISITING' | 'MAILING' | 'DELIVERY') => {
+    append({
+      id: '',
+      street: '',
+      number: '',
+      zipCode: '',
+      city: '',
+      state: '',
+      countryCode: Alpha3Code.Nld,
+      type: addressType,
+    });
+  };
+
+  const getCustomerInputWithAddresses = (
+    formState: CustomerDetailsModel,
+    customerInput: RegisterCustomerInput | UpdateCustomerDetailsInput
+  ): RegisterCustomerInput | UpdateCustomerDetailsInput => {
+    const getAddressBase = (address: CustomerAddressModel): Partial<CreateAddressInput> => {
+      return {
+        street: address.street,
+        number: address.number,
+        zipCode: address.zipCode,
+        city: address.city,
+        state: address.state,
+        countryCode: address.countryCode,
+      };
+    };
+
+    const getCreateAddressInput = (address: CustomerAddressModel): CreateAddressInput => {
+      return { ...getAddressBase(address), type: address.type };
+    };
+
+    const getUpdateAddressInput = (address: CustomerAddressModel): UpdateAddressInput => {
+      return { id: address.id, ...getAddressBase(address) };
+    };
+
+    if ('id' in customerInput) {
+      const addedAddresses = formState.addresses
+        .filter((address) => !address.id)
+        .map((address) => getCreateAddressInput(address));
+      const updatedAddresses = formState.addresses
+        .filter((address) => address.id)
+        .map((address) => getUpdateAddressInput(address));
+      const removedAddresses =
+        customer?.addresses
+          ?.filter((address) => !formState.addresses.some((a) => a.id === address.id))
+          .map((address) => ({ id: address.id })) || [];
+      return {
+        ...customerInput,
+        addedAddresses,
+        updatedAddresses,
+        removedAddresses,
+      };
+    } else {
+      return {
+        ...customerInput,
+        addresses: fields.map((address) => getCreateAddressInput(address)),
+      };
+    }
+  };
+
+  const onSubmit = async (formState: CustomerDetailsModel) => {
+    console.log('Submitting customer details:', formState);
+    const idInput = formState?.id ? { id: formState.id } : {};
     try {
-      const result = await saveCustomerDetails({
+      const customerInput = {
         ...idInput,
-        code: customer.code,
-        name: customer.name,
-        website: customer.website,
-        email: customer.email,
-        phoneNumber: customer.phoneNumber,
-        iban: customer.iban,
-        bic: customer.bic,
-      } as RegisterCustomerInput | UpdateCustomerDetailsInput);
+        code: formState.code,
+        name: formState.name,
+        website: formState.website,
+        email: formState.email,
+        phoneNumber: formState.phoneNumber,
+        iban: formState.iban,
+        bic: formState.bic,
+      } as RegisterCustomerInput | UpdateCustomerDetailsInput;
+
+      const result = await saveCustomerDetails(
+        getCustomerInputWithAddresses(formState, customerInput)
+      );
 
       result && navigate('..');
     } catch (error) {
-      setErrors(error, setError);
+      setFieldErrors(error, setError, serverErrorMap);
     }
   };
 
   const actions = (
     <>
+      {activeTab === 'addresses' && (
+        <Dropdown className="ms-2">
+          <Dropdown.Toggle
+            disabled={!canAppendAddress}
+            variant="outline-secondary"
+            id="dropdown-add-address"
+          >
+            {t('addresses.addAddress')}
+          </Dropdown.Toggle>
+
+          <Dropdown.Menu>
+            <Dropdown.Item
+              disabled={!canAppendAddressTypes('VISITING')}
+              onClick={() => appendAddress('VISITING')}
+            >
+              {t('addresses.visiting')}
+            </Dropdown.Item>
+            <Dropdown.Item
+              disabled={!canAppendAddressTypes('MAILING')}
+              onClick={() => appendAddress('MAILING')}
+            >
+              {t('addresses.mailing')}
+            </Dropdown.Item>
+            <Dropdown.Item
+              disabled={!canAppendAddressTypes('DELIVERY')}
+              onClick={() => appendAddress('DELIVERY')}
+            >
+              {t('addresses.delivery')}
+            </Dropdown.Item>
+          </Dropdown.Menu>
+        </Dropdown>
+      )}
+      <Button variant="secondary" onClick={() => navigate('..')}>
+        {t('common.cancel')}
+      </Button>
       <Button
         variant="primary"
+        form={detailsFormId}
         type="submit"
         disabled={savingCustomerDetails || !isValid || !isDirty}
       >
         {savingCustomerDetails ? <Spinner animation="border" size="sm" className="me-2" /> : null}
         {t('common.save')}
       </Button>
-      <Button variant="secondary" onClick={() => navigate('..')}>
-        {t('common.cancel')}
-      </Button>
     </>
   );
 
   return (
-    <Form className="h-100" noValidate onSubmit={handleSubmit(onSubmit)}>
-      <DetailsPanel
-        title={customer?.name || t('New Customer')}
-        onClose={() => navigate('..')}
-        actions={actions}
-        loading={loadingCustomerDetails || savingCustomerDetails}
-      >
-        {
-          <>
-            <Form.Group as={Row} className="mb-3" controlId="customerCode">
-              <Form.Label column sm={3}>
-                {t('code')}
-              </Form.Label>
-              <Col sm={9}>
-                <Form.Control
-                  type="text"
-                  placeholder={t('customers.enterCustomerCode')}
-                  {...register('code', formConfig.code.registerConfig)}
-                  isInvalid={!!errors.code}
-                />
-                <FieldErrorsFeedback errors={errors} fieldNames={['code', 'Code']} />
-              </Col>
-            </Form.Group>
-
-            <Form.Group as={Row} className="mb-3" controlId="customerName">
-              <Form.Label column sm={3}>
-                {t('name')}
-              </Form.Label>
-              <Col sm={9}>
-                <Form.Control
-                  type="text"
-                  placeholder={t('customers.enterCustomerName')}
-                  {...register('name', formConfig.name.registerConfig)}
-                  isInvalid={!!errors.name}
-                />
-                <FieldErrorsFeedback errors={errors} fieldNames={['name', 'Name']} />
-              </Col>
-            </Form.Group>
-
-            <Form.Group as={Row} className="mb-3" controlId="customerWebsite">
-              <Form.Label column sm={3}>
-                {t('website')}
-              </Form.Label>
-              <Col sm={9}>
-                <Form.Control
-                  type="text"
-                  placeholder={t('customers.enterCustomerWebsite')}
-                  {...register('website', formConfig.website.registerConfig)}
-                  isInvalid={!!errors.website}
-                />
-                <FieldErrorsFeedback errors={errors} fieldNames={['website', 'Website']} />
-              </Col>
-            </Form.Group>
-
-            <Form.Group as={Row} className="mb-3" controlId="customerEmail">
-              <Form.Label column sm={3}>
-                {t('email')}
-              </Form.Label>
-              <Col sm={9}>
-                <Form.Control
-                  type="email"
-                  placeholder={t('customers.enterCustomerEmail')}
-                  {...register('email', formConfig.email.registerConfig)}
-                  isInvalid={!!errors.email}
-                />
-                <FieldErrorsFeedback errors={errors} fieldNames={['email', 'Email']} />
-              </Col>
-            </Form.Group>
-
-            <Form.Group as={Row} className="mb-3" controlId="customerPhoneNumber">
-              <Form.Label column sm={3}>
-                {t('phoneNumber')}
-              </Form.Label>
-              <Col sm={9}>
-                <Form.Control
-                  type="tel"
-                  placeholder={t('customers.enterCustomerPhoneNumber')}
-                  {...register('phoneNumber', formConfig.phoneNumber.registerConfig)}
-                  isInvalid={!!errors.phoneNumber}
-                />
-                <FieldErrorsFeedback errors={errors} fieldNames={['phoneNumber', 'Phone Number']} />
-              </Col>
-            </Form.Group>
-
-            <Form.Group as={Row} className="mb-3" controlId="customerIban">
-              <Form.Label column sm={3}>
-                {t('iban')}
-              </Form.Label>
-              <Col sm={9}>
-                <Form.Control
-                  type="text"
-                  placeholder={t('customers.enterCustomerIban')}
-                  {...register('iban', formConfig.iban.registerConfig)}
-                  isInvalid={!!errors.iban}
-                />
-                <FieldErrorsFeedback errors={errors} fieldNames={['iban', 'IBAN']} />
-              </Col>
-            </Form.Group>
-
-            <Form.Group as={Row} className="mb-3" controlId="customerBic">
-              <Form.Label column sm={3}>
-                {t('bic')}
-              </Form.Label>
-              <Col sm={9}>
-                <Form.Control
-                  type="text"
-                  placeholder={t('customers.enterCustomerBic')}
-                  {...register('bic', formConfig.bic.registerConfig)}
-                  isInvalid={!!errors.bic}
-                />
-                <FieldErrorsFeedback errors={errors} fieldNames={['bic', 'BIC']} />
-              </Col>
-            </Form.Group>
-          </>
-        }
-
-        {loadingCustomerDetailsError && <p>Error: {loadingCustomerDetailsError.message}</p>}
-        {errors.root &&
-          Object.values(errors.root.types || {})
+    <DetailsPanel
+      title={
+        <>
+          <User size={24} className="me-2" /> {customer?.name || t('New Customer')}
+        </>
+      }
+      onClose={() => navigate('..')}
+      actions={actions}
+      loading={loadingCustomerDetails || savingCustomerDetails}
+    >
+      {errors.root &&
+        (errors.root.types ? (
+          Object.values(errors.root.types)
             .flatMap((v) => v)
             .map((error, idx) => (
-              <p key={'root-error-' + idx}>
-                <Alert variant="danger">{error}</Alert>
-              </p>
-            ))}
-      </DetailsPanel>
-    </Form>
+              <Alert key={'root-error-' + idx} variant="danger">
+                {error}
+              </Alert>
+            ))
+        ) : (
+          <Alert variant="danger">{errors.root?.message}</Alert>
+        ))}
+      <FormProvider {...formProps}>
+        <Form id={detailsFormId} noValidate onSubmit={handleSubmit(onSubmit)}>
+          <Tabs activeKey={activeTab} onSelect={(tab) => setActiveTab(tab ?? 'details')}>
+            <Tab className="pt-3" eventKey="details" title={t('common.details')}>
+              {loadingCustomerDetailsError ? (
+                <p>Error: {loadingCustomerDetailsError.message}</p>
+              ) : (
+                <CustomerForm />
+              )}
+            </Tab>
+            <Tab eventKey="addresses" title={t('common.addresses')}>
+              {fields.map((address, index) => (
+                <div className="mt-2" key={fields[index].id}>
+                  <AddressForm
+                    index={index}
+                    address={address}
+                    onRemove={() => remove(index)}
+                  ></AddressForm>
+                </div>
+              ))}
+            </Tab>
+          </Tabs>
+        </Form>
+      </FormProvider>
+    </DetailsPanel>
   );
 }
 export default CustomerDetails;

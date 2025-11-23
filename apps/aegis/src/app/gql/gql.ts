@@ -25,6 +25,7 @@ type Documents = {
   '\n  subscription onCustomerDetailsUpdated {\n    onCustomerDetailsUpdated {\n      ...CustomerFields\n    }\n  }\n': typeof types.OnCustomerDetailsUpdatedDocument;
   '\n  subscription OnCustomerDeactivated {\n    onCustomerDeactivated\n  }\n': typeof types.OnCustomerDeactivatedDocument;
   '\n  query Suppliers(\n    $first: Int\n    $last: Int\n    $after: String\n    $before: String\n    $where: SupplierFilterInput\n    $order: [SupplierSortInput!]\n  ) {\n    suppliers(\n      first: $first\n      last: $last\n      after: $after\n      before: $before\n      where: $where\n      order: $order\n    ) {\n      nodes {\n        id\n        code\n        name\n        website\n        email\n        phoneNumber\n        iban\n        bic\n      }\n      pageInfo {\n        hasNextPage\n        hasPreviousPage\n        startCursor\n        endCursor\n      }\n      totalCount\n    }\n  }\n': typeof types.SuppliersDocument;
+  '\n  query Countries {\n    countries {\n      code\n      name\n    }\n  }\n': typeof types.CountriesDocument;
 };
 const documents: Documents = {
   '\n  fragment CustomerFields on Customer {\n    id\n    code\n    name\n    website\n    email\n    phoneNumber\n    iban\n    bic\n  }\n':
@@ -49,6 +50,8 @@ const documents: Documents = {
     types.OnCustomerDeactivatedDocument,
   '\n  query Suppliers(\n    $first: Int\n    $last: Int\n    $after: String\n    $before: String\n    $where: SupplierFilterInput\n    $order: [SupplierSortInput!]\n  ) {\n    suppliers(\n      first: $first\n      last: $last\n      after: $after\n      before: $before\n      where: $where\n      order: $order\n    ) {\n      nodes {\n        id\n        code\n        name\n        website\n        email\n        phoneNumber\n        iban\n        bic\n      }\n      pageInfo {\n        hasNextPage\n        hasPreviousPage\n        startCursor\n        endCursor\n      }\n      totalCount\n    }\n  }\n':
     types.SuppliersDocument,
+  '\n  query Countries {\n    countries {\n      code\n      name\n    }\n  }\n':
+    types.CountriesDocument,
 };
 
 /**
@@ -131,6 +134,12 @@ export function graphql(
 export function graphql(
   source: '\n  query Suppliers(\n    $first: Int\n    $last: Int\n    $after: String\n    $before: String\n    $where: SupplierFilterInput\n    $order: [SupplierSortInput!]\n  ) {\n    suppliers(\n      first: $first\n      last: $last\n      after: $after\n      before: $before\n      where: $where\n      order: $order\n    ) {\n      nodes {\n        id\n        code\n        name\n        website\n        email\n        phoneNumber\n        iban\n        bic\n      }\n      pageInfo {\n        hasNextPage\n        hasPreviousPage\n        startCursor\n        endCursor\n      }\n      totalCount\n    }\n  }\n'
 ): (typeof documents)['\n  query Suppliers(\n    $first: Int\n    $last: Int\n    $after: String\n    $before: String\n    $where: SupplierFilterInput\n    $order: [SupplierSortInput!]\n  ) {\n    suppliers(\n      first: $first\n      last: $last\n      after: $after\n      before: $before\n      where: $where\n      order: $order\n    ) {\n      nodes {\n        id\n        code\n        name\n        website\n        email\n        phoneNumber\n        iban\n        bic\n      }\n      pageInfo {\n        hasNextPage\n        hasPreviousPage\n        startCursor\n        endCursor\n      }\n      totalCount\n    }\n  }\n'];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
+  source: '\n  query Countries {\n    countries {\n      code\n      name\n    }\n  }\n'
+): (typeof documents)['\n  query Countries {\n    countries {\n      code\n      name\n    }\n  }\n'];
 
 export function graphql(source: string) {
   return (documents as any)[source] ?? {};

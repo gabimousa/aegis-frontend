@@ -8,6 +8,7 @@ import App from './app/app';
 import { ApolloLink } from '@apollo/client';
 import { GraphQLWsLink } from '@apollo/client/link/subscriptions';
 import { getMainDefinition } from '@apollo/client/utilities';
+import { CountriesQuery } from './app/shared/countries/graphql/countriesQueries';
 import './translation/i18n';
 
 const httpLink = new HttpLink({ uri: '/graphql' });
@@ -41,6 +42,7 @@ const client = new ApolloClient({
     },
   },
 });
+client.query({ query: CountriesQuery });
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 

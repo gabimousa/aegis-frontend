@@ -1,5 +1,5 @@
 import { useSubscription } from '@apollo/client/react';
-import { Customer } from '../../model/customer.model';
+import { CustomerModel } from '../../model/customer.model';
 import {
   onCustomerDeactivatedSubscription,
   onCustomerDetailsUpdatedSubscription,
@@ -7,8 +7,8 @@ import {
 } from '../graphql/customersSubscriptions';
 
 type useCustomerSubscriptionsProps = {
-  onCustomerRegistered?: (customer: Customer) => void;
-  onCustomerUpdated?: (customer: Customer) => void;
+  onCustomerRegistered?: (customer: CustomerModel) => void;
+  onCustomerUpdated?: (customer: CustomerModel) => void;
   onCustomerDeactivated?: (customerId: string) => void;
 };
 
@@ -24,7 +24,7 @@ export const useCustomerSubscriptions = ({
   } = useSubscription(onCustomerRegisteredSubscription, {
     onData(options) {
       const customer = options.data.data?.onCustomerRegistered;
-      customer && onCustomerRegistered?.(customer as Customer);
+      customer && onCustomerRegistered?.(customer as CustomerModel);
     },
   });
 
@@ -35,7 +35,7 @@ export const useCustomerSubscriptions = ({
   } = useSubscription(onCustomerDetailsUpdatedSubscription, {
     onData(options) {
       const customer = options.data.data?.onCustomerDetailsUpdated;
-      customer && onCustomerUpdated?.(customer as Customer);
+      customer && onCustomerUpdated?.(customer as CustomerModel);
     },
   });
 

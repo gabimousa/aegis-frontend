@@ -1,26 +1,21 @@
 import { ErrorLike } from '@apollo/client';
 import { createContext, PropsWithChildren, useState } from 'react';
-import {
-  ApplicationError,
-  PageInfo,
-  RegisterCustomerInput,
-  UpdateCustomerDetailsInput,
-} from '../../gql/graphql';
+import { PageInfo, RegisterCustomerInput, UpdateCustomerDetailsInput } from '../../gql/graphql';
 import { useCustomerDetailsData } from './data/hooks/useCustomerDetailsData';
 import { useCustomersData } from './data/hooks/useCustomersData';
 import { useCustomerSubscriptions } from './data/hooks/useCustomerSubscriptions';
-import { Customer } from './model/customer.model';
-import { CustomerDetails } from './model/customerDetails.model';
+import { CustomerModel } from './model/customer.model';
+import { CustomerDetailsModel } from './model/customerDetails.model';
 
 type CustomersContextType = {
-  customers: Customer[];
+  customers: CustomerModel[];
   loadingCustomers: boolean;
   loadingCustomersError?: ErrorLike;
   pageInfo?: PageInfo;
   totalCount: number;
   nextPage: () => void;
   prevPage: () => void;
-  selectedCustomer?: CustomerDetails;
+  selectedCustomer?: CustomerDetailsModel;
   searchTerm: string;
   setSearchTerm: (term: string) => void;
   selectCustomer: (id: string | undefined) => void;

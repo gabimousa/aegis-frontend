@@ -1,7 +1,7 @@
 import { useMutation, useQuery } from '@apollo/client/react';
 import { useState } from 'react';
-import { ApplicationError, CustomersQueryVariables } from '../../../../gql/graphql';
-import { Customer } from '../../model/customer.model';
+import { CustomersQueryVariables } from '../../../../gql/graphql';
+import { CustomerModel } from '../../model/customer.model';
 import { deactivateCustomerMutation } from '../graphql/customersMutations';
 import { CustomersQuery } from '../graphql/customersQueries';
 
@@ -67,7 +67,7 @@ export const useCustomersData = ({
   };
 
   return {
-    customers: (data?.customers?.nodes as Customer[]) || [],
+    customers: (data?.customers?.nodes as CustomerModel[]) || [],
     pageInfo: data?.customers?.pageInfo,
     totalCount: data?.customers?.totalCount,
     loading,

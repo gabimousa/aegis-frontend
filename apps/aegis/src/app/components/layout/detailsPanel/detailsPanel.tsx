@@ -20,12 +20,8 @@ function DetailsPanel({
   return (
     <div className={styles.detailsPanel}>
       <div className={styles.header}>
-        <div className={styles.title}>{title}</div>
-        <Button
-          variant="outline-secondary"
-          size="sm"
-          onClick={() => onClose && onClose()}
-        >
+        <div className={`${styles.title} text-primary`}>{title}</div>
+        <Button variant="outline-light text-danger" size="sm" onClick={() => onClose && onClose()}>
           <X size={20}></X>
         </Button>
       </div>

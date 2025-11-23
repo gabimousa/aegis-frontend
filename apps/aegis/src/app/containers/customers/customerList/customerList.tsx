@@ -8,7 +8,7 @@ import { DataGridColumn } from '../../../components/data-grid/data-grid-column';
 import ListView from '../../../components/listView/listView';
 import { useConfirm } from '../../../hooks/useConfirm';
 import CustomersDataContext from '../customersContext';
-import { Customer } from '../model/customer.model';
+import { CustomerModel } from '../model/customer.model';
 
 export function CustomerList() {
   const { confirm } = useConfirm();
@@ -27,7 +27,7 @@ export function CustomerList() {
     deactivatingCustomer,
   } = useContext(CustomersDataContext);
 
-  const columns: DataGridColumn<Customer>[] = [
+  const columns: DataGridColumn<CustomerModel>[] = [
     { header: t('common.code'), field: 'code', width: 150 },
     { header: t('common.name'), field: 'name' },
     { header: t('common.website'), field: 'website', width: 200 },
@@ -44,11 +44,11 @@ export function CustomerList() {
     </Button>
   );
 
-  const dataGridProps: DataGridProps<Customer> = {
+  const dataGridProps: DataGridProps<CustomerModel> = {
     keyAccessor: 'id',
     columns,
     data: customers ?? [],
-    onEdit: (item) => navigate(`./${item.id}`),
+    onEdit: (item) => navigate(`./${encodeURIComponent(item.id)}`),
     onDelete: async (item) => {
       const confirmed = await confirm(
         t('customers.deactivateCustomerTitle'),

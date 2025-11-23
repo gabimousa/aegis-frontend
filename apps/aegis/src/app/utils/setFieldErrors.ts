@@ -1,8 +1,9 @@
 import { FieldValues, Path, UseFormSetError } from 'react-hook-form';
 
-function setErrors<TFieldValues extends FieldValues>(
+function setFieldErrors<TFieldValues extends FieldValues>(
   error: unknown,
-  setError: UseFormSetError<TFieldValues>
+  setError: UseFormSetError<TFieldValues>,
+  errorMap?: Record<string, string>
 ) {
   if (error && typeof error === 'object') {
     if ('message' in error && typeof error.message === 'string') {
@@ -14,11 +15,12 @@ function setErrors<TFieldValues extends FieldValues>(
             acc[curr.code] = curr.description;
             return acc;
           }, {} as Record<string, string>);
-          setError((fieldName as Path<TFieldValues>) ?? 'root', { types });
+          const mappedFieldName = errorMap?.[fieldName] ?? fieldName;
+          setError((mappedFieldName as Path<TFieldValues>) ?? 'root', { types });
         }
       });
     }
   }
 }
 
-export default setErrors;
+export default setFieldErrors;

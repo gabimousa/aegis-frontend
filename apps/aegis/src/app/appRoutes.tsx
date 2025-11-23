@@ -2,7 +2,7 @@ import { createBrowserRouter } from 'react-router';
 import AppShell from './components/layout/app-shell';
 import ArticleDetails from './containers/articles/articleDetails/articleDetails';
 import ArticleList from './containers/articles/articleList/articleList';
-import CustomerDetails from './containers/customers/customerDetails/customerDetails';
+import CustomerDetailsModel from './containers/customers/customerDetails/customerDetails';
 import Customers from './containers/customers/customers';
 import Suppliers from './containers/suppliers/suppliers';
 
@@ -24,7 +24,7 @@ export const router = createBrowserRouter([
         children: [
           {
             path: '/customers/:id',
-            element: <CustomerDetails />,
+            element: <CustomerDetailsModel />,
           },
         ],
       },

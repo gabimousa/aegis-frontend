@@ -418,6 +418,12 @@ export type BooleanOperationFilterInput = {
   neq?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
+export type Country = {
+  __typename?: 'Country';
+  code: Alpha3Code;
+  name: Scalars['String']['output'];
+};
+
 export type CreateAddressInput = {
   city?: InputMaybe<Scalars['String']['input']>;
   countryCode?: InputMaybe<Alpha3Code>;
@@ -708,6 +714,7 @@ export type Query = {
   __typename?: 'Query';
   articleById?: Maybe<Article>;
   articles?: Maybe<ArticlesConnection>;
+  countries: Array<Country>;
   customerById?: Maybe<Customer>;
   customers?: Maybe<CustomersConnection>;
   /** Fetches an object given its ID. */
@@ -1282,6 +1289,13 @@ export type SuppliersQuery = {
       endCursor?: string | null;
     };
   } | null;
+};
+
+export type CountriesQueryVariables = Exact<{ [key: string]: never }>;
+
+export type CountriesQuery = {
+  __typename?: 'Query';
+  countries: Array<{ __typename?: 'Country'; code: Alpha3Code; name: string }>;
 };
 
 export const CustomerFieldsFragmentDoc = {
@@ -2113,3 +2127,29 @@ export const SuppliersDocument = {
     },
   ],
 } as unknown as DocumentNode<SuppliersQuery, SuppliersQueryVariables>;
+export const CountriesDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'Countries' },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'countries' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'code' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<CountriesQuery, CountriesQueryVariables>;
