@@ -1,9 +1,13 @@
 import { ErrorLike } from '@apollo/client';
-import { createContext, PropsWithChildren, useState } from 'react';
+import { createContext, PropsWithChildren, useCallback, useState } from 'react';
 import { PageInfo, RegisterCustomerInput, UpdateCustomerDetailsInput } from '../../gql/graphql';
-import { useCustomerDetailsData } from './data/hooks/useCustomerDetailsData';
-import { useCustomersData } from './data/hooks/useCustomersData';
-import { useCustomerSubscriptions } from './data/hooks/useCustomerSubscriptions';
+import {
+  useCustomerDetailsQuery,
+  useCustomersQuery,
+  useCustomerSubscriptions,
+  useDeactivateCustomer,
+  useSaveCustomer,
+} from './data/hooks';
 import { CustomerModel } from './model/customer.model';
 import { CustomerDetailsModel } from './model/customerDetails.model';
 
@@ -51,64 +55,78 @@ export const CustomersDataContext = createContext<CustomersContextType>({
 
 export const CustomerDataProvider = ({ children }: PropsWithChildren) => {
   const [searchTerm, setSearchTerm] = useState('');
-  const {
-    customers,
-    pageInfo,
-    totalCount,
-    loading: loadingCustomers,
-    error: loadingCustomersError,
-    refetchCurrentPage,
-    nextPage,
-    prevPage,
-    deactivate,
-    deactivatingCustomer,
-  } = useCustomersData({
+  const [selectedCustomerId, setSelectedCustomerId] = useState<string | undefined>(undefined);
+
+  // Customer list query and mutations
+  const customersQuery = useCustomersQuery({
     pageSize: 10,
     searchTerm,
   });
 
-  useCustomerSubscriptions({
-    onCustomerUpdated: () => {
-      refetchCurrentPage();
-    },
-    onCustomerRegistered: (customer) => {
-      refetchCurrentPage();
-    },
+  const customersMutations = useDeactivateCustomer({
     onCustomerDeactivated: () => {
-      refetchCurrentPage();
+      customersQuery.refetch();
     },
   });
 
-  const [selectedCustomerId, setSelectedCustomerId] = useState<string | undefined>(undefined);
+  // Customer details query and mutations
+  const customerDetailsQuery = useCustomerDetailsQuery({
+    id: selectedCustomerId,
+  });
 
-  const {
-    customer: selectedCustomer,
-    loading: loadingCustomerDetails,
-    error: loadingCustomerDetailsError,
-    save: saveCustomerDetails,
-    saving: savingCustomerDetails,
-  } = useCustomerDetailsData({ id: selectedCustomerId });
+  const customerDetailsMutations = useSaveCustomer({
+    onDataSaved: (customer) => {
+      // Optionally update the customer in the list or refetch
+      customersQuery.refetch();
+    },
+  });
+
+  // Subscriptions for real-time updates
+  useCustomerSubscriptions({
+    onCustomerUpdated: () => {
+      customersQuery.refetch();
+    },
+    onCustomerRegistered: () => {
+      customersQuery.refetch();
+    },
+    onCustomerDeactivated: () => {
+      customersQuery.refetch();
+    },
+  });
+
+  // Navigation handlers
+  const nextPage = useCallback(() => {
+    if (customersQuery.pageInfo && customersQuery.canGoNext(customersQuery.pageInfo)) {
+      customersQuery.nextPage(customersQuery.pageInfo);
+    }
+  }, [customersQuery]);
+
+  const prevPage = useCallback(() => {
+    if (customersQuery.pageInfo && customersQuery.canGoPrevious(customersQuery.pageInfo)) {
+      customersQuery.prevPage(customersQuery.pageInfo);
+    }
+  }, [customersQuery]);
 
   return (
     <CustomersDataContext.Provider
       value={{
-        customers,
-        loadingCustomers,
-        loadingCustomersError,
+        customers: customersQuery.customers,
+        loadingCustomers: customersQuery.loading,
+        loadingCustomersError: customersQuery.error,
         searchTerm,
         setSearchTerm,
         nextPage,
         prevPage,
-        pageInfo,
-        totalCount: totalCount ?? 0,
+        pageInfo: customersQuery.pageInfo,
+        totalCount: customersQuery.totalCount ?? 0,
         selectCustomer: setSelectedCustomerId,
-        selectedCustomer,
-        loadingCustomerDetails,
-        loadingCustomerDetailsError,
-        saveCustomerDetails,
-        savingCustomerDetails,
-        deactivate,
-        deactivatingCustomer,
+        selectedCustomer: customerDetailsQuery.customer,
+        loadingCustomerDetails: customerDetailsQuery.loading,
+        loadingCustomerDetailsError: customerDetailsQuery.error,
+        saveCustomerDetails: customerDetailsMutations.save,
+        savingCustomerDetails: customerDetailsMutations.saving,
+        deactivate: customersMutations.deactivate,
+        deactivatingCustomer: customersMutations.deactivatingCustomer,
       }}
     >
       {children}
