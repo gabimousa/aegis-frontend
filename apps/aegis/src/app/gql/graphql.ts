@@ -22,7 +22,6 @@ export type Scalars = {
   DateTime: { input: any; output: any };
   /** The `Decimal` scalar type represents a decimal floating-point number. */
   Decimal: { input: any; output: any };
-  UUID: { input: any; output: any };
 };
 
 export type AddAddressToCustomerError = ApplicationError;
@@ -56,7 +55,7 @@ export type Address = {
   city?: Maybe<Scalars['String']['output']>;
   countryCode?: Maybe<Alpha3Code>;
   dateTimeRemoved?: Maybe<Scalars['DateTime']['output']>;
-  id: Scalars['UUID']['output'];
+  id: Scalars['ID']['output'];
   number?: Maybe<Scalars['String']['output']>;
   removed: Scalars['Boolean']['output'];
   state?: Maybe<Scalars['String']['output']>;
@@ -369,12 +368,17 @@ export type ArticleSuppliersArgs = {
   where?: InputMaybe<SupplierFilterInput>;
 };
 
+export type ArticleDiscontinuedPayload = {
+  __typename?: 'ArticleDiscontinuedPayload';
+  id: Scalars['ID']['output'];
+};
+
 export type ArticleFilterInput = {
   and?: InputMaybe<Array<ArticleFilterInput>>;
   code?: InputMaybe<StringOperationFilterInput>;
   description?: InputMaybe<StringOperationFilterInput>;
   discontinued?: InputMaybe<BooleanOperationFilterInput>;
-  id?: InputMaybe<UuidOperationFilterInput>;
+  id?: InputMaybe<IdOperationFilterInput>;
   name?: InputMaybe<StringOperationFilterInput>;
   or?: InputMaybe<Array<ArticleFilterInput>>;
   price?: InputMaybe<DecimalOperationFilterInput>;
@@ -453,6 +457,11 @@ export type CustomerAddressesArgs = {
   order?: InputMaybe<Array<AddressSortInput>>;
 };
 
+export type CustomerDeactivatedPayload = {
+  __typename?: 'CustomerDeactivatedPayload';
+  id: Scalars['ID']['output'];
+};
+
 export type CustomerFilterInput = {
   active?: InputMaybe<BooleanOperationFilterInput>;
   and?: InputMaybe<Array<CustomerFilterInput>>;
@@ -461,7 +470,7 @@ export type CustomerFilterInput = {
   dateTimeDeactivated?: InputMaybe<DateTimeOperationFilterInput>;
   email?: InputMaybe<StringOperationFilterInput>;
   iban?: InputMaybe<StringOperationFilterInput>;
-  id?: InputMaybe<UuidOperationFilterInput>;
+  id?: InputMaybe<IdOperationFilterInput>;
   name?: InputMaybe<StringOperationFilterInput>;
   or?: InputMaybe<Array<CustomerFilterInput>>;
   phoneNumber?: InputMaybe<StringOperationFilterInput>;
@@ -588,6 +597,13 @@ export const ErrorType = {
 export type ErrorType = (typeof ErrorType)[keyof typeof ErrorType];
 export type IdInputOfGuidInput = {
   id: Scalars['ID']['input'];
+};
+
+export type IdOperationFilterInput = {
+  eq?: InputMaybe<Scalars['ID']['input']>;
+  in?: InputMaybe<Array<InputMaybe<Scalars['ID']['input']>>>;
+  neq?: InputMaybe<Scalars['ID']['input']>;
+  nin?: InputMaybe<Array<InputMaybe<Scalars['ID']['input']>>>;
 };
 
 export type LinkToSupplierError = ApplicationError;
@@ -874,12 +890,12 @@ export type Subscription = {
   onAddressAddedToSupplier: Supplier;
   onAddressRemovedFromCustomer: Customer;
   onAddressRemovedFromSupplier: Supplier;
-  onArticleDiscontinued: Scalars['String']['output'];
+  onArticleDiscontinued: ArticleDiscontinuedPayload;
   onArticleRegistered: Article;
-  onCustomerDeactivated: Scalars['String']['output'];
+  onCustomerDeactivated: CustomerDeactivatedPayload;
   onCustomerDetailsUpdated: Customer;
   onCustomerRegistered: Customer;
-  onSupplierDeactivated: Scalars['String']['output'];
+  onSupplierDeactivated: SupplierDeactivatedPayload;
   onSupplierDetailsUpdated: Supplier;
   onSupplierLinkedToArticle: Article;
   onSupplierRegistered: Supplier;
@@ -906,6 +922,11 @@ export type SupplierAddressesArgs = {
   order?: InputMaybe<Array<AddressSortInput>>;
 };
 
+export type SupplierDeactivatedPayload = {
+  __typename?: 'SupplierDeactivatedPayload';
+  id: Scalars['ID']['output'];
+};
+
 export type SupplierFilterInput = {
   active?: InputMaybe<BooleanOperationFilterInput>;
   and?: InputMaybe<Array<SupplierFilterInput>>;
@@ -914,7 +935,7 @@ export type SupplierFilterInput = {
   dateTimeDeactivated?: InputMaybe<DateTimeOperationFilterInput>;
   email?: InputMaybe<StringOperationFilterInput>;
   iban?: InputMaybe<StringOperationFilterInput>;
-  id?: InputMaybe<UuidOperationFilterInput>;
+  id?: InputMaybe<IdOperationFilterInput>;
   name?: InputMaybe<StringOperationFilterInput>;
   or?: InputMaybe<Array<SupplierFilterInput>>;
   phoneNumber?: InputMaybe<StringOperationFilterInput>;
@@ -1068,21 +1089,6 @@ export type UpdateSupplierDetailsPayload = {
   supplier?: Maybe<Supplier>;
 };
 
-export type UuidOperationFilterInput = {
-  eq?: InputMaybe<Scalars['UUID']['input']>;
-  gt?: InputMaybe<Scalars['UUID']['input']>;
-  gte?: InputMaybe<Scalars['UUID']['input']>;
-  in?: InputMaybe<Array<InputMaybe<Scalars['UUID']['input']>>>;
-  lt?: InputMaybe<Scalars['UUID']['input']>;
-  lte?: InputMaybe<Scalars['UUID']['input']>;
-  neq?: InputMaybe<Scalars['UUID']['input']>;
-  ngt?: InputMaybe<Scalars['UUID']['input']>;
-  ngte?: InputMaybe<Scalars['UUID']['input']>;
-  nin?: InputMaybe<Array<InputMaybe<Scalars['UUID']['input']>>>;
-  nlt?: InputMaybe<Scalars['UUID']['input']>;
-  nlte?: InputMaybe<Scalars['UUID']['input']>;
-};
-
 export type CustomerFieldsFragment = {
   __typename?: 'Customer';
   id: string;
@@ -1097,7 +1103,7 @@ export type CustomerFieldsFragment = {
 
 export type CustomerAddressFieldsFragment = {
   __typename?: 'Address';
-  id: any;
+  id: string;
   type: AddressType;
   street?: string | null;
   number?: string | null;
@@ -1253,7 +1259,7 @@ export type OnCustomerDeactivatedSubscriptionVariables = Exact<{ [key: string]: 
 
 export type OnCustomerDeactivatedSubscription = {
   __typename?: 'Subscription';
-  onCustomerDeactivated: string;
+  onCustomerDeactivated: { __typename?: 'CustomerDeactivatedPayload'; id: string };
 };
 
 export type SuppliersQueryVariables = Exact<{
@@ -1994,7 +2000,16 @@ export const OnCustomerDeactivatedDocument = {
       name: { kind: 'Name', value: 'OnCustomerDeactivated' },
       selectionSet: {
         kind: 'SelectionSet',
-        selections: [{ kind: 'Field', name: { kind: 'Name', value: 'onCustomerDeactivated' } }],
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'onCustomerDeactivated' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'Field', name: { kind: 'Name', value: 'id' } }],
+            },
+          },
+        ],
       },
     },
   ],

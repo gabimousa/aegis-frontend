@@ -45,7 +45,7 @@ export const useCustomerSubscriptions = ({
     error: deactivatedError,
   } = useSubscription(onCustomerDeactivatedSubscription, {
     onData(options) {
-      const customerId = options.data.data?.onCustomerDeactivated;
+      const customerId = options.data.data?.onCustomerDeactivated.id;
       customerId && onCustomerDeactivated?.(customerId);
     },
   });

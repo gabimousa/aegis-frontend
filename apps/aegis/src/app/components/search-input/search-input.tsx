@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Form } from 'react-bootstrap';
-import useDebounce from '../../hooks/useDebounce';
+import useDebounce from '../../hooks/useDebounce/useDebounce';
 
 type SearchProps = {
   placeholder?: string;

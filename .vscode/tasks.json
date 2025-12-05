@@ -1,0 +1,106 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "nx-serve-aegis",
+      "type": "shell",
+      "command": "nx",
+      "args": ["serve", "aegis"],
+      "group": "build",
+      "isBackground": true,
+      "problemMatcher": {
+        "pattern": {
+          "regexp": "^([^\\s].*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
+          "file": 1,
+          "line": 2,
+          "column": 3,
+          "severity": 4,
+          "message": 5
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "^\\s*Local:.* ",
+          "endsPattern": "ready in \\d+ms\\."
+        }
+      },
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared",
+        "group": "nx-serve"
+      }
+    },
+    {
+      "label": "nx-build-aegis",
+      "type": "shell",
+      "command": "nx",
+      "args": ["build", "aegis"],
+      "group": "build",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared",
+        "group": "nx-build"
+      }
+    },
+    {
+      "label": "nx-test-aegis",
+      "type": "shell",
+      "command": "nx",
+      "args": ["test", "aegis"],
+      "group": "test",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared",
+        "group": "nx-test"
+      }
+    },
+    {
+      "label": "nx-e2e-aegis",
+      "type": "shell",
+      "command": "nx",
+      "args": ["e2e", "aegis-e2e"],
+      "group": "test",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared",
+        "group": "nx-test"
+      }
+    },
+    {
+      "label": "nx-lint-aegis",
+      "type": "shell",
+      "command": "nx",
+      "args": ["lint", "aegis"],
+      "group": "build",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared",
+        "group": "nx-lint"
+      }
+    }
+  ]
+}

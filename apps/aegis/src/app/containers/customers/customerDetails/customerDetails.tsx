@@ -35,12 +35,14 @@ function CustomerDetails() {
   const match = useMatch('/customers/:id');
   const { t } = useTranslation();
   const {
-    selectCustomer,
-    selectedCustomer: customer,
-    loadingCustomerDetails,
-    loadingCustomerDetailsError,
-    saveCustomerDetails,
-    savingCustomerDetails,
+    details: {
+      selectCustomer,
+      selectedCustomer: customer,
+      loadingCustomerDetails,
+      loadingCustomerDetailsError,
+      saveCustomerDetails,
+      savingCustomerDetails,
+    },
   } = useContext(CustomersDataContext);
 
   const formProps = useForm<CustomerDetailsModel>({

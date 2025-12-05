@@ -18,6 +18,8 @@ export const onCustomerDetailsUpdatedSubscription = graphql(`
 
 export const onCustomerDeactivatedSubscription = graphql(`
   subscription OnCustomerDeactivated {
-    onCustomerDeactivated
+    onCustomerDeactivated {
+      id
+    }
   }
 `);

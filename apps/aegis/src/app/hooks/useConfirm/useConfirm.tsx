@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 import { Button } from 'react-bootstrap';
-import { useDialog } from './useDialog';
+import { useDialog } from '../useDialog/useDialog';
 
 export const useConfirm = () => {
   const { showDialog, closeDialog } = useDialog();

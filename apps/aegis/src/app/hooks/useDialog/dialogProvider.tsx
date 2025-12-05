@@ -1,23 +1,11 @@
-import React, { createContext, ReactNode, useContext, useState } from 'react';
+import { createContext, PropsWithChildren, useState } from 'react';
 import { Modal } from 'react-bootstrap';
+import { DialogContextType } from './models/dialogContextType';
+import { DialogOptions } from './models/dialogOptions';
 
-type DialogOptions = {
-  id: string;
-  title?: string | ReactNode;
-  content?: ReactNode;
-  actions?: ReactNode;
-  size?: 'sm' | 'lg' | 'xl';
-  backdrop?: boolean | 'static';
-};
+export const DialogContext = createContext<DialogContextType | undefined>(undefined);
 
-type DialogContextType = {
-  showDialog: (options: Omit<DialogOptions, 'id'>) => string;
-  closeDialog: (id: string) => void;
-};
-
-const DialogContext = createContext<DialogContextType | undefined>(undefined);
-
-export const DialogProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const DialogProvider = ({ children }: PropsWithChildren) => {
   const [dialogs, setDialogs] = useState<DialogOptions[]>([]);
 
   const showDialog = (options: Omit<DialogOptions, 'id'>) => {
@@ -56,10 +44,4 @@ export const DialogProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       ))}
     </DialogContext.Provider>
   );
-};
-
-export const useDialog = () => {
-  const ctx = useContext(DialogContext);
-  if (!ctx) throw new Error('useDialog must be used within a DialogProvider');
-  return ctx;
 };

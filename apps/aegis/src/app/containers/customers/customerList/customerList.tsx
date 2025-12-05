@@ -6,7 +6,7 @@ import { Plus, Users } from 'tabler-icons-react';
 import DataGrid, { DataGridProps } from '../../../components/data-grid/data-grid';
 import { DataGridColumn } from '../../../components/data-grid/data-grid-column';
 import ListView from '../../../components/listView/listView';
-import { useConfirm } from '../../../hooks/useConfirm';
+import { useConfirm } from '../../../hooks/useConfirm/useConfirm';
 import CustomersDataContext from '../customersContext';
 import { CustomerModel } from '../model/customer.model';
 
@@ -15,16 +15,17 @@ export function CustomerList() {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const {
-    customers,
-    loadingCustomers,
-    loadingCustomersError,
-    setSearchTerm,
-    pageInfo,
-    totalCount,
-    nextPage,
-    prevPage,
-    deactivate,
-    deactivatingCustomer,
+    list: {
+      customers,
+      loadingCustomers,
+      loadingCustomersError,
+      setSearchTerm,
+      pageInfo,
+      totalCount,
+      loadMore,
+      canLoadMore,
+    },
+    details: { deactivate, deactivatingCustomer },
   } = useContext(CustomersDataContext);
 
   const columns: DataGridColumn<CustomerModel>[] = [
@@ -88,12 +89,9 @@ export function CustomerList() {
       cardTitle={t('customers.listTitle')}
       showFooter={!!pageInfo}
       footerLabel={footerLabel}
-      onNextPage={nextPage}
-      nextPageLabel={t('common.next')}
-      onPrevPage={prevPage}
-      prevPageLabel={t('common.previous')}
-      isNextPageDisabled={!pageInfo?.hasNextPage}
-      isPrevPageDisabled={!pageInfo?.hasPreviousPage}
+      loadMoreLabel={t('common.loadMore')}
+      onLoadMore={() => pageInfo && loadMore(pageInfo)}
+      canLoadMore={pageInfo ? canLoadMore(pageInfo) : false}
     >
       <DataGrid {...dataGridProps} />
     </ListView>

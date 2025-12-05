@@ -11,14 +11,11 @@ type ListViewProps = PropsWithChildren<{
   cardTitle: string | ReactElement;
   loadingLabel?: string;
   showFooter?: boolean;
-  nextPageLabel?: string | ReactElement;
-  prevPageLabel?: string | ReactElement;
+  loadMoreLabel?: string | ReactElement;
   footerLabel?: string | ReactElement;
-  isPrevPageDisabled?: boolean;
-  isNextPageDisabled?: boolean;
+  canLoadMore?: boolean;
   onSearchChange: (value: string) => void;
-  onPrevPage?: () => void;
-  onNextPage?: () => void;
+  onLoadMore?: () => void;
 }>;
 
 function ListView({
@@ -32,13 +29,10 @@ function ListView({
   children,
   showFooter,
   footerLabel,
-  nextPageLabel,
-  prevPageLabel,
-  isPrevPageDisabled,
-  isNextPageDisabled,
+  loadMoreLabel,
+  canLoadMore,
   onSearchChange,
-  onPrevPage,
-  onNextPage,
+  onLoadMore,
 }: ListViewProps) {
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -101,21 +95,13 @@ function ListView({
                   </div>
                   <div>
                     <Button
-                      onClick={onPrevPage}
+                      onClick={onLoadMore}
                       variant="outline-secondary"
                       size="sm"
-                      disabled={isPrevPageDisabled}
+                      disabled={!canLoadMore}
                       className="me-2"
                     >
-                      {prevPageLabel}
-                    </Button>
-                    <Button
-                      onClick={onNextPage}
-                      variant="outline-secondary"
-                      size="sm"
-                      disabled={isNextPageDisabled}
-                    >
-                      {nextPageLabel}
+                      {loadMoreLabel}
                     </Button>
                   </div>
                 </div>

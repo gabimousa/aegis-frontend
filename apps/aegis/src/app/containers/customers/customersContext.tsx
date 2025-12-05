@@ -1,5 +1,5 @@
 import { ErrorLike } from '@apollo/client';
-import { createContext, PropsWithChildren, useCallback, useState } from 'react';
+import { createContext, PropsWithChildren, useState } from 'react';
 import { PageInfo, RegisterCustomerInput, UpdateCustomerDetailsInput } from '../../gql/graphql';
 import {
   useCustomerDetailsQuery,
@@ -12,121 +12,136 @@ import { CustomerModel } from './model/customer.model';
 import { CustomerDetailsModel } from './model/customerDetails.model';
 
 type CustomersContextType = {
-  customers: CustomerModel[];
-  loadingCustomers: boolean;
-  loadingCustomersError?: ErrorLike;
-  pageInfo?: PageInfo;
-  totalCount: number;
-  nextPage: () => void;
-  prevPage: () => void;
-  selectedCustomer?: CustomerDetailsModel;
-  searchTerm: string;
-  setSearchTerm: (term: string) => void;
-  selectCustomer: (id: string | undefined) => void;
-  loadingCustomerDetails: boolean;
-  loadingCustomerDetailsError?: ErrorLike;
-  saveCustomerDetails: (
-    input: RegisterCustomerInput | UpdateCustomerDetailsInput
-  ) => Promise<boolean>;
-  savingCustomerDetails?: boolean;
-  deactivate: (customerId: string) => Promise<boolean>;
-  deactivatingCustomer: boolean;
+  list: {
+    customers: CustomerModel[];
+    loadingCustomers: boolean;
+    loadingCustomersError?: ErrorLike;
+    pageInfo?: PageInfo;
+    totalCount: number;
+    loadMore: (pageInfo: PageInfo) => void;
+    canLoadMore: (pageInfo: PageInfo) => boolean;
+    searchTerm?: string;
+    setSearchTerm: (term: string | undefined) => void;
+  };
+  details: {
+    selectedCustomer?: CustomerDetailsModel;
+    selectCustomer: (id: string | undefined) => void;
+    loadingCustomerDetails: boolean;
+    loadingCustomerDetailsError?: ErrorLike;
+    saveCustomerDetails: (
+      input: RegisterCustomerInput | UpdateCustomerDetailsInput
+    ) => Promise<boolean>;
+    savingCustomerDetails?: boolean;
+    deactivate: (customerId: string) => Promise<boolean>;
+    deactivatingCustomer: boolean;
+  };
 };
 
 export const CustomersDataContext = createContext<CustomersContextType>({
-  customers: [],
-  loadingCustomers: false,
-  loadingCustomersError: undefined,
-  pageInfo: undefined,
-  totalCount: 0,
-  nextPage: () => void 0,
-  prevPage: () => void 0,
-  selectCustomer: () => void 0,
-  searchTerm: '',
-  setSearchTerm: () => void 0,
-  selectedCustomer: undefined,
-  loadingCustomerDetails: false,
-  loadingCustomerDetailsError: undefined,
-  saveCustomerDetails: async () => false,
-  savingCustomerDetails: false,
-  deactivate: async () => false,
-  deactivatingCustomer: false,
+  list: {
+    customers: [],
+    loadingCustomers: false,
+    loadingCustomersError: undefined,
+    pageInfo: undefined,
+    totalCount: 0,
+    loadMore: (pageInfo: PageInfo) => void 0,
+    canLoadMore: (pageInfo: PageInfo) => false,
+    searchTerm: '',
+    setSearchTerm: () => void 0,
+  },
+  details: {
+    selectCustomer: () => void 0,
+    selectedCustomer: undefined,
+    loadingCustomerDetails: false,
+    loadingCustomerDetailsError: undefined,
+    saveCustomerDetails: async () => false,
+    savingCustomerDetails: false,
+    deactivate: async () => false,
+    deactivatingCustomer: false,
+  },
 });
 
 export const CustomerDataProvider = ({ children }: PropsWithChildren) => {
-  const [searchTerm, setSearchTerm] = useState('');
   const [selectedCustomerId, setSelectedCustomerId] = useState<string | undefined>(undefined);
 
   // Customer list query and mutations
-  const customersQuery = useCustomersQuery({
-    pageSize: 10,
+  const {
+    entities,
+    pageInfo,
+    loading,
+    error,
+    canLoadMore,
+    loadMore,
+    fetchSingleEntity,
+    removeLocalEntity,
     searchTerm,
-  });
-
-  const customersMutations = useDeactivateCustomer({
-    onCustomerDeactivated: () => {
-      customersQuery.refetch();
-    },
+    setSearchTerm,
+    totalCount,
+  } = useCustomersQuery({
+    pageSize: 10,
   });
 
   // Customer details query and mutations
-  const customerDetailsQuery = useCustomerDetailsQuery({
+  const {
+    entity,
+    loading: loadingCustomerDetails,
+    error: customerDetailsError,
+  } = useCustomerDetailsQuery({
     id: selectedCustomerId,
   });
 
-  const customerDetailsMutations = useSaveCustomer({
-    onDataSaved: (customer) => {
-      // Optionally update the customer in the list or refetch
-      customersQuery.refetch();
+  const { save, saving } = useSaveCustomer({
+    onDataSaved: ({ id }) => {
+      fetchSingleEntity(id);
+    },
+  });
+
+  const { deactivate, deactivatingCustomer } = useDeactivateCustomer({
+    onCustomerDeactivated: (id) => {
+      removeLocalEntity(id);
     },
   });
 
   // Subscriptions for real-time updates
   useCustomerSubscriptions({
-    onCustomerUpdated: () => {
-      customersQuery.refetch();
+    onCustomerUpdated: ({ id }) => {
+      // Customer updates might change name/sort order - use smart refetch
+      fetchSingleEntity(id);
     },
-    onCustomerRegistered: () => {
-      customersQuery.refetch();
+    onCustomerRegistered: ({ id }) => {
+      // New customers might appear on different pages - reset pagination
+      fetchSingleEntity(id);
     },
-    onCustomerDeactivated: () => {
-      customersQuery.refetch();
+    onCustomerDeactivated: (id) => {
+      // Deactivation might empty current page
+      removeLocalEntity(id);
     },
   });
-
-  // Navigation handlers
-  const nextPage = useCallback(() => {
-    if (customersQuery.pageInfo && customersQuery.canGoNext(customersQuery.pageInfo)) {
-      customersQuery.nextPage(customersQuery.pageInfo);
-    }
-  }, [customersQuery]);
-
-  const prevPage = useCallback(() => {
-    if (customersQuery.pageInfo && customersQuery.canGoPrevious(customersQuery.pageInfo)) {
-      customersQuery.prevPage(customersQuery.pageInfo);
-    }
-  }, [customersQuery]);
 
   return (
     <CustomersDataContext.Provider
       value={{
-        customers: customersQuery.customers,
-        loadingCustomers: customersQuery.loading,
-        loadingCustomersError: customersQuery.error,
-        searchTerm,
-        setSearchTerm,
-        nextPage,
-        prevPage,
-        pageInfo: customersQuery.pageInfo,
-        totalCount: customersQuery.totalCount ?? 0,
-        selectCustomer: setSelectedCustomerId,
-        selectedCustomer: customerDetailsQuery.customer,
-        loadingCustomerDetails: customerDetailsQuery.loading,
-        loadingCustomerDetailsError: customerDetailsQuery.error,
-        saveCustomerDetails: customerDetailsMutations.save,
-        savingCustomerDetails: customerDetailsMutations.saving,
-        deactivate: customersMutations.deactivate,
-        deactivatingCustomer: customersMutations.deactivatingCustomer,
+        list: {
+          customers: entities,
+          loadingCustomers: loading,
+          loadingCustomersError: error,
+          searchTerm,
+          pageInfo: pageInfo,
+          totalCount: totalCount ?? 0,
+          setSearchTerm,
+          loadMore,
+          canLoadMore,
+        },
+        details: {
+          selectCustomer: setSelectedCustomerId,
+          selectedCustomer: entity,
+          loadingCustomerDetails: loadingCustomerDetails,
+          loadingCustomerDetailsError: customerDetailsError,
+          saveCustomerDetails: save,
+          savingCustomerDetails: saving,
+          deactivate,
+          deactivatingCustomer,
+        },
       }}
     >
       {children}
