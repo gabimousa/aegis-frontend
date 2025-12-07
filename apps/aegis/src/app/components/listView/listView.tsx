@@ -42,11 +42,11 @@ function ListView({
   };
 
   return (
-    <Container fluid>
-      <Row className="mb-4">
-        <Col md={12} className="d-flex flex-wrap">
-          <div className="flex-grow-1 d-flex align-items-center">{header}</div>
-          <div className="flex-grow-0">{actions}</div>
+    <Container fluid className="h-100 overflow-hidden d-flex flex-column">
+      <Row className="mb-2">
+        <Col md={12} className="d-flex align-items-center flex-wrap">
+          <div className="flex-grow-1">{header}</div>
+          <div className="flex-grow-1 flex-sm-grow-0">{actions}</div>
         </Col>
       </Row>
 
@@ -70,13 +70,13 @@ function ListView({
         </Row>
       )}
 
-      <Row>
-        <Col>
-          <Card>
-            <Card.Header>
+      <Row className="flex-grow-1 overflow-auto">
+        <Col className="h-100">
+          <Card className="h-100 d-flex flex-column">
+            {/* <Card.Header>
               <h5 className="mb-0">{cardTitle}</h5>
-            </Card.Header>
-            <Card.Body>
+            </Card.Header> */}
+            <Card.Body className="flex-grow-1 overflow-auto p-0">
               {loading ? (
                 <div className="text-center p-4">
                   <Spinner animation="border" role="status">

@@ -62,7 +62,7 @@ export function CustomerList() {
   };
 
   const title = (
-    <div className="d-flex align-items-center mb-3">
+    <div className="d-flex align-items-center">
       <Users size={32} className="me-3" />
       <h2 className="mb-0">{t('customers.title')}</h2>
     </div>

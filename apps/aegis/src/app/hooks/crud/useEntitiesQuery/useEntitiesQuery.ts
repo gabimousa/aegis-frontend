@@ -44,13 +44,7 @@ export const useEntitiesQuery = <Q, T extends { id: string }>({
     fetchPolicy: 'cache-and-network',
   });
 
-  const {
-    data: singleEntityData,
-    refetch: refetchSingleEntity,
-    loading: singleEntityLoading,
-    error: singleEntityError,
-    client: singleEntityClient,
-  } = useQuery(query, {
+  const { refetch: refetchSingleEntity, error: singleEntityError } = useQuery(query, {
     variables,
     skip: true,
     errorPolicy: 'all',
@@ -62,16 +56,30 @@ export const useEntitiesQuery = <Q, T extends { id: string }>({
   }, [error, singleEntityError]);
 
   const fetchSingleEntity = useCallback(
-    (id: string) => {
+    async (id: string) => {
       controllerRef.current?.abort();
       controllerRef.current = new AbortController();
       console.log(`🔍 Fetching single entity with ID: ${id}`);
-      return refetchSingleEntity({
+      const result = await refetchSingleEntity({
         first: 1,
         where: { id: { eq: id } },
       });
+      const connection = connectionSelector(result.data);
+      const newEntities = connection?.nodes ?? [];
+      if (newEntities.length > 0) {
+        const [entity] = newEntities;
+        setEntityLookup((prevEntityLookup) => {
+          if (prevEntityLookup[entity.id]) {
+            return { ...prevEntityLookup, [entity.id]: entity };
+          } else {
+            setOrderedIds((prevOrderedIds) => Array.from(new Set([...prevOrderedIds, entity.id])));
+            return { ...prevEntityLookup, [entity.id]: entity };
+          }
+        });
+      }
+      return newEntities.length > 0 ? newEntities[0] : undefined;
     },
-    [refetchSingleEntity]
+    [refetchSingleEntity, connectionSelector]
   );
 
   const removeLocalEntity = useCallback((id: string) => {
@@ -100,26 +108,6 @@ export const useEntitiesQuery = <Q, T extends { id: string }>({
       setTotalCount(connection?.totalCount ?? 0);
     }
   }, [data, connectionSelector]);
-
-  useEffect(() => {
-    if (singleEntityData) {
-      const connection = connectionSelector(singleEntityData);
-      const newEntities = connection?.nodes ?? [];
-      if (newEntities.length > 0) {
-        const [entity] = newEntities;
-        setEntityLookup((prevEntityLookup) => {
-          if (prevEntityLookup[entity.id]) {
-            return { ...prevEntityLookup, [entity.id]: entity };
-          } else {
-            setOrderedIds((prevOrderedIds) => Array.from(new Set([...prevOrderedIds, entity.id])));
-            return { ...prevEntityLookup, [entity.id]: entity };
-          }
-        });
-      }
-
-      setTotalCount(connection?.totalCount ?? 0);
-    }
-  }, [singleEntityData, connectionSelector]);
 
   return {
     ...pagination,

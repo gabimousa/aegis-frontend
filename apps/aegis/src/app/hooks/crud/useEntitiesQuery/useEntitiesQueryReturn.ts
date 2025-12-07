@@ -8,7 +8,7 @@ export interface UseEntitiesQueryReturn<T> extends UsePaginationReturn {
   totalCount: number;
   loading: boolean;
   error?: ErrorLike;
-  fetchSingleEntity: (id: string) => void;
+  fetchSingleEntity: (id: string) => Promise<T | undefined>;
   removeLocalEntity: (id: string) => void;
   searchTerm?: string;
   setSearchTerm: (term: string | undefined) => void;
