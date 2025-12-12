@@ -7,27 +7,27 @@ import DataGrid, { DataGridProps } from '../../../components/data-grid/data-grid
 import { DataGridColumn } from '../../../components/data-grid/data-grid-column';
 import ListView from '../../../components/listView/listView';
 import { useConfirm } from '../../../hooks/useConfirm/useConfirm';
-import CustomersDataContext from '../data/customersContext';
-import { CustomerModel } from '../model/customer.model';
+import SuppliersDataContext from '../data/suppliersContext';
+import { SupplierModel } from '../model/supplier.model';
 
-export function CustomerList() {
+export function SupplierList() {
   const { confirm } = useConfirm();
   const navigate = useNavigate();
   const { t } = useTranslation();
   const {
     list: {
-      customers,
-      loadingCustomers,
-      loadingCustomersError,
+      suppliers,
+      loadingSuppliers,
+      loadingSuppliersError,
       setSearchTerm,
       totalCount,
       loadMore,
       canLoadMore,
     },
-    details: { deactivate, deactivatingCustomer },
-  } = useContext(CustomersDataContext);
+    details: { deactivate, deactivatingSupplier },
+  } = useContext(SuppliersDataContext);
 
-  const columns: DataGridColumn<CustomerModel>[] = [
+  const columns: DataGridColumn<SupplierModel>[] = [
     { header: t('common.code'), field: 'code', width: 150 },
     { header: t('common.name'), field: 'name' },
     { header: t('common.website'), field: 'website', width: 200 },
@@ -44,15 +44,15 @@ export function CustomerList() {
     </Button>
   );
 
-  const dataGridProps: DataGridProps<CustomerModel> = {
+  const dataGridProps: DataGridProps<SupplierModel> = {
     keyAccessor: 'id',
     columns,
-    data: customers ?? [],
+    data: suppliers ?? [],
     onEdit: (item) => navigate(`./${encodeURIComponent(item.id)}`),
     onDelete: async (item) => {
       const confirmed = await confirm(
-        t('customers.deactivateCustomerTitle'),
-        t('customers.deactivateCustomerMessage', { name: item.name })
+        t('suppliers.deactivateSupplierTitle'),
+        t('suppliers.deactivateSupplierMessage', { name: item.name })
       );
       if (confirmed) {
         await deactivate(item.id);
@@ -63,12 +63,12 @@ export function CustomerList() {
   const title = (
     <div className="d-flex align-items-center">
       <Users size={32} className="me-3" />
-      <h2 className="mb-0">{t('customers.title')}</h2>
+      <h2 className="mb-0">{t('suppliers.title')}</h2>
     </div>
   );
 
   const footerLabel = totalCount
-    ? t('customers.totalCount', {
+    ? t('suppliers.totalCount', {
         count: totalCount,
       })
     : '';
@@ -76,16 +76,16 @@ export function CustomerList() {
   return (
     <ListView
       header={title}
-      searchPlaceholder={t('customers.searchPlaceholder')}
+      searchPlaceholder={t('suppliers.searchPlaceholder')}
       onSearchChange={setSearchTerm}
       actions={actions}
-      loading={loadingCustomers || deactivatingCustomer}
+      loading={loadingSuppliers || deactivatingSupplier}
       loadingLabel={t('loading')}
       errorMessage={
-        loadingCustomersError &&
-        t('customers.errorLoading', { error: loadingCustomersError?.message })
+        loadingSuppliersError &&
+        t('suppliers.errorLoading', { error: loadingSuppliersError?.message })
       }
-      showFooter={!!customers}
+      showFooter={!!suppliers}
       footerLabel={footerLabel}
       loadMoreLabel={t('common.loadMore')}
       onLoadMore={() => loadMore()}
@@ -95,4 +95,4 @@ export function CustomerList() {
     </ListView>
   );
 }
-export default CustomerList;
+export default SupplierList;

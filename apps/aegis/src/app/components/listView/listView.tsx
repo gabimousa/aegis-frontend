@@ -1,4 +1,4 @@
-import { PropsWithChildren, ReactElement, useState } from 'react';
+import { PropsWithChildren, ReactElement, useCallback, useState } from 'react';
 import { Alert, Button, Card, Col, Container, Row, Spinner } from 'react-bootstrap';
 import SearchInput from '../search-input/search-input';
 
@@ -8,7 +8,6 @@ type ListViewProps = PropsWithChildren<{
   actions?: ReactElement;
   errorMessage?: string;
   loading: boolean;
-  cardTitle: string | ReactElement;
   loadingLabel?: string;
   showFooter?: boolean;
   loadMoreLabel?: string | ReactElement;
@@ -20,7 +19,6 @@ type ListViewProps = PropsWithChildren<{
 
 function ListView({
   header,
-  cardTitle,
   searchPlaceholder,
   actions,
   errorMessage,
@@ -36,10 +34,13 @@ function ListView({
 }: ListViewProps) {
   const [searchTerm, setSearchTerm] = useState('');
 
-  const handleSearchChange = (value: string) => {
-    setSearchTerm(value);
-    onSearchChange(value);
-  };
+  const handleSearchChange = useCallback(
+    (value: string) => {
+      setSearchTerm(value);
+      onSearchChange(value);
+    },
+    [onSearchChange]
+  );
 
   return (
     <Container fluid className="h-100 overflow-hidden d-flex flex-column">

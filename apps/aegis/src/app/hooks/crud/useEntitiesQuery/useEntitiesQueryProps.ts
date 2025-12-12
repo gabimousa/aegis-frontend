@@ -1,5 +1,5 @@
 import { OperationVariables, TypedDocumentNode } from '@apollo/client';
-import { Connection } from './connection';
+import { Connection } from '../../../types/connection';
 
 export interface UseEntitiesQueryProps<Q, T> {
   pageSize: number;

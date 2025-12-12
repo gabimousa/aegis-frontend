@@ -8,15 +8,15 @@ import DetailsPanel from '../../../components/layout/detailsPanel/detailsPanel';
 import {
   Alpha3Code,
   CreateAddressInput,
-  RegisterCustomerInput,
+  RegisterSupplierInput,
   UpdateAddressInput,
-  UpdateCustomerDetailsInput,
+  UpdateSupplierDetailsInput,
 } from '../../../gql/graphql';
 import setFieldErrors from '../../../utils/setFieldErrors';
-import CustomersDataContext from '../data/customersContext';
-import { CustomerAddressModel, CustomerDetailsModel } from '../model/customerDetails.model';
+import SuppliersDataContext from '../data/suppliersContext';
+import { SupplierAddressModel, SupplierDetailsModel } from '../model/supplierDetails.model';
 import AddressForm from './addressForm/addressForm';
-import CustomerForm from './customerForm/customerForm';
+import SupplierForm from './supplierForm/supplierForm';
 
 const serverErrorMap: Record<string, string> = {
   Code: 'code',
@@ -28,24 +28,24 @@ const serverErrorMap: Record<string, string> = {
   BIC: 'bic',
 };
 
-function CustomerDetails() {
+function SupplierDetails() {
   const [activeTab, setActiveTab] = useState('details');
   const detailsFormId = useId();
   const navigate = useNavigate();
-  const match = useMatch('/customers/:id');
+  const match = useMatch('/suppliers/:id');
   const { t } = useTranslation();
   const {
     details: {
-      selectCustomer,
-      selectedCustomer: customer,
-      loadingCustomerDetails,
-      loadingCustomerDetailsError,
-      saveCustomerDetails,
-      savingCustomerDetails,
+      selectSupplier,
+      selectedSupplier: supplier,
+      loadingSupplierDetails,
+      loadingSupplierDetailsError,
+      saveSupplierDetails,
+      savingSupplierDetails,
     },
-  } = useContext(CustomersDataContext);
+  } = useContext(SuppliersDataContext);
 
-  const formProps = useForm<CustomerDetailsModel>({
+  const formProps = useForm<SupplierDetailsModel>({
     mode: 'all',
     defaultValues: {
       code: '',
@@ -72,15 +72,14 @@ function CustomerDetails() {
   });
 
   useEffect(() => {
-    const customerId = match?.params.id;
-    selectCustomer(customerId);
-    return () => selectCustomer(undefined);
-  }, [match?.params.id, selectCustomer]);
+    const supplierId = match?.params.id;
+    selectSupplier(supplierId);
+    return () => selectSupplier(undefined);
+  }, [match?.params.id, selectSupplier]);
 
   useEffect(() => {
-    reset(customer);
-  }, [customer, reset]);
-
+    reset(supplier);
+  }, [supplier, reset]);
   const canAppendAddressTypes = (addressType: 'VISITING' | 'MAILING' | 'DELIVERY') => {
     return !fields.some((address) => address.type === addressType);
   };
@@ -103,11 +102,11 @@ function CustomerDetails() {
     });
   };
 
-  const getCustomerInputWithAddresses = (
-    formState: CustomerDetailsModel,
-    customerInput: RegisterCustomerInput | UpdateCustomerDetailsInput
-  ): RegisterCustomerInput | UpdateCustomerDetailsInput => {
-    const getAddressBase = (address: CustomerAddressModel): Partial<CreateAddressInput> => {
+  const getSupplierInputWithAddresses = (
+    formState: SupplierDetailsModel,
+    supplierInput: RegisterSupplierInput | UpdateSupplierDetailsInput
+  ): RegisterSupplierInput | UpdateSupplierDetailsInput => {
+    const getAddressBase = (address: SupplierAddressModel): Partial<CreateAddressInput> => {
       return {
         street: address.street,
         number: address.number,
@@ -118,15 +117,15 @@ function CustomerDetails() {
       };
     };
 
-    const getCreateAddressInput = (address: CustomerAddressModel): CreateAddressInput => {
+    const getCreateAddressInput = (address: SupplierAddressModel): CreateAddressInput => {
       return { ...getAddressBase(address), type: address.type };
     };
 
-    const getUpdateAddressInput = (address: CustomerAddressModel): UpdateAddressInput => {
+    const getUpdateAddressInput = (address: SupplierAddressModel): UpdateAddressInput => {
       return { id: address.id, ...getAddressBase(address) };
     };
 
-    if ('id' in customerInput) {
+    if ('id' in supplierInput) {
       const addedAddresses = formState.addresses
         .filter((address) => !address.id)
         .map((address) => getCreateAddressInput(address));
@@ -134,28 +133,28 @@ function CustomerDetails() {
         .filter((address) => address.id)
         .map((address) => getUpdateAddressInput(address));
       const removedAddresses =
-        customer?.addresses
+        supplier?.addresses
           ?.filter((address) => !formState.addresses.some((a) => a.id === address.id))
           .map((address) => ({ id: address.id })) || [];
       return {
-        ...customerInput,
+        ...supplierInput,
         addedAddresses,
         updatedAddresses,
         removedAddresses,
       };
     } else {
       return {
-        ...customerInput,
+        ...supplierInput,
         addresses: fields.map((address) => getCreateAddressInput(address)),
       };
     }
   };
 
-  const onSubmit = async (formState: CustomerDetailsModel) => {
-    console.log('Submitting customer details:', formState);
+  const onSubmit = async (formState: SupplierDetailsModel) => {
+    console.log('Submitting supplier details:', formState);
     const idInput = formState?.id ? { id: formState.id } : {};
     try {
-      const customerInput = {
+      const supplierInput = {
         ...idInput,
         code: formState.code,
         name: formState.name,
@@ -164,10 +163,10 @@ function CustomerDetails() {
         phoneNumber: formState.phoneNumber,
         iban: formState.iban,
         bic: formState.bic,
-      } as RegisterCustomerInput | UpdateCustomerDetailsInput;
+      } as RegisterSupplierInput | UpdateSupplierDetailsInput;
 
-      const result = await saveCustomerDetails(
-        getCustomerInputWithAddresses(formState, customerInput)
+      const result = await saveSupplierDetails(
+        getSupplierInputWithAddresses(formState, supplierInput)
       );
 
       result && navigate('..');
@@ -217,9 +216,9 @@ function CustomerDetails() {
         variant="primary"
         form={detailsFormId}
         type="submit"
-        disabled={savingCustomerDetails || !isValid || !isDirty}
+        disabled={savingSupplierDetails || !isValid || !isDirty}
       >
-        {savingCustomerDetails ? <Spinner animation="border" size="sm" className="me-2" /> : null}
+        {savingSupplierDetails ? <Spinner animation="border" size="sm" className="me-2" /> : null}
         {t('common.save')}
       </Button>
     </>
@@ -229,12 +228,12 @@ function CustomerDetails() {
     <DetailsPanel
       title={
         <>
-          <User size={24} className="me-2" /> {customer?.name || t('New Customer')}
+          <User size={24} className="me-2" /> {supplier?.name || t('New Supplier')}
         </>
       }
       onClose={() => navigate('..')}
       actions={actions}
-      loading={loadingCustomerDetails || savingCustomerDetails}
+      loading={loadingSupplierDetails || savingSupplierDetails}
     >
       {errors.root &&
         (errors.root.types ? (
@@ -252,10 +251,10 @@ function CustomerDetails() {
         <Form id={detailsFormId} noValidate onSubmit={handleSubmit(onSubmit)}>
           <Tabs activeKey={activeTab} onSelect={(tab) => setActiveTab(tab ?? 'details')}>
             <Tab className="pt-3" eventKey="details" title={t('common.details')}>
-              {loadingCustomerDetailsError ? (
-                <p>Error: {loadingCustomerDetailsError.message}</p>
+              {loadingSupplierDetailsError ? (
+                <p>Error: {loadingSupplierDetailsError.message}</p>
               ) : (
-                <CustomerForm />
+                <SupplierForm />
               )}
             </Tab>
             <Tab eventKey="addresses" title={t('common.addresses')}>
@@ -275,4 +274,4 @@ function CustomerDetails() {
     </DetailsPanel>
   );
 }
-export default CustomerDetails;
+export default SupplierDetails;

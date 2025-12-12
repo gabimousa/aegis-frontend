@@ -1,25 +1,31 @@
 import { ErrorLike } from '@apollo/client';
-import { createContext, PropsWithChildren, useState } from 'react';
-import { PageInfo, RegisterCustomerInput, UpdateCustomerDetailsInput } from '../../gql/graphql';
+import { createContext, PropsWithChildren, useEffect, useState } from 'react';
+import { RegisterCustomerInput, UpdateCustomerDetailsInput } from '../../../gql/graphql';
+import { CustomerModel } from '../model/customer.model';
+import { CustomerDetailsModel } from '../model/customerDetails.model';
 import {
   useCustomerDetailsQuery,
   useCustomersQuery,
   useCustomerSubscriptions,
   useDeactivateCustomer,
   useSaveCustomer,
-} from './data/hooks';
-import { CustomerModel } from './model/customer.model';
-import { CustomerDetailsModel } from './model/customerDetails.model';
+} from './hooks';
 
 type CustomersContextType = {
   list: {
     customers: CustomerModel[];
     loadingCustomers: boolean;
     loadingCustomersError?: ErrorLike;
-    pageInfo?: PageInfo;
     totalCount: number;
-    loadMore: (pageInfo: PageInfo) => void;
-    canLoadMore: (pageInfo: PageInfo) => boolean;
+    load: () => Promise<CustomerModel[]>;
+    loadMore: () => Promise<CustomerModel[]>;
+    loadById: (id: string) => Promise<CustomerModel | undefined>;
+    getById: (id: string) => CustomerModel | undefined;
+    addOne: (item: CustomerModel) => void;
+    addMany: (items: CustomerModel[]) => void;
+    deleteOne: (id: string) => void;
+    clear: () => void;
+    canLoadMore: boolean;
     searchTerm?: string;
     setSearchTerm: (term: string | undefined) => void;
   };
@@ -42,10 +48,16 @@ export const CustomersDataContext = createContext<CustomersContextType>({
     customers: [],
     loadingCustomers: false,
     loadingCustomersError: undefined,
-    pageInfo: undefined,
     totalCount: 0,
-    loadMore: (pageInfo: PageInfo) => void 0,
-    canLoadMore: (pageInfo: PageInfo) => false,
+    load: async () => Promise.resolve([]),
+    loadMore: async () => Promise.resolve([]),
+    loadById: async (id: string) => undefined,
+    getById: (id: string) => undefined,
+    addOne: () => void 0,
+    addMany: () => void 0,
+    deleteOne: () => void 0,
+    clear: () => void 0,
+    canLoadMore: false,
     searchTerm: '',
     setSearchTerm: () => void 0,
   },
@@ -66,20 +78,29 @@ export const CustomerDataProvider = ({ children }: PropsWithChildren) => {
 
   // Customer list query and mutations
   const {
-    entities,
-    pageInfo,
+    items,
+    totalCount,
     loading,
     error,
     canLoadMore,
+    getItemById,
+    load,
     loadMore,
-    fetchSingleEntity,
-    removeLocalEntity,
-    searchTerm,
-    setSearchTerm,
-    totalCount,
+    loadById,
+    addOne,
+    addMany,
+    clear,
+    deleteOne,
+    setSearchValue,
+    searchValue,
   } = useCustomersQuery({
     pageSize: 10,
   });
+
+  useEffect(() => {
+    load();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Only run on mount
 
   // Customer details query and mutations
   const {
@@ -92,29 +113,29 @@ export const CustomerDataProvider = ({ children }: PropsWithChildren) => {
 
   const { save, saving } = useSaveCustomer({
     onDataSaved: ({ id }) => {
-      fetchSingleEntity(id);
+      loadById(id);
     },
   });
 
   const { deactivate, deactivatingCustomer } = useDeactivateCustomer({
     onCustomerDeactivated: (id) => {
-      removeLocalEntity(id);
+      loadById(id);
     },
   });
 
   // Subscriptions for real-time updates
   useCustomerSubscriptions({
-    onCustomerUpdated: ({ id }) => {
+    onCustomerUpdated: (customer: CustomerModel) => {
       // Customer updates might change name/sort order - use smart refetch
-      fetchSingleEntity(id);
+      addOne(customer);
     },
-    onCustomerRegistered: ({ id }) => {
+    onCustomerRegistered: (customer: CustomerModel) => {
       // New customers might appear on different pages - reset pagination
-      fetchSingleEntity(id);
+      addOne(customer);
     },
     onCustomerDeactivated: (id) => {
       // Deactivation might empty current page
-      removeLocalEntity(id);
+      deleteOne(id);
     },
   });
 
@@ -122,14 +143,20 @@ export const CustomerDataProvider = ({ children }: PropsWithChildren) => {
     <CustomersDataContext.Provider
       value={{
         list: {
-          customers: entities,
+          customers: items,
           loadingCustomers: loading,
           loadingCustomersError: error,
-          searchTerm,
-          pageInfo: pageInfo,
+          searchTerm: searchValue,
           totalCount: totalCount ?? 0,
-          setSearchTerm,
+          setSearchTerm: setSearchValue,
           loadMore,
+          load,
+          loadById,
+          getById: getItemById,
+          addOne,
+          addMany,
+          deleteOne,
+          clear,
           canLoadMore,
         },
         details: {

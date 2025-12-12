@@ -12,13 +12,13 @@ export const usePagination = ({
     initialVariables || { first: pageSize }
   );
 
-  const hasMore = useCallback((pageInfo?: PageInfo) => {
+  const canLoadMore = useCallback((pageInfo?: PageInfo) => {
     return pageInfo?.hasNextPage ?? false;
   }, []);
 
   const loadMore = useCallback(
     (pageInfo: PageInfo) => {
-      if (hasMore(pageInfo)) {
+      if (canLoadMore(pageInfo)) {
         setVariables({
           first: pageSize,
           last: null,
@@ -27,7 +27,7 @@ export const usePagination = ({
         });
       }
     },
-    [pageSize, hasMore]
+    [pageSize, canLoadMore]
   );
 
   const resetPagination = useCallback(() => {
@@ -36,7 +36,7 @@ export const usePagination = ({
 
   return {
     variables,
-    canLoadMore: hasMore,
+    canLoadMore,
     loadMore,
     resetPagination,
   };

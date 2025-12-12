@@ -1,7 +1,7 @@
 import { useMatch, useNavigate } from 'react-router';
 import MasterDetail from '../../components/layout/masterDetail/masterDetail';
 import CustomerList from './customerList/customerList';
-import { CustomerDataProvider } from './customersContext';
+import { CustomerDataProvider } from './data/customersContext';
 
 function Customers() {
   const match = useMatch('/customers/:id');

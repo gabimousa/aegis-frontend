@@ -24,7 +24,16 @@ type Documents = {
   '\n  subscription OnCustomerRegistered {\n    onCustomerRegistered {\n      ...CustomerFields\n    }\n  }\n': typeof types.OnCustomerRegisteredDocument;
   '\n  subscription onCustomerDetailsUpdated {\n    onCustomerDetailsUpdated {\n      ...CustomerFields\n    }\n  }\n': typeof types.OnCustomerDetailsUpdatedDocument;
   '\n  subscription OnCustomerDeactivated {\n    onCustomerDeactivated {\n      id\n    }\n  }\n': typeof types.OnCustomerDeactivatedDocument;
-  '\n  query Suppliers(\n    $first: Int\n    $last: Int\n    $after: String\n    $before: String\n    $where: SupplierFilterInput\n    $order: [SupplierSortInput!]\n  ) {\n    suppliers(\n      first: $first\n      last: $last\n      after: $after\n      before: $before\n      where: $where\n      order: $order\n    ) {\n      nodes {\n        id\n        code\n        name\n        website\n        email\n        phoneNumber\n        iban\n        bic\n      }\n      pageInfo {\n        hasNextPage\n        hasPreviousPage\n        startCursor\n        endCursor\n      }\n      totalCount\n    }\n  }\n': typeof types.SuppliersDocument;
+  '\n  fragment SupplierFields on Supplier {\n    id\n    code\n    name\n    website\n    email\n    phoneNumber\n    iban\n    bic\n  }\n': typeof types.SupplierFieldsFragmentDoc;
+  '\n  fragment SupplierAddressFields on Address {\n    id\n    type\n    street\n    number\n    zipCode\n    city\n    state\n    countryCode\n  }\n': typeof types.SupplierAddressFieldsFragmentDoc;
+  '\n  mutation registerSupplier($input: RegisterSupplierInput!) {\n    registerSupplier(input: $input) {\n      supplier {\n        ...SupplierFields\n        addresses {\n          ...SupplierAddressFields\n        }\n      }\n      errors {\n        ... on ApplicationError {\n          code\n          description\n          type\n          fieldName\n          message\n        }\n      }\n    }\n  }\n': typeof types.RegisterSupplierDocument;
+  '\n  mutation updateSupplierDetails($input: UpdateSupplierDetailsInput!) {\n    updateSupplierDetails(input: $input) {\n      supplier {\n        ...SupplierFields\n        addresses {\n          ...SupplierAddressFields\n        }\n      }\n      errors {\n        ... on ApplicationError {\n          code\n          description\n          type\n          fieldName\n          message\n        }\n      }\n    }\n  }\n': typeof types.UpdateSupplierDetailsDocument;
+  '\n  mutation deactivateSupplier($input: DeactivateSupplierInput!) {\n    deactivateSupplier(input: $input) {\n      errors {\n        ... on ApplicationError {\n          code\n          description\n          type\n          fieldName\n          message\n        }\n      }\n    }\n  }\n': typeof types.DeactivateSupplierDocument;
+  '\n  query suppliers(\n    $first: Int\n    $last: Int\n    $after: String\n    $before: String\n    $where: SupplierFilterInput\n    $order: [SupplierSortInput!]\n  ) {\n    suppliers(\n      first: $first\n      last: $last\n      after: $after\n      before: $before\n      where: $where\n      order: $order\n    ) {\n      nodes {\n        ...SupplierFields\n      }\n      pageInfo {\n        hasNextPage\n        hasPreviousPage\n        startCursor\n        endCursor\n      }\n      totalCount\n    }\n  }\n': typeof types.SuppliersDocument;
+  '\n  query SupplierDetails($id: ID!) {\n    supplierById(id: $id) {\n      ...SupplierFields\n      addresses {\n        ...SupplierAddressFields\n      }\n    }\n  }\n': typeof types.SupplierDetailsDocument;
+  '\n  subscription OnSupplierRegistered {\n    onSupplierRegistered {\n      ...SupplierFields\n    }\n  }\n': typeof types.OnSupplierRegisteredDocument;
+  '\n  subscription OnSupplierDetailsUpdated {\n    onSupplierDetailsUpdated {\n      ...SupplierFields\n    }\n  }\n': typeof types.OnSupplierDetailsUpdatedDocument;
+  '\n  subscription OnSupplierDeactivated {\n    onSupplierDeactivated {\n      id\n    }\n  }\n': typeof types.OnSupplierDeactivatedDocument;
   '\n  query Countries {\n    countries {\n      code\n      name\n    }\n  }\n': typeof types.CountriesDocument;
 };
 const documents: Documents = {
@@ -48,8 +57,26 @@ const documents: Documents = {
     types.OnCustomerDetailsUpdatedDocument,
   '\n  subscription OnCustomerDeactivated {\n    onCustomerDeactivated {\n      id\n    }\n  }\n':
     types.OnCustomerDeactivatedDocument,
-  '\n  query Suppliers(\n    $first: Int\n    $last: Int\n    $after: String\n    $before: String\n    $where: SupplierFilterInput\n    $order: [SupplierSortInput!]\n  ) {\n    suppliers(\n      first: $first\n      last: $last\n      after: $after\n      before: $before\n      where: $where\n      order: $order\n    ) {\n      nodes {\n        id\n        code\n        name\n        website\n        email\n        phoneNumber\n        iban\n        bic\n      }\n      pageInfo {\n        hasNextPage\n        hasPreviousPage\n        startCursor\n        endCursor\n      }\n      totalCount\n    }\n  }\n':
+  '\n  fragment SupplierFields on Supplier {\n    id\n    code\n    name\n    website\n    email\n    phoneNumber\n    iban\n    bic\n  }\n':
+    types.SupplierFieldsFragmentDoc,
+  '\n  fragment SupplierAddressFields on Address {\n    id\n    type\n    street\n    number\n    zipCode\n    city\n    state\n    countryCode\n  }\n':
+    types.SupplierAddressFieldsFragmentDoc,
+  '\n  mutation registerSupplier($input: RegisterSupplierInput!) {\n    registerSupplier(input: $input) {\n      supplier {\n        ...SupplierFields\n        addresses {\n          ...SupplierAddressFields\n        }\n      }\n      errors {\n        ... on ApplicationError {\n          code\n          description\n          type\n          fieldName\n          message\n        }\n      }\n    }\n  }\n':
+    types.RegisterSupplierDocument,
+  '\n  mutation updateSupplierDetails($input: UpdateSupplierDetailsInput!) {\n    updateSupplierDetails(input: $input) {\n      supplier {\n        ...SupplierFields\n        addresses {\n          ...SupplierAddressFields\n        }\n      }\n      errors {\n        ... on ApplicationError {\n          code\n          description\n          type\n          fieldName\n          message\n        }\n      }\n    }\n  }\n':
+    types.UpdateSupplierDetailsDocument,
+  '\n  mutation deactivateSupplier($input: DeactivateSupplierInput!) {\n    deactivateSupplier(input: $input) {\n      errors {\n        ... on ApplicationError {\n          code\n          description\n          type\n          fieldName\n          message\n        }\n      }\n    }\n  }\n':
+    types.DeactivateSupplierDocument,
+  '\n  query suppliers(\n    $first: Int\n    $last: Int\n    $after: String\n    $before: String\n    $where: SupplierFilterInput\n    $order: [SupplierSortInput!]\n  ) {\n    suppliers(\n      first: $first\n      last: $last\n      after: $after\n      before: $before\n      where: $where\n      order: $order\n    ) {\n      nodes {\n        ...SupplierFields\n      }\n      pageInfo {\n        hasNextPage\n        hasPreviousPage\n        startCursor\n        endCursor\n      }\n      totalCount\n    }\n  }\n':
     types.SuppliersDocument,
+  '\n  query SupplierDetails($id: ID!) {\n    supplierById(id: $id) {\n      ...SupplierFields\n      addresses {\n        ...SupplierAddressFields\n      }\n    }\n  }\n':
+    types.SupplierDetailsDocument,
+  '\n  subscription OnSupplierRegistered {\n    onSupplierRegistered {\n      ...SupplierFields\n    }\n  }\n':
+    types.OnSupplierRegisteredDocument,
+  '\n  subscription OnSupplierDetailsUpdated {\n    onSupplierDetailsUpdated {\n      ...SupplierFields\n    }\n  }\n':
+    types.OnSupplierDetailsUpdatedDocument,
+  '\n  subscription OnSupplierDeactivated {\n    onSupplierDeactivated {\n      id\n    }\n  }\n':
+    types.OnSupplierDeactivatedDocument,
   '\n  query Countries {\n    countries {\n      code\n      name\n    }\n  }\n':
     types.CountriesDocument,
 };
@@ -132,8 +159,62 @@ export function graphql(
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(
-  source: '\n  query Suppliers(\n    $first: Int\n    $last: Int\n    $after: String\n    $before: String\n    $where: SupplierFilterInput\n    $order: [SupplierSortInput!]\n  ) {\n    suppliers(\n      first: $first\n      last: $last\n      after: $after\n      before: $before\n      where: $where\n      order: $order\n    ) {\n      nodes {\n        id\n        code\n        name\n        website\n        email\n        phoneNumber\n        iban\n        bic\n      }\n      pageInfo {\n        hasNextPage\n        hasPreviousPage\n        startCursor\n        endCursor\n      }\n      totalCount\n    }\n  }\n'
-): (typeof documents)['\n  query Suppliers(\n    $first: Int\n    $last: Int\n    $after: String\n    $before: String\n    $where: SupplierFilterInput\n    $order: [SupplierSortInput!]\n  ) {\n    suppliers(\n      first: $first\n      last: $last\n      after: $after\n      before: $before\n      where: $where\n      order: $order\n    ) {\n      nodes {\n        id\n        code\n        name\n        website\n        email\n        phoneNumber\n        iban\n        bic\n      }\n      pageInfo {\n        hasNextPage\n        hasPreviousPage\n        startCursor\n        endCursor\n      }\n      totalCount\n    }\n  }\n'];
+  source: '\n  fragment SupplierFields on Supplier {\n    id\n    code\n    name\n    website\n    email\n    phoneNumber\n    iban\n    bic\n  }\n'
+): (typeof documents)['\n  fragment SupplierFields on Supplier {\n    id\n    code\n    name\n    website\n    email\n    phoneNumber\n    iban\n    bic\n  }\n'];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
+  source: '\n  fragment SupplierAddressFields on Address {\n    id\n    type\n    street\n    number\n    zipCode\n    city\n    state\n    countryCode\n  }\n'
+): (typeof documents)['\n  fragment SupplierAddressFields on Address {\n    id\n    type\n    street\n    number\n    zipCode\n    city\n    state\n    countryCode\n  }\n'];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
+  source: '\n  mutation registerSupplier($input: RegisterSupplierInput!) {\n    registerSupplier(input: $input) {\n      supplier {\n        ...SupplierFields\n        addresses {\n          ...SupplierAddressFields\n        }\n      }\n      errors {\n        ... on ApplicationError {\n          code\n          description\n          type\n          fieldName\n          message\n        }\n      }\n    }\n  }\n'
+): (typeof documents)['\n  mutation registerSupplier($input: RegisterSupplierInput!) {\n    registerSupplier(input: $input) {\n      supplier {\n        ...SupplierFields\n        addresses {\n          ...SupplierAddressFields\n        }\n      }\n      errors {\n        ... on ApplicationError {\n          code\n          description\n          type\n          fieldName\n          message\n        }\n      }\n    }\n  }\n'];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
+  source: '\n  mutation updateSupplierDetails($input: UpdateSupplierDetailsInput!) {\n    updateSupplierDetails(input: $input) {\n      supplier {\n        ...SupplierFields\n        addresses {\n          ...SupplierAddressFields\n        }\n      }\n      errors {\n        ... on ApplicationError {\n          code\n          description\n          type\n          fieldName\n          message\n        }\n      }\n    }\n  }\n'
+): (typeof documents)['\n  mutation updateSupplierDetails($input: UpdateSupplierDetailsInput!) {\n    updateSupplierDetails(input: $input) {\n      supplier {\n        ...SupplierFields\n        addresses {\n          ...SupplierAddressFields\n        }\n      }\n      errors {\n        ... on ApplicationError {\n          code\n          description\n          type\n          fieldName\n          message\n        }\n      }\n    }\n  }\n'];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
+  source: '\n  mutation deactivateSupplier($input: DeactivateSupplierInput!) {\n    deactivateSupplier(input: $input) {\n      errors {\n        ... on ApplicationError {\n          code\n          description\n          type\n          fieldName\n          message\n        }\n      }\n    }\n  }\n'
+): (typeof documents)['\n  mutation deactivateSupplier($input: DeactivateSupplierInput!) {\n    deactivateSupplier(input: $input) {\n      errors {\n        ... on ApplicationError {\n          code\n          description\n          type\n          fieldName\n          message\n        }\n      }\n    }\n  }\n'];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
+  source: '\n  query suppliers(\n    $first: Int\n    $last: Int\n    $after: String\n    $before: String\n    $where: SupplierFilterInput\n    $order: [SupplierSortInput!]\n  ) {\n    suppliers(\n      first: $first\n      last: $last\n      after: $after\n      before: $before\n      where: $where\n      order: $order\n    ) {\n      nodes {\n        ...SupplierFields\n      }\n      pageInfo {\n        hasNextPage\n        hasPreviousPage\n        startCursor\n        endCursor\n      }\n      totalCount\n    }\n  }\n'
+): (typeof documents)['\n  query suppliers(\n    $first: Int\n    $last: Int\n    $after: String\n    $before: String\n    $where: SupplierFilterInput\n    $order: [SupplierSortInput!]\n  ) {\n    suppliers(\n      first: $first\n      last: $last\n      after: $after\n      before: $before\n      where: $where\n      order: $order\n    ) {\n      nodes {\n        ...SupplierFields\n      }\n      pageInfo {\n        hasNextPage\n        hasPreviousPage\n        startCursor\n        endCursor\n      }\n      totalCount\n    }\n  }\n'];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
+  source: '\n  query SupplierDetails($id: ID!) {\n    supplierById(id: $id) {\n      ...SupplierFields\n      addresses {\n        ...SupplierAddressFields\n      }\n    }\n  }\n'
+): (typeof documents)['\n  query SupplierDetails($id: ID!) {\n    supplierById(id: $id) {\n      ...SupplierFields\n      addresses {\n        ...SupplierAddressFields\n      }\n    }\n  }\n'];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
+  source: '\n  subscription OnSupplierRegistered {\n    onSupplierRegistered {\n      ...SupplierFields\n    }\n  }\n'
+): (typeof documents)['\n  subscription OnSupplierRegistered {\n    onSupplierRegistered {\n      ...SupplierFields\n    }\n  }\n'];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
+  source: '\n  subscription OnSupplierDetailsUpdated {\n    onSupplierDetailsUpdated {\n      ...SupplierFields\n    }\n  }\n'
+): (typeof documents)['\n  subscription OnSupplierDetailsUpdated {\n    onSupplierDetailsUpdated {\n      ...SupplierFields\n    }\n  }\n'];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
+  source: '\n  subscription OnSupplierDeactivated {\n    onSupplierDeactivated {\n      id\n    }\n  }\n'
+): (typeof documents)['\n  subscription OnSupplierDeactivated {\n    onSupplierDeactivated {\n      id\n    }\n  }\n'];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

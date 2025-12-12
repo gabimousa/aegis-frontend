@@ -1,5 +1,5 @@
 import { CustomerAddressFieldsFragment, CustomerFieldsFragment } from '../../../gql/graphql';
-import { FragmentFields } from '../../../types/FragmentFields';
+import { FragmentFields } from '../../../types';
 
 export type CustomerAddressModel = FragmentFields<CustomerAddressFieldsFragment>;
 

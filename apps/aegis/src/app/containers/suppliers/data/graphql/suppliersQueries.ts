@@ -1,7 +1,7 @@
-import { graphql } from '../../../gql';
+import { graphql } from '../../../../gql';
 
 export const SuppliersQuery = graphql(`
-  query Suppliers(
+  query suppliers(
     $first: Int
     $last: Int
     $after: String
@@ -18,14 +18,7 @@ export const SuppliersQuery = graphql(`
       order: $order
     ) {
       nodes {
-        id
-        code
-        name
-        website
-        email
-        phoneNumber
-        iban
-        bic
+        ...SupplierFields
       }
       pageInfo {
         hasNextPage
@@ -34,6 +27,17 @@ export const SuppliersQuery = graphql(`
         endCursor
       }
       totalCount
+    }
+  }
+`);
+
+export const supplierDetailsQuery = graphql(`
+  query SupplierDetails($id: ID!) {
+    supplierById(id: $id) {
+      ...SupplierFields
+      addresses {
+        ...SupplierAddressFields
+      }
     }
   }
 `);
