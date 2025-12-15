@@ -1,5 +1,5 @@
 import { PropsWithChildren, ReactElement, useCallback, useState } from 'react';
-import { Alert, Button, Card, Col, Container, Row, Spinner } from 'react-bootstrap';
+import { Alert, Button, Card, Col, Container, Row } from 'react-bootstrap';
 import SearchInput from '../search-input/search-input';
 
 type ListViewProps = PropsWithChildren<{
@@ -78,15 +78,15 @@ function ListView({
               <h5 className="mb-0">{cardTitle}</h5>
             </Card.Header> */}
             <Card.Body className="flex-grow-1 overflow-auto p-0">
-              {loading ? (
+              {/* {loading ? (
                 <div className="text-center p-4">
                   <Spinner animation="border" role="status">
                     <span className="visually-hidden">{loadingLabel}</span>
                   </Spinner>
                 </div>
-              ) : (
-                children
-              )}
+              ) : ( */}
+              {children}
+              {/* )} */}
             </Card.Body>
             {showFooter && (
               <Card.Footer>

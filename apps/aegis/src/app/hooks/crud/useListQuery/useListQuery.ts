@@ -1,6 +1,6 @@
 import { OperationVariables, TypedDocumentNode } from '@apollo/client';
-import { useQuery } from '@apollo/client/react';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useLazyQuery } from '@apollo/client/react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { PageInfo } from '../../../gql/graphql';
 import { Connection } from '../../../types';
 import { useEntityStore } from '../../useEntityStore';
@@ -18,9 +18,9 @@ export type UseListQueryReturn<T> = {
   error: Error | undefined;
   canLoadMore: boolean;
   getItemById: (id: string) => T | undefined;
-  load: () => Promise<T[]>;
-  loadMore: () => Promise<T[]>;
-  loadById: (id: string) => Promise<T | undefined>;
+  load: () => void;
+  loadMore: () => void;
+  loadById: (id: string) => void;
   addOne: (item: T) => void;
   addMany: (items: T[]) => void;
   deleteOne: (id: string) => void;
@@ -50,11 +50,12 @@ export const useListQuery = <Q, T extends { id: string }>({
     (item) => item.id
   );
 
-  const { loading, error, refetch } = useQuery(query, {
-    skip: true,
+  const [executeQuery, { loading, error }] = useLazyQuery(query, {
+    fetchPolicy: 'no-cache',
     errorPolicy: 'all',
-    fetchPolicy: 'cache-and-network',
+    notifyOnNetworkStatusChange: true,
   });
+
   const canLoadMore = useMemo(() => listState.pageInfo?.hasNextPage ?? true, [listState.pageInfo]);
 
   const updateData = useCallback(
@@ -70,37 +71,60 @@ export const useListQuery = <Q, T extends { id: string }>({
     [addMany]
   );
 
+  const ref = useRef({
+    pageSize,
+    executeQuery,
+    searchTerm: listState.searchTerm,
+    connectionSelector,
+    updateData,
+  });
+
   const fetchData = useCallback(
     async (vars?: OperationVariables, updatePageInfo = true) => {
+      console.log('pageSize changed', ref.current.pageSize === pageSize);
+      console.log('executeQuery changed', ref.current.executeQuery === executeQuery);
+      console.log('searchTerm changed', ref.current.searchTerm === listState.searchTerm);
+      console.log(
+        'connectionSelector changed',
+        ref.current.connectionSelector === connectionSelector
+      );
+      console.log('updateData changed', ref.current.updateData === updateData);
+      ref.current = {
+        pageSize,
+        executeQuery,
+        searchTerm: listState.searchTerm,
+        connectionSelector,
+        updateData,
+      };
+
       const variables: OperationVariables = {
         first: pageSize,
         where: listState.searchTerm ? { name: { contains: listState.searchTerm } } : undefined,
         ...vars,
       };
 
-      const { data } = await refetch(variables);
+      console.log('🚀 Executing query with variables:', variables);
+      const { data } = await executeQuery({ variables });
       const connection = connectionSelector(data);
       updateData(connection, updatePageInfo);
-      return connection?.nodes ?? [];
     },
-    [pageSize, refetch, listState.searchTerm, connectionSelector, updateData]
+    [pageSize, executeQuery, listState.searchTerm, connectionSelector, updateData]
   );
 
-  const load = useCallback(async () => {
-    return await fetchData({ after: null });
+  const load = useCallback(() => {
+    return fetchData({ after: null });
   }, [fetchData]);
 
-  const loadMore = useCallback(async () => {
+  const loadMore = useCallback(() => {
     if (!canLoadMore) return [];
 
-    return await fetchData({ after: listState.pageInfo?.endCursor });
+    return fetchData({ after: listState.pageInfo?.endCursor });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [canLoadMore, listState.pageInfo]);
 
   const loadById = useCallback(
-    async (id: string) => {
-      const results = await fetchData({ first: 1, where: { id: { eq: id } } }, false);
-      return results.length > 0 ? results[0] : undefined;
+    (id: string) => {
+      fetchData({ first: 1, where: { id: { eq: id } } }, false);
     },
     [fetchData]
   );

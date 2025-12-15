@@ -94,7 +94,7 @@ export const SuppliersDataProvider = ({ children }: PropsWithChildren) => {
     setSearchValue,
     searchValue,
   } = useSuppliersQuery({
-    pageSize: 10,
+    pageSize: 25,
   });
 
   useEffect(() => {

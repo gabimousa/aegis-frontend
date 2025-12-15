@@ -94,7 +94,7 @@ export const CustomerDataProvider = ({ children }: PropsWithChildren) => {
     setSearchValue,
     searchValue,
   } = useCustomersQuery({
-    pageSize: 10,
+    pageSize: 25,
   });
 
   useEffect(() => {

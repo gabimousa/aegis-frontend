@@ -24,7 +24,7 @@ export function CustomerList() {
       loadMore,
       canLoadMore,
     },
-    details: { deactivate, deactivatingCustomer },
+    details: { deactivate, deactivatingCustomer, savingCustomerDetails },
   } = useContext(CustomersDataContext);
 
   const columns: DataGridColumn<CustomerModel>[] = [
@@ -58,6 +58,9 @@ export function CustomerList() {
         await deactivate(item.id);
       }
     },
+    canLoadMore,
+    onLoadMore: () => loadMore(),
+    loading: loadingCustomers || deactivatingCustomer || savingCustomerDetails,
   };
 
   const title = (
