@@ -16,6 +16,12 @@
     "skipLibCheck": true,
     "strict": true,
     "target": "es2022",
-    "customConditions": ["@aegis-frontend/source"]
+    "customConditions": ["@aegis-frontend/source"],
+    "baseUrl": ".",
+    "paths": {
+      "@aegis/shared": ["libs/aegis/shared/src/index.ts"],
+      "@aegis/ui": ["libs/aegis/ui/src/index.ts"],
+      "@utils": ["libs/utils/src/index.ts"]
+    }
   }
 }

@@ -1,7 +1,7 @@
 import type { ErrorLike } from '@apollo/client';
 import { useMutation } from '@apollo/client/react';
 import { useCallback, useState } from 'react';
-import { toGroup } from '../../../utils/toGroup';
+import { toGroup } from '@aegis/utils';
 import { UseSaveEntityProps } from './useSaveEntityProps';
 import { UseSaveEntityReturn } from './useSaveEntityReturn';
 

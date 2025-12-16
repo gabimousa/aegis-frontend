@@ -1,6 +1,6 @@
 import { FieldValues, Path, UseFormSetError } from 'react-hook-form';
 
-function setFieldErrors<TFieldValues extends FieldValues>(
+export function setFieldErrors<TFieldValues extends FieldValues>(
   error: unknown,
   setError: UseFormSetError<TFieldValues>,
   errorMap?: Record<string, string>

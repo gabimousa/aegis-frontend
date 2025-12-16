@@ -1,5 +1,6 @@
 /// <reference types='vitest' />
 import react from '@vitejs/plugin-react';
+import { resolve } from 'path';
 import { deprecations } from 'sass';
 import { defineConfig } from 'vite';
 
@@ -8,6 +9,11 @@ export default defineConfig(() => ({
   cacheDir: '../../node_modules/.vite/apps/aegis',
   resolve: {
     conditions: ['@aegis-frontend/source'],
+    alias: {
+      '@aegis/shared': resolve(__dirname, '../../libs/aegis/shared/src/index.ts'),
+      '@aegis/ui': resolve(__dirname, '../../libs/aegis/ui/src/index.ts'),
+      '@utils': resolve(__dirname, '../../libs/utils/src/index.ts'),
+    },
   },
   server: {
     port: 4200,

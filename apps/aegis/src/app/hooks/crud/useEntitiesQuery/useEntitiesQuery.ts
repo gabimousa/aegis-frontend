@@ -1,8 +1,8 @@
+import { toRecord } from '@aegis/utils';
 import { OperationVariables } from '@apollo/client';
 import { useQuery } from '@apollo/client/react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { PageInfo } from '../../../gql/graphql';
-import { toRecord } from '../../../utils/toMap';
 import { usePagination } from '../../usePagination';
 import { UseEntitiesQueryProps } from './useEntitiesQueryProps';
 import { UseEntitiesQueryReturn } from './useEntitiesQueryReturn';

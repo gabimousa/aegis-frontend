@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from 'react';
-import { toRecord } from '../../utils/toMap';
+import { toRecord } from '@aegis/utils';
 
 type StoreState<T> = {
   items: T[];

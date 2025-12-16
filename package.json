@@ -75,6 +75,6 @@
   },
   "workspaces": [
     "apps/*",
-    "libs/aegis/*"
+    "libs/*"
   ]
 }

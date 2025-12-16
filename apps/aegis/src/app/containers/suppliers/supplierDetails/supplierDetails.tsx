@@ -1,3 +1,4 @@
+import { setFieldErrors } from '@aegis/shared';
 import { useContext, useEffect, useId, useState } from 'react';
 import { Alert, Button, Dropdown, Form, Spinner, Tab, Tabs } from 'react-bootstrap';
 import { FormProvider, useFieldArray, useForm } from 'react-hook-form';
@@ -12,7 +13,6 @@ import {
   UpdateAddressInput,
   UpdateSupplierDetailsInput,
 } from '../../../gql/graphql';
-import setFieldErrors from '../../../utils/setFieldErrors';
 import SuppliersDataContext from '../data/suppliersContext';
 import { SupplierAddressModel, SupplierDetailsModel } from '../model/supplierDetails.model';
 import AddressForm from './addressForm/addressForm';

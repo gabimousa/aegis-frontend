@@ -1,1 +1,1 @@
-export * from './lib/aegis-shared';
+export * from './lib/utils';
