@@ -3,12 +3,6 @@
   "include": [],
   "references": [
     {
-      "path": "../../libs/aegis/utils"
-    },
-    {
-      "path": "../../libs/aegis/ui"
-    },
-    {
       "path": "./tsconfig.app.json"
     },
     {

@@ -10,7 +10,7 @@
       "path": "./apps/aegis"
     },
     {
-      "path": "./libs/aegis/utils"
+      "path": "./libs/utils"
     },
     {
       "path": "./libs/aegis/ui"
