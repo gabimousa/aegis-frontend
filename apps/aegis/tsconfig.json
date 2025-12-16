@@ -6,6 +6,9 @@
       "path": "../../libs/utils"
     },
     {
+      "path": "../../libs/aegis/shared"
+    },
+    {
       "path": "./tsconfig.app.json"
     },
     {

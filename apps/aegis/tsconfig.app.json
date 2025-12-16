@@ -35,6 +35,9 @@
   "references": [
     {
       "path": "../../libs/utils"
+    },
+    {
+      "path": "../../libs/aegis/shared"
     }
   ]
 }

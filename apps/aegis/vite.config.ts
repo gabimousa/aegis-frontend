@@ -12,7 +12,7 @@ export default defineConfig(() => ({
     alias: {
       '@aegis/shared': resolve(__dirname, '../../libs/aegis/shared/src/index.ts'),
       '@aegis/ui': resolve(__dirname, '../../libs/aegis/ui/src/index.ts'),
-      '@utils': resolve(__dirname, '../../libs/utils/src/index.ts'),
+      '@aegis/utils': resolve(__dirname, '../../libs/utils/src/index.ts'),
     },
   },
   server: {
