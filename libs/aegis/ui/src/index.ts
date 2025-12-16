@@ -1,1 +1,1 @@
-export * from './lib/aegis-ui';
+export * from './lib/components';

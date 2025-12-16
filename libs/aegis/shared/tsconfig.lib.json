@@ -1,10 +1,10 @@
 {
-  "extends": "../../tsconfig.base.json",
+  "extends": "../../../tsconfig.base.json",
   "compilerOptions": {
     "outDir": "dist",
-    "tsBuildInfoFile": "dist/tsconfig.app.tsbuildinfo",
+    "tsBuildInfoFile": "dist/tsconfig.lib.tsbuildinfo",
     "jsx": "react-jsx",
-    "lib": ["dom"],
+    "lib": ["es2022", "dom"],
     "types": [
       "node",
       "@nx/react/typings/cssmodule.d.ts",
@@ -19,10 +19,10 @@
     "src/**/*.test.ts",
     "src/**/*.spec.tsx",
     "src/**/*.test.tsx",
-    "src/**/*.spec.js",
     "src/**/*.test.js",
-    "src/**/*.spec.jsx",
+    "src/**/*.spec.js",
     "src/**/*.test.jsx",
+    "src/**/*.spec.jsx",
     "vite.config.ts",
     "vite.config.mts",
     "vitest.config.ts",
@@ -31,16 +31,5 @@
     "eslint.config.cjs",
     "eslint.config.mjs"
   ],
-  "include": ["src/**/*.js", "src/**/*.jsx", "src/**/*.ts", "src/**/*.tsx"],
-  "references": [
-    {
-      "path": "../../libs/utils"
-    },
-    {
-      "path": "../../libs/aegis/ui/tsconfig.lib.json"
-    },
-    {
-      "path": "../../libs/aegis/shared/tsconfig.lib.json"
-    }
-  ]
+  "include": ["src/**/*.js", "src/**/*.jsx", "src/**/*.ts", "src/**/*.tsx"]
 }

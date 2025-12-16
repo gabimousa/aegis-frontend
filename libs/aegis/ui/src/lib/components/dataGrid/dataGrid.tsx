@@ -1,7 +1,7 @@
 import { Button, Table } from 'react-bootstrap';
 import { Edit, Trash } from 'tabler-icons-react';
-import { DataGridColumn } from './data-grid-column';
-import styles from './data-grid.module.scss';
+import styles from './dataGrid.module.scss';
+import { DataGridColumn } from './dataGridColumn';
 
 export type DataGridProps<T> = {
   keyAccessor: keyof T | ((item: T) => string | number);
@@ -14,7 +14,7 @@ export type DataGridProps<T> = {
   loading?: boolean;
 };
 
-function DataGrid<T>({
+export function DataGrid<T>({
   columns,
   data,
   keyAccessor,
@@ -119,4 +119,3 @@ function DataGrid<T>({
     </div>
   );
 }
-export default DataGrid;

@@ -1,10 +1,9 @@
+import { DataGrid, DataGridColumn, DataGridProps } from '@aegis/ui';
 import { useContext } from 'react';
 import { Button } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router';
 import { Plus, Users } from 'tabler-icons-react';
-import DataGrid, { DataGridProps } from '../../../components/data-grid/data-grid';
-import { DataGridColumn } from '../../../components/data-grid/data-grid-column';
 import ListView from '../../../components/listView/listView';
 import { useConfirm } from '../../../hooks/useConfirm/useConfirm';
 import CustomersDataContext from '../data/customersContext';
