@@ -6,6 +6,9 @@ import { defineConfig } from 'vite';
 export default defineConfig(() => ({
   root: __dirname,
   cacheDir: '../../node_modules/.vite/apps/aegis',
+  resolve: {
+    conditions: ['@aegis-frontend/source'],
+  },
   server: {
     port: 4200,
     host: 'localhost',
@@ -33,6 +36,9 @@ export default defineConfig(() => ({
     reportCompressedSize: true,
     commonjsOptions: {
       transformMixedEsModules: true,
+    },
+    rollupOptions: {
+      external: ['rxjs'],
     },
   },
   test: {

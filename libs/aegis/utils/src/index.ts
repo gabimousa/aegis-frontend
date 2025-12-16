@@ -1,1 +1,1 @@
-export * from './lib/aegis-utils.js';
+export * from './lib/aegis-utils';

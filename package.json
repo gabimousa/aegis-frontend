@@ -25,6 +25,8 @@
     "tabler-icons-react": "^1.56.0"
   },
   "devDependencies": {
+    "@babel/core": "^7.14.5",
+    "@babel/preset-react": "^7.14.5",
     "@eslint/js": "^9.8.0",
     "@graphql-codegen/cli": "^6.0.0",
     "@graphql-codegen/near-operation-file-preset": "^3.1.0",
