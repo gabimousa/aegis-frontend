@@ -1,6 +1,6 @@
 import { PropsWithChildren, ReactElement, useCallback, useState } from 'react';
 import { Alert, Button, Card, Col, Container, Row } from 'react-bootstrap';
-import SearchInput from '../search-input/search-input';
+import { SearchInput } from '../searchInput';
 
 type ListViewProps = PropsWithChildren<{
   header: string | ReactElement;
@@ -17,7 +17,7 @@ type ListViewProps = PropsWithChildren<{
   onLoadMore?: () => void;
 }>;
 
-function ListView({
+export function ListView({
   header,
   searchPlaceholder,
   actions,
@@ -114,5 +114,3 @@ function ListView({
     </Container>
   );
 }
-
-export default ListView;

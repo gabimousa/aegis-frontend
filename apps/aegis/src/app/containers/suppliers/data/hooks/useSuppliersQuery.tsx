@@ -1,8 +1,8 @@
 import { useCallback } from 'react';
-import { SuppliersQuery as SuppliersQueryType } from '../../../../gql/graphql';
-import { useListQuery } from '../../../../hooks/crud/useListQuery';
-import { Connection } from '../../../../types';
-import { SupplierModel } from '../../model/supplier.model';
+import { SuppliersQuery as SuppliersQueryType } from '@aegis/shared';
+import { useListQuery } from '@aegis/shared';
+import { Connection } from '@aegis/shared';
+import { SupplierModel } from '../../model';
 import { SuppliersQuery } from '../graphql/suppliersQueries';
 
 export interface UseSuppliersQueryProps {

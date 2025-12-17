@@ -1,6 +1,6 @@
+import { DialogProvider } from '@aegis/shared';
 import { RouterProvider } from 'react-router';
 import { router } from './appRoutes';
-import { DialogProvider } from './hooks/useDialog';
 import { CountriesProvider } from './shared/countries/countriesContext';
 
 export function App() {

@@ -14,6 +14,14 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  * Learn more about it here: https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#reducing-bundle-size
  */
 type Documents = {
+  '\n  fragment ArticleFields on Article {\n    id\n    code\n    name\n    description\n    price\n    sellingUnit\n  }\n': typeof types.ArticleFieldsFragmentDoc;
+  '\n  mutation registerArticle($input: RegisterArticleInput!) {\n    registerArticle(input: $input) {\n      article {\n        ...ArticleFields\n      }\n      errors {\n        ... on ApplicationError {\n          code\n          description\n          type\n          fieldName\n          message\n        }\n      }\n    }\n  }\n': typeof types.RegisterArticleDocument;
+  '\n  mutation updateArticleDetails($input: UpdateArticleDetailsInput!) {\n    updateArticleDetails(input: $input) {\n      article {\n        ...ArticleFields\n      }\n      errors {\n        ... on ApplicationError {\n          code\n          description\n          type\n          fieldName\n          message\n        }\n      }\n    }\n  }\n': typeof types.UpdateArticleDetailsDocument;
+  '\n  mutation discontinueArticle($input: DiscontinueArticleInput!) {\n    discontinueArticle(input: $input) {\n      errors {\n        ... on ApplicationError {\n          code\n          description\n          type\n          fieldName\n          message\n        }\n      }\n    }\n  }\n': typeof types.DiscontinueArticleDocument;
+  '\n  query articles(\n    $first: Int\n    $last: Int\n    $after: String\n    $before: String\n    $where: ArticleFilterInput\n    $order: [ArticleSortInput!]\n  ) {\n    articles(\n      first: $first\n      last: $last\n      after: $after\n      before: $before\n      where: $where\n      order: $order\n    ) {\n      nodes {\n        ...ArticleFields\n      }\n      pageInfo {\n        hasNextPage\n        hasPreviousPage\n        startCursor\n        endCursor\n      }\n      totalCount\n    }\n  }\n': typeof types.ArticlesDocument;
+  '\n  subscription OnArticleRegistered {\n    onArticleRegistered {\n      ...ArticleFields\n    }\n  }\n': typeof types.OnArticleRegisteredDocument;
+  '\n  subscription OnArticleDetailsUpdated {\n    onArticleDetailsUpdated {\n      ...ArticleFields\n    }\n  }\n': typeof types.OnArticleDetailsUpdatedDocument;
+  '\n  subscription OnArticleDiscontinued {\n    onArticleDiscontinued {\n      id\n    }\n  }\n': typeof types.OnArticleDiscontinuedDocument;
   '\n  fragment CustomerFields on Customer {\n    id\n    code\n    name\n    website\n    email\n    phoneNumber\n    iban\n    bic\n  }\n': typeof types.CustomerFieldsFragmentDoc;
   '\n  fragment CustomerAddressFields on Address {\n    id\n    type\n    street\n    number\n    zipCode\n    city\n    state\n    countryCode\n  }\n': typeof types.CustomerAddressFieldsFragmentDoc;
   '\n  mutation registerCustomer($input: RegisterCustomerInput!) {\n    registerCustomer(input: $input) {\n      customer {\n        ...CustomerFields\n        addresses {\n          ...CustomerAddressFields\n        }\n      }\n      errors {\n        ... on ApplicationError {\n          code\n          description\n          type\n          fieldName\n          message\n        }\n      }\n    }\n  }\n': typeof types.RegisterCustomerDocument;
@@ -37,6 +45,22 @@ type Documents = {
   '\n  query Countries {\n    countries {\n      code\n      name\n    }\n  }\n': typeof types.CountriesDocument;
 };
 const documents: Documents = {
+  '\n  fragment ArticleFields on Article {\n    id\n    code\n    name\n    description\n    price\n    sellingUnit\n  }\n':
+    types.ArticleFieldsFragmentDoc,
+  '\n  mutation registerArticle($input: RegisterArticleInput!) {\n    registerArticle(input: $input) {\n      article {\n        ...ArticleFields\n      }\n      errors {\n        ... on ApplicationError {\n          code\n          description\n          type\n          fieldName\n          message\n        }\n      }\n    }\n  }\n':
+    types.RegisterArticleDocument,
+  '\n  mutation updateArticleDetails($input: UpdateArticleDetailsInput!) {\n    updateArticleDetails(input: $input) {\n      article {\n        ...ArticleFields\n      }\n      errors {\n        ... on ApplicationError {\n          code\n          description\n          type\n          fieldName\n          message\n        }\n      }\n    }\n  }\n':
+    types.UpdateArticleDetailsDocument,
+  '\n  mutation discontinueArticle($input: DiscontinueArticleInput!) {\n    discontinueArticle(input: $input) {\n      errors {\n        ... on ApplicationError {\n          code\n          description\n          type\n          fieldName\n          message\n        }\n      }\n    }\n  }\n':
+    types.DiscontinueArticleDocument,
+  '\n  query articles(\n    $first: Int\n    $last: Int\n    $after: String\n    $before: String\n    $where: ArticleFilterInput\n    $order: [ArticleSortInput!]\n  ) {\n    articles(\n      first: $first\n      last: $last\n      after: $after\n      before: $before\n      where: $where\n      order: $order\n    ) {\n      nodes {\n        ...ArticleFields\n      }\n      pageInfo {\n        hasNextPage\n        hasPreviousPage\n        startCursor\n        endCursor\n      }\n      totalCount\n    }\n  }\n':
+    types.ArticlesDocument,
+  '\n  subscription OnArticleRegistered {\n    onArticleRegistered {\n      ...ArticleFields\n    }\n  }\n':
+    types.OnArticleRegisteredDocument,
+  '\n  subscription OnArticleDetailsUpdated {\n    onArticleDetailsUpdated {\n      ...ArticleFields\n    }\n  }\n':
+    types.OnArticleDetailsUpdatedDocument,
+  '\n  subscription OnArticleDiscontinued {\n    onArticleDiscontinued {\n      id\n    }\n  }\n':
+    types.OnArticleDiscontinuedDocument,
   '\n  fragment CustomerFields on Customer {\n    id\n    code\n    name\n    website\n    email\n    phoneNumber\n    iban\n    bic\n  }\n':
     types.CustomerFieldsFragmentDoc,
   '\n  fragment CustomerAddressFields on Address {\n    id\n    type\n    street\n    number\n    zipCode\n    city\n    state\n    countryCode\n  }\n':
@@ -95,6 +119,54 @@ const documents: Documents = {
  */
 export function graphql(source: string): unknown;
 
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
+  source: '\n  fragment ArticleFields on Article {\n    id\n    code\n    name\n    description\n    price\n    sellingUnit\n  }\n'
+): (typeof documents)['\n  fragment ArticleFields on Article {\n    id\n    code\n    name\n    description\n    price\n    sellingUnit\n  }\n'];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
+  source: '\n  mutation registerArticle($input: RegisterArticleInput!) {\n    registerArticle(input: $input) {\n      article {\n        ...ArticleFields\n      }\n      errors {\n        ... on ApplicationError {\n          code\n          description\n          type\n          fieldName\n          message\n        }\n      }\n    }\n  }\n'
+): (typeof documents)['\n  mutation registerArticle($input: RegisterArticleInput!) {\n    registerArticle(input: $input) {\n      article {\n        ...ArticleFields\n      }\n      errors {\n        ... on ApplicationError {\n          code\n          description\n          type\n          fieldName\n          message\n        }\n      }\n    }\n  }\n'];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
+  source: '\n  mutation updateArticleDetails($input: UpdateArticleDetailsInput!) {\n    updateArticleDetails(input: $input) {\n      article {\n        ...ArticleFields\n      }\n      errors {\n        ... on ApplicationError {\n          code\n          description\n          type\n          fieldName\n          message\n        }\n      }\n    }\n  }\n'
+): (typeof documents)['\n  mutation updateArticleDetails($input: UpdateArticleDetailsInput!) {\n    updateArticleDetails(input: $input) {\n      article {\n        ...ArticleFields\n      }\n      errors {\n        ... on ApplicationError {\n          code\n          description\n          type\n          fieldName\n          message\n        }\n      }\n    }\n  }\n'];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
+  source: '\n  mutation discontinueArticle($input: DiscontinueArticleInput!) {\n    discontinueArticle(input: $input) {\n      errors {\n        ... on ApplicationError {\n          code\n          description\n          type\n          fieldName\n          message\n        }\n      }\n    }\n  }\n'
+): (typeof documents)['\n  mutation discontinueArticle($input: DiscontinueArticleInput!) {\n    discontinueArticle(input: $input) {\n      errors {\n        ... on ApplicationError {\n          code\n          description\n          type\n          fieldName\n          message\n        }\n      }\n    }\n  }\n'];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
+  source: '\n  query articles(\n    $first: Int\n    $last: Int\n    $after: String\n    $before: String\n    $where: ArticleFilterInput\n    $order: [ArticleSortInput!]\n  ) {\n    articles(\n      first: $first\n      last: $last\n      after: $after\n      before: $before\n      where: $where\n      order: $order\n    ) {\n      nodes {\n        ...ArticleFields\n      }\n      pageInfo {\n        hasNextPage\n        hasPreviousPage\n        startCursor\n        endCursor\n      }\n      totalCount\n    }\n  }\n'
+): (typeof documents)['\n  query articles(\n    $first: Int\n    $last: Int\n    $after: String\n    $before: String\n    $where: ArticleFilterInput\n    $order: [ArticleSortInput!]\n  ) {\n    articles(\n      first: $first\n      last: $last\n      after: $after\n      before: $before\n      where: $where\n      order: $order\n    ) {\n      nodes {\n        ...ArticleFields\n      }\n      pageInfo {\n        hasNextPage\n        hasPreviousPage\n        startCursor\n        endCursor\n      }\n      totalCount\n    }\n  }\n'];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
+  source: '\n  subscription OnArticleRegistered {\n    onArticleRegistered {\n      ...ArticleFields\n    }\n  }\n'
+): (typeof documents)['\n  subscription OnArticleRegistered {\n    onArticleRegistered {\n      ...ArticleFields\n    }\n  }\n'];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
+  source: '\n  subscription OnArticleDetailsUpdated {\n    onArticleDetailsUpdated {\n      ...ArticleFields\n    }\n  }\n'
+): (typeof documents)['\n  subscription OnArticleDetailsUpdated {\n    onArticleDetailsUpdated {\n      ...ArticleFields\n    }\n  }\n'];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
+  source: '\n  subscription OnArticleDiscontinued {\n    onArticleDiscontinued {\n      id\n    }\n  }\n'
+): (typeof documents)['\n  subscription OnArticleDiscontinued {\n    onArticleDiscontinued {\n      id\n    }\n  }\n'];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

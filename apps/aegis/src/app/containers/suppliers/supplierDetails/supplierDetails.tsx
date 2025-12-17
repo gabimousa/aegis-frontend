@@ -12,9 +12,9 @@ import {
   RegisterSupplierInput,
   UpdateAddressInput,
   UpdateSupplierDetailsInput,
-} from '../../../gql/graphql';
+} from '@aegis/shared';
 import SuppliersDataContext from '../data/suppliersContext';
-import { SupplierAddressModel, SupplierDetailsModel } from '../model/supplierDetails.model';
+import { AddressModel, SupplierDetailsModel } from '../model';
 import AddressForm from './addressForm/addressForm';
 import SupplierForm from './supplierForm/supplierForm';
 
@@ -106,7 +106,7 @@ function SupplierDetails() {
     formState: SupplierDetailsModel,
     supplierInput: RegisterSupplierInput | UpdateSupplierDetailsInput
   ): RegisterSupplierInput | UpdateSupplierDetailsInput => {
-    const getAddressBase = (address: SupplierAddressModel): Partial<CreateAddressInput> => {
+    const getAddressBase = (address: AddressModel): Partial<CreateAddressInput> => {
       return {
         street: address.street,
         number: address.number,
@@ -117,11 +117,11 @@ function SupplierDetails() {
       };
     };
 
-    const getCreateAddressInput = (address: SupplierAddressModel): CreateAddressInput => {
+    const getCreateAddressInput = (address: AddressModel): CreateAddressInput => {
       return { ...getAddressBase(address), type: address.type };
     };
 
-    const getUpdateAddressInput = (address: SupplierAddressModel): UpdateAddressInput => {
+    const getUpdateAddressInput = (address: AddressModel): UpdateAddressInput => {
       return { id: address.id, ...getAddressBase(address) };
     };
 

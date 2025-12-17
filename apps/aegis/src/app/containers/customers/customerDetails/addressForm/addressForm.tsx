@@ -1,18 +1,17 @@
+import { FieldErrorsFeedback } from '@aegis/ui';
 import { useContext } from 'react';
 import { Button, Card, Col, FloatingLabel, Form, Row } from 'react-bootstrap';
 import { useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { Trash } from 'tabler-icons-react';
-import FieldErrorsFeedback from '../../../../components/fieldErrorsFeedback/fieldErrorsFeedback';
-import { AddressType } from '../../../../gql/graphql';
+import { AddressType } from '@aegis/shared';
 import { CountriesContext } from '../../../../shared/countries/countriesContext';
-import { Address } from '../../model/address.model';
-import { CustomerDetailsModel } from '../../model/customerDetails.model';
+import { AddressModel, CustomerDetailsModel } from '../../model';
 import useCustomerDetailsFormConfig from '../useCustomerDetailsFormConfig';
 
 type AddressFormProps = {
   index: number;
-  address: Address;
+  address: AddressModel;
   onRemove?: () => void;
 };
 

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Form } from 'react-bootstrap';
-import useDebounce from '../../hooks/useDebounce/useDebounce';
+import { useDebounce } from '@aegis/shared';
 
 type SearchProps = {
   placeholder?: string;
@@ -9,7 +9,7 @@ type SearchProps = {
   onSearchChange: (value: string) => void;
 };
 
-function SearchInput({ placeholder, value, className, onSearchChange }: SearchProps) {
+export function SearchInput({ placeholder, value, className, onSearchChange }: SearchProps) {
   const [searchTerm, setSearchTerm] = useState(value);
   const debouncedValue = useDebounce(searchTerm, 400);
 
@@ -27,5 +27,3 @@ function SearchInput({ placeholder, value, className, onSearchChange }: SearchPr
     />
   );
 }
-
-export default SearchInput;

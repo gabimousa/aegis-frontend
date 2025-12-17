@@ -1,4 +1,4 @@
-import { graphql } from '../../../../gql';
+import { graphql } from '@aegis/shared';
 
 export const customerFragment = graphql(`
   fragment CustomerFields on Customer {

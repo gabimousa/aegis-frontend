@@ -1,4 +1,4 @@
-import { SupplierAddressFieldsFragment } from '../../../gql/graphql';
-import { FragmentFields } from '../../../types';
+import { SupplierAddressFieldsFragment } from '@aegis/shared';
+import { FragmentFields } from '@aegis/shared';
 
-export type Address = FragmentFields<SupplierAddressFieldsFragment>;
+export type AddressModel = FragmentFields<SupplierAddressFieldsFragment>;

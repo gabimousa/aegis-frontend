@@ -1,8 +1,7 @@
+import { RegisterCustomerInput, UpdateCustomerDetailsInput } from '@aegis/shared';
 import { ErrorLike } from '@apollo/client';
 import { createContext, PropsWithChildren, useEffect, useState } from 'react';
-import { RegisterCustomerInput, UpdateCustomerDetailsInput } from '../../../gql/graphql';
-import { CustomerModel } from '../model/customer.model';
-import { CustomerDetailsModel } from '../model/customerDetails.model';
+import { CustomerDetailsModel, CustomerModel } from '../model';
 import {
   useCustomerDetailsQuery,
   useCustomersQuery,
@@ -17,9 +16,9 @@ type CustomersContextType = {
     loadingCustomers: boolean;
     loadingCustomersError?: ErrorLike;
     totalCount: number;
-    load: () => Promise<CustomerModel[]>;
-    loadMore: () => Promise<CustomerModel[]>;
-    loadById: (id: string) => Promise<CustomerModel | undefined>;
+    load: () => void;
+    loadMore: () => void;
+    loadById: (id: string) => void;
     getById: (id: string) => CustomerModel | undefined;
     addOne: (item: CustomerModel) => void;
     addMany: (items: CustomerModel[]) => void;

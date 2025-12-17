@@ -1,5 +1,5 @@
 import type { ErrorLike } from '@apollo/client';
-import { useRemoveEntity } from '../../../../hooks';
+import { useRemoveEntity } from '@aegis/shared';
 import { deactivateCustomerMutation } from '../graphql/customersMutations';
 
 export interface UseDeactivateCustomerProps {

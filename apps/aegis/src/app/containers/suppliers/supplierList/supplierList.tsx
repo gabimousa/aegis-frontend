@@ -1,13 +1,12 @@
-import { DataGrid, DataGridColumn, DataGridProps } from '@aegis/ui';
+import { useConfirm } from '@aegis/shared';
+import { DataGrid, DataGridColumn, DataGridProps, ListView } from '@aegis/ui';
 import { useContext } from 'react';
 import { Button } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router';
 import { Plus, Users } from 'tabler-icons-react';
-import ListView from '../../../components/listView/listView';
-import { useConfirm } from '../../../hooks/useConfirm/useConfirm';
 import SuppliersDataContext from '../data/suppliersContext';
-import { SupplierModel } from '../model/supplier.model';
+import { SupplierModel } from '../model';
 
 export function SupplierList() {
   const { confirm } = useConfirm();

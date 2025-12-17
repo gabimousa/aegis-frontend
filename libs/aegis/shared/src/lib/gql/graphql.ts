@@ -890,6 +890,7 @@ export type Subscription = {
   onAddressAddedToSupplier: Supplier;
   onAddressRemovedFromCustomer: Customer;
   onAddressRemovedFromSupplier: Supplier;
+  onArticleDetailsUpdated: Article;
   onArticleDiscontinued: ArticleDiscontinuedPayload;
   onArticleRegistered: Article;
   onCustomerDeactivated: CustomerDeactivatedPayload;
@@ -900,7 +901,6 @@ export type Subscription = {
   onSupplierLinkedToArticle: Article;
   onSupplierRegistered: Supplier;
   onSupplierUnlinkedFromArticle: Article;
-  onUpdateArticleDetails: Article;
 };
 
 export type Supplier = Node & {
@@ -1087,6 +1087,137 @@ export type UpdateSupplierDetailsPayload = {
   __typename?: 'UpdateSupplierDetailsPayload';
   errors?: Maybe<Array<UpdateSupplierDetailsError>>;
   supplier?: Maybe<Supplier>;
+};
+
+export type ArticleFieldsFragment = {
+  __typename?: 'Article';
+  id: string;
+  code: string;
+  name: string;
+  description?: string | null;
+  price: any;
+  sellingUnit: any;
+} & { ' $fragmentName'?: 'ArticleFieldsFragment' };
+
+export type RegisterArticleMutationVariables = Exact<{
+  input: RegisterArticleInput;
+}>;
+
+export type RegisterArticleMutation = {
+  __typename?: 'Mutation';
+  registerArticle: {
+    __typename?: 'RegisterArticlePayload';
+    article?:
+      | ({ __typename?: 'Article' } & {
+          ' $fragmentRefs'?: { ArticleFieldsFragment: ArticleFieldsFragment };
+        })
+      | null;
+    errors?: Array<{
+      __typename?: 'ApplicationError';
+      code: string;
+      description: string;
+      type: ErrorType;
+      fieldName?: string | null;
+      message: string;
+    }> | null;
+  };
+};
+
+export type UpdateArticleDetailsMutationVariables = Exact<{
+  input: UpdateArticleDetailsInput;
+}>;
+
+export type UpdateArticleDetailsMutation = {
+  __typename?: 'Mutation';
+  updateArticleDetails: {
+    __typename?: 'UpdateArticleDetailsPayload';
+    article?:
+      | ({ __typename?: 'Article' } & {
+          ' $fragmentRefs'?: { ArticleFieldsFragment: ArticleFieldsFragment };
+        })
+      | null;
+    errors?: Array<{
+      __typename?: 'ApplicationError';
+      code: string;
+      description: string;
+      type: ErrorType;
+      fieldName?: string | null;
+      message: string;
+    }> | null;
+  };
+};
+
+export type DiscontinueArticleMutationVariables = Exact<{
+  input: DiscontinueArticleInput;
+}>;
+
+export type DiscontinueArticleMutation = {
+  __typename?: 'Mutation';
+  discontinueArticle: {
+    __typename?: 'DiscontinueArticlePayload';
+    errors?: Array<{
+      __typename?: 'ApplicationError';
+      code: string;
+      description: string;
+      type: ErrorType;
+      fieldName?: string | null;
+      message: string;
+    }> | null;
+  };
+};
+
+export type ArticlesQueryVariables = Exact<{
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  after?: InputMaybe<Scalars['String']['input']>;
+  before?: InputMaybe<Scalars['String']['input']>;
+  where?: InputMaybe<ArticleFilterInput>;
+  order?: InputMaybe<Array<ArticleSortInput> | ArticleSortInput>;
+}>;
+
+export type ArticlesQuery = {
+  __typename?: 'Query';
+  articles?: {
+    __typename?: 'ArticlesConnection';
+    totalCount: number;
+    nodes?: Array<
+      { __typename?: 'Article' } & {
+        ' $fragmentRefs'?: { ArticleFieldsFragment: ArticleFieldsFragment };
+      }
+    > | null;
+    pageInfo: {
+      __typename?: 'PageInfo';
+      hasNextPage: boolean;
+      hasPreviousPage: boolean;
+      startCursor?: string | null;
+      endCursor?: string | null;
+    };
+  } | null;
+};
+
+export type OnArticleRegisteredSubscriptionVariables = Exact<{ [key: string]: never }>;
+
+export type OnArticleRegisteredSubscription = {
+  __typename?: 'Subscription';
+  onArticleRegistered: { __typename?: 'Article' } & {
+    ' $fragmentRefs'?: { ArticleFieldsFragment: ArticleFieldsFragment };
+  };
+};
+
+export type OnArticleDetailsUpdatedSubscriptionVariables = Exact<{ [key: string]: never }>;
+
+export type OnArticleDetailsUpdatedSubscription = {
+  __typename?: 'Subscription';
+  onArticleDetailsUpdated: { __typename?: 'Article' } & {
+    ' $fragmentRefs'?: { ArticleFieldsFragment: ArticleFieldsFragment };
+  };
+};
+
+export type OnArticleDiscontinuedSubscriptionVariables = Exact<{ [key: string]: never }>;
+
+export type OnArticleDiscontinuedSubscription = {
+  __typename?: 'Subscription';
+  onArticleDiscontinued: { __typename?: 'ArticleDiscontinuedPayload'; id: string };
 };
 
 export type CustomerFieldsFragment = {
@@ -1442,6 +1573,27 @@ export type CountriesQuery = {
   countries: Array<{ __typename?: 'Country'; code: Alpha3Code; name: string }>;
 };
 
+export const ArticleFieldsFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'ArticleFields' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Article' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'code' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'description' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'price' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'sellingUnit' } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<ArticleFieldsFragment, unknown>;
 export const CustomerFieldsFragmentDoc = {
   kind: 'Document',
   definitions: [
@@ -1534,6 +1686,507 @@ export const SupplierAddressFieldsFragmentDoc = {
     },
   ],
 } as unknown as DocumentNode<SupplierAddressFieldsFragment, unknown>;
+export const RegisterArticleDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'registerArticle' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'input' } },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'RegisterArticleInput' } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'registerArticle' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'input' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'input' } },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'article' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'FragmentSpread', name: { kind: 'Name', value: 'ArticleFields' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'errors' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'InlineFragment',
+                        typeCondition: {
+                          kind: 'NamedType',
+                          name: { kind: 'Name', value: 'ApplicationError' },
+                        },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            { kind: 'Field', name: { kind: 'Name', value: 'code' } },
+                            { kind: 'Field', name: { kind: 'Name', value: 'description' } },
+                            { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                            { kind: 'Field', name: { kind: 'Name', value: 'fieldName' } },
+                            { kind: 'Field', name: { kind: 'Name', value: 'message' } },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'ArticleFields' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Article' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'code' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'description' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'price' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'sellingUnit' } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<RegisterArticleMutation, RegisterArticleMutationVariables>;
+export const UpdateArticleDetailsDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'updateArticleDetails' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'input' } },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'UpdateArticleDetailsInput' } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'updateArticleDetails' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'input' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'input' } },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'article' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'FragmentSpread', name: { kind: 'Name', value: 'ArticleFields' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'errors' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'InlineFragment',
+                        typeCondition: {
+                          kind: 'NamedType',
+                          name: { kind: 'Name', value: 'ApplicationError' },
+                        },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            { kind: 'Field', name: { kind: 'Name', value: 'code' } },
+                            { kind: 'Field', name: { kind: 'Name', value: 'description' } },
+                            { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                            { kind: 'Field', name: { kind: 'Name', value: 'fieldName' } },
+                            { kind: 'Field', name: { kind: 'Name', value: 'message' } },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'ArticleFields' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Article' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'code' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'description' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'price' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'sellingUnit' } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<UpdateArticleDetailsMutation, UpdateArticleDetailsMutationVariables>;
+export const DiscontinueArticleDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'discontinueArticle' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'input' } },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'DiscontinueArticleInput' } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'discontinueArticle' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'input' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'input' } },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'errors' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'InlineFragment',
+                        typeCondition: {
+                          kind: 'NamedType',
+                          name: { kind: 'Name', value: 'ApplicationError' },
+                        },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            { kind: 'Field', name: { kind: 'Name', value: 'code' } },
+                            { kind: 'Field', name: { kind: 'Name', value: 'description' } },
+                            { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                            { kind: 'Field', name: { kind: 'Name', value: 'fieldName' } },
+                            { kind: 'Field', name: { kind: 'Name', value: 'message' } },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<DiscontinueArticleMutation, DiscontinueArticleMutationVariables>;
+export const ArticlesDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'articles' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'first' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'last' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'after' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'before' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'where' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'ArticleFilterInput' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'order' } },
+          type: {
+            kind: 'ListType',
+            type: {
+              kind: 'NonNullType',
+              type: { kind: 'NamedType', name: { kind: 'Name', value: 'ArticleSortInput' } },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'articles' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'first' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'first' } },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'last' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'last' } },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'after' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'after' } },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'before' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'before' } },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'where' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'where' } },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'order' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'order' } },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'nodes' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'FragmentSpread', name: { kind: 'Name', value: 'ArticleFields' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'pageInfo' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'hasNextPage' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'hasPreviousPage' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'startCursor' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'endCursor' } },
+                    ],
+                  },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'totalCount' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'ArticleFields' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Article' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'code' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'description' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'price' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'sellingUnit' } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<ArticlesQuery, ArticlesQueryVariables>;
+export const OnArticleRegisteredDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'subscription',
+      name: { kind: 'Name', value: 'OnArticleRegistered' },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'onArticleRegistered' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'ArticleFields' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'ArticleFields' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Article' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'code' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'description' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'price' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'sellingUnit' } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  OnArticleRegisteredSubscription,
+  OnArticleRegisteredSubscriptionVariables
+>;
+export const OnArticleDetailsUpdatedDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'subscription',
+      name: { kind: 'Name', value: 'OnArticleDetailsUpdated' },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'onArticleDetailsUpdated' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'ArticleFields' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'ArticleFields' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Article' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'code' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'description' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'price' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'sellingUnit' } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  OnArticleDetailsUpdatedSubscription,
+  OnArticleDetailsUpdatedSubscriptionVariables
+>;
+export const OnArticleDiscontinuedDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'subscription',
+      name: { kind: 'Name', value: 'OnArticleDiscontinued' },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'onArticleDiscontinued' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [{ kind: 'Field', name: { kind: 'Name', value: 'id' } }],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  OnArticleDiscontinuedSubscription,
+  OnArticleDiscontinuedSubscriptionVariables
+>;
 export const RegisterCustomerDocument = {
   kind: 'Document',
   definitions: [

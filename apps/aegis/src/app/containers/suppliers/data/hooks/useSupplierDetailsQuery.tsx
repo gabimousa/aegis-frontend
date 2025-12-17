@@ -1,7 +1,7 @@
+import { useEntityDetailsQuery, UseEntityDetailsQueryReturn } from '@aegis/shared';
 import { useCallback } from 'react';
-import { SupplierDetailsQuery } from '../../../../gql/graphql';
-import { useEntityDetailsQuery, UseEntityDetailsQueryReturn } from '../../../../hooks';
-import { SupplierDetailsModel } from '../../model/supplierDetails.model';
+import { SupplierDetailsQuery } from '@aegis/shared';
+import { SupplierDetailsModel } from '../../model';
 import { supplierDetailsQuery } from '../graphql/suppliersQueries';
 
 export interface UseSupplierDetailsQueryProps {

@@ -1,8 +1,8 @@
+import { FieldErrorsFeedback } from '@aegis/ui';
 import { FloatingLabel, Form } from 'react-bootstrap';
 import { useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import FieldErrorsFeedback from '../../../../components/fieldErrorsFeedback/fieldErrorsFeedback';
-import { CustomerDetailsModel } from '../../model/customerDetails.model';
+import { CustomerDetailsModel } from '../../model';
 import useCustomerDetailsFormConfig from '../useCustomerDetailsFormConfig';
 
 function CustomerForm() {

@@ -1,4 +1,4 @@
-import { CustomerFieldsFragment } from '../../../gql/graphql';
-import { FragmentFields } from '../../../types';
+import { CustomerFieldsFragment } from '@aegis/shared';
+import { FragmentFields } from '@aegis/shared';
 
 export type CustomerModel = FragmentFields<CustomerFieldsFragment>;

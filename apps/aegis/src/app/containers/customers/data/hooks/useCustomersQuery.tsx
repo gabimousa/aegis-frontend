@@ -1,8 +1,8 @@
+import { useListQuery } from '@aegis/shared';
 import { useCallback } from 'react';
-import { CustomersQuery as CustomersQueryType } from '../../../../gql/graphql';
-import { useListQuery } from '../../../../hooks/crud/useListQuery';
-import { Connection } from '../../../../types';
-import { CustomerModel } from '../../model/customer.model';
+import { CustomersQuery as CustomersQueryType } from '@aegis/shared';
+import { Connection } from '@aegis/shared';
+import { CustomerModel } from '../../model';
 import { CustomersQuery } from '../graphql/customersQueries';
 
 export interface UseCustomersQueryProps {

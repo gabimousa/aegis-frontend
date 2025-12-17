@@ -4,7 +4,7 @@ const config: CodegenConfig = {
   schema: 'http://localhost:5098/graphql',
   documents: ['apps/**/*.tsx', 'apps/**/*.ts'],
   generates: {
-    './apps/aegis/src/app/gql/': {
+    './libs/aegis/shared/src/lib/gql/': {
       preset: 'client',
       config: {
         declarationKind: 'interface',

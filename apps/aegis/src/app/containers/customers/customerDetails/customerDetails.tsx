@@ -12,9 +12,9 @@ import {
   RegisterCustomerInput,
   UpdateAddressInput,
   UpdateCustomerDetailsInput,
-} from '../../../gql/graphql';
+} from '@aegis/shared';
 import CustomersDataContext from '../data/customersContext';
-import { CustomerAddressModel, CustomerDetailsModel } from '../model/customerDetails.model';
+import { AddressModel, CustomerDetailsModel } from '../model';
 import AddressForm from './addressForm/addressForm';
 import CustomerForm from './customerForm/customerForm';
 
@@ -107,7 +107,7 @@ function CustomerDetails() {
     formState: CustomerDetailsModel,
     customerInput: RegisterCustomerInput | UpdateCustomerDetailsInput
   ): RegisterCustomerInput | UpdateCustomerDetailsInput => {
-    const getAddressBase = (address: CustomerAddressModel): Partial<CreateAddressInput> => {
+    const getAddressBase = (address: AddressModel): Partial<CreateAddressInput> => {
       return {
         street: address.street,
         number: address.number,
@@ -118,11 +118,11 @@ function CustomerDetails() {
       };
     };
 
-    const getCreateAddressInput = (address: CustomerAddressModel): CreateAddressInput => {
+    const getCreateAddressInput = (address: AddressModel): CreateAddressInput => {
       return { ...getAddressBase(address), type: address.type };
     };
 
-    const getUpdateAddressInput = (address: CustomerAddressModel): UpdateAddressInput => {
+    const getUpdateAddressInput = (address: AddressModel): UpdateAddressInput => {
       return { id: address.id, ...getAddressBase(address) };
     };
 

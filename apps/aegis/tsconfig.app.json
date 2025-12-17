@@ -34,9 +34,6 @@
   "include": ["src/**/*.js", "src/**/*.jsx", "src/**/*.ts", "src/**/*.tsx"],
   "references": [
     {
-      "path": "../../libs/utils"
-    },
-    {
       "path": "../../libs/aegis/ui/tsconfig.lib.json"
     },
     {

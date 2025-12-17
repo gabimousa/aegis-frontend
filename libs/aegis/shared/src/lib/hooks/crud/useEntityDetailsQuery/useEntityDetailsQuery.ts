@@ -1,4 +1,3 @@
-import type { ErrorLike, TypedDocumentNode } from '@apollo/client';
 import { useQuery } from '@apollo/client/react';
 import { UseEntityDetailsQueryProps } from './useEntityDetailsQueryProps';
 import { UseEntityDetailsQueryReturn } from './useEntityDetailsQueryReturn';

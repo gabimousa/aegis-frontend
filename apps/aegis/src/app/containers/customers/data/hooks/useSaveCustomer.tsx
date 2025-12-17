@@ -1,6 +1,6 @@
+import { useSaveEntity } from '@aegis/shared';
 import type { ErrorLike } from '@apollo/client';
-import { useSaveEntity } from '../../../../hooks';
-import { CustomerDetailsModel } from '../../model/customerDetails.model';
+import { CustomerDetailsModel } from '../../model';
 import {
   registerCustomerMutation,
   updateCustomerDetailsMutation,

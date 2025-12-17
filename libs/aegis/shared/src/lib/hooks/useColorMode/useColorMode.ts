@@ -4,15 +4,11 @@ type Mode = 'light' | 'dark' | 'auto';
 const STORAGE_KEY = 'theme';
 
 function getSystemPrefersDark() {
-  return (
-    window.matchMedia &&
-    window.matchMedia('(prefers-color-scheme: dark)').matches
-  );
+  return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
 }
 
 function applyTheme(mode: Mode) {
-  const actual =
-    mode === 'auto' ? (getSystemPrefersDark() ? 'dark' : 'light') : mode;
+  const actual = mode === 'auto' ? (getSystemPrefersDark() ? 'dark' : 'light') : mode;
   document.documentElement.setAttribute('data-bs-theme', actual);
 }
 

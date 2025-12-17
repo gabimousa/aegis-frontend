@@ -6,7 +6,7 @@ type FieldErrorProps = {
   fieldName: string;
 };
 
-function FieldErrorsFeedback({ errors, fieldName }: FieldErrorProps) {
+export function FieldErrorsFeedback({ errors, fieldName }: FieldErrorProps) {
   const fieldErrors = Object.entries(errors)
     .filter(([key, value]) => fieldName === key && value)
     .map(([key, value]) => ({ key, value }));
@@ -26,5 +26,3 @@ function FieldErrorsFeedback({ errors, fieldName }: FieldErrorProps) {
     </Form.Control.Feedback>
   );
 }
-
-export default FieldErrorsFeedback;

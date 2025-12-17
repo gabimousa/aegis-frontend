@@ -1,6 +1,6 @@
 import { RegisterOptions } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { CustomerDetailsModel } from '../model/customerDetails.model';
+import { CustomerDetailsModel } from '../model';
 
 function useCustomerDetailsFormConfig() {
   const { t } = useTranslation();

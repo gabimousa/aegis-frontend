@@ -1,4 +1,4 @@
-import { graphql } from '../../../../gql';
+import { graphql } from '@aegis/shared';
 
 export const onSupplierRegisteredSubscription = graphql(`
   subscription OnSupplierRegistered {

@@ -1,8 +1,7 @@
+import { RegisterSupplierInput, UpdateSupplierDetailsInput } from '@aegis/shared';
 import { ErrorLike } from '@apollo/client';
 import { createContext, PropsWithChildren, useEffect, useState } from 'react';
-import { RegisterSupplierInput, UpdateSupplierDetailsInput } from '../../../gql/graphql';
-import { SupplierModel } from '../model/supplier.model';
-import { SupplierDetailsModel } from '../model/supplierDetails.model';
+import { SupplierDetailsModel, SupplierModel } from '../model';
 import {
   useDeactivateSupplier,
   useSaveSupplier,
@@ -17,9 +16,9 @@ type SuppliersContextType = {
     loadingSuppliers: boolean;
     loadingSuppliersError?: ErrorLike;
     totalCount: number;
-    load: () => Promise<SupplierModel[]>;
-    loadMore: () => Promise<SupplierModel[]>;
-    loadById: (id: string) => Promise<SupplierModel | undefined>;
+    load: () => void;
+    loadMore: () => void;
+    loadById: (id: string) => void;
     getById: (id: string) => SupplierModel | undefined;
     addOne: (item: SupplierModel) => void;
     addMany: (items: SupplierModel[]) => void;
