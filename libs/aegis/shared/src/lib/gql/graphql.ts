@@ -569,7 +569,7 @@ export type DecimalOperationFilterInput = {
 export type DiscontinueArticleError = ApplicationError;
 
 export type DiscontinueArticleInput = {
-  input: IdInputOfGuidInput;
+  id: Scalars['ID']['input'];
 };
 
 export type DiscontinueArticlePayload = {
@@ -1193,6 +1193,19 @@ export type ArticlesQuery = {
       endCursor?: string | null;
     };
   } | null;
+};
+
+export type ArticleDetailsQueryVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+export type ArticleDetailsQuery = {
+  __typename?: 'Query';
+  articleById?:
+    | ({ __typename?: 'Article' } & {
+        ' $fragmentRefs'?: { ArticleFieldsFragment: ArticleFieldsFragment };
+      })
+    | null;
 };
 
 export type OnArticleRegisteredSubscriptionVariables = Exact<{ [key: string]: never }>;
@@ -2073,6 +2086,64 @@ export const ArticlesDocument = {
     },
   ],
 } as unknown as DocumentNode<ArticlesQuery, ArticlesQueryVariables>;
+export const ArticleDetailsDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'ArticleDetails' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'articleById' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'id' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'ArticleFields' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'ArticleFields' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Article' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'code' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'description' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'price' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'sellingUnit' } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<ArticleDetailsQuery, ArticleDetailsQueryVariables>;
 export const OnArticleRegisteredDocument = {
   kind: 'Document',
   definitions: [

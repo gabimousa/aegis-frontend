@@ -124,7 +124,7 @@ export const SuppliersDataProvider = ({ children }: PropsWithChildren) => {
 
   // Subscriptions for real-time updates
   useSupplierSubscriptions({
-    onSupplierUpdated: (supplier: SupplierModel) => {
+    onSupplierDetailsUpdated: (supplier: SupplierModel) => {
       // Supplier updates might change name/sort order - use smart refetch
       addOne(supplier);
     },

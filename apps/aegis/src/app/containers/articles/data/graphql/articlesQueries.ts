@@ -30,3 +30,11 @@ export const ArticlesQuery = graphql(`
     }
   }
 `);
+
+export const articleDetailsQuery = graphql(`
+  query ArticleDetails($id: ID!) {
+    articleById(id: $id) {
+      ...ArticleFields
+    }
+  }
+`);

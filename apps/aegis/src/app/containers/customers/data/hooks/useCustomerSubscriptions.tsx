@@ -8,13 +8,13 @@ import {
 
 type useCustomerSubscriptionsProps = {
   onCustomerRegistered?: (customer: CustomerModel) => void;
-  onCustomerUpdated?: (customer: CustomerModel) => void;
+  onCustomerDetailsUpdated?: (customer: CustomerModel) => void;
   onCustomerDeactivated?: (customerId: string) => void;
 };
 
 export const useCustomerSubscriptions = ({
   onCustomerRegistered,
-  onCustomerUpdated,
+  onCustomerDetailsUpdated,
   onCustomerDeactivated,
 }: useCustomerSubscriptionsProps) => {
   const {
@@ -35,7 +35,7 @@ export const useCustomerSubscriptions = ({
   } = useSubscription(onCustomerDetailsUpdatedSubscription, {
     onData(options) {
       const customer = options.data.data?.onCustomerDetailsUpdated;
-      customer && onCustomerUpdated?.(customer as CustomerModel);
+      customer && onCustomerDetailsUpdated?.(customer as CustomerModel);
     },
   });
 

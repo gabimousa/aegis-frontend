@@ -8,13 +8,13 @@ import {
 
 type useSupplierSubscriptionsProps = {
   onSupplierRegistered?: (supplier: SupplierModel) => void;
-  onSupplierUpdated?: (supplier: SupplierModel) => void;
+  onSupplierDetailsUpdated?: (supplier: SupplierModel) => void;
   onSupplierDeactivated?: (supplierId: string) => void;
 };
 
 export const useSupplierSubscriptions = ({
   onSupplierRegistered,
-  onSupplierUpdated,
+  onSupplierDetailsUpdated,
   onSupplierDeactivated,
 }: useSupplierSubscriptionsProps) => {
   const {
@@ -35,7 +35,7 @@ export const useSupplierSubscriptions = ({
   } = useSubscription(onSupplierDetailsUpdatedSubscription, {
     onData(options) {
       const supplier = options.data.data?.onSupplierDetailsUpdated;
-      supplier && onSupplierUpdated?.(supplier as SupplierModel);
+      supplier && onSupplierDetailsUpdated?.(supplier as SupplierModel);
     },
   });
 

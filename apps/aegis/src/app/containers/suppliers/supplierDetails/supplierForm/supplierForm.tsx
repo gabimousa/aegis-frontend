@@ -1,8 +1,6 @@
 import { FieldErrorsFeedback } from '@aegis/ui';
 import { FloatingLabel, Form } from 'react-bootstrap';
-import { useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { SupplierDetailsModel } from '../../model';
 import useSupplierDetailsFormConfig from '../useSupplierDetailsFormConfig';
 
 function SupplierForm() {
@@ -15,12 +13,8 @@ function SupplierForm() {
     phoneNumberConfig,
     ibanConfig,
     bicConfig,
-  } = useSupplierDetailsFormConfig();
-
-  const {
-    register,
     formState: { errors },
-  } = useFormContext<SupplierDetailsModel>();
+  } = useSupplierDetailsFormConfig();
 
   return (
     <>
@@ -29,11 +23,11 @@ function SupplierForm() {
           <Form.Control
             type="text"
             placeholder={t('suppliers.enterSupplierCode')}
-            {...register('code', codeConfig.registerConfig)}
+            {...codeConfig.registerConfig}
             isInvalid={!!errors.code}
           />
+          <FieldErrorsFeedback errors={errors} fieldName="code" />
         </FloatingLabel>
-        <FieldErrorsFeedback errors={errors} fieldName="code" />
       </Form.Group>
 
       <Form.Group className="mb-2" controlId="supplierName">
@@ -41,7 +35,7 @@ function SupplierForm() {
           <Form.Control
             type="text"
             placeholder={t('suppliers.enterSupplierName')}
-            {...register('name', nameConfig.registerConfig)}
+            {...nameConfig.registerConfig}
             isInvalid={!!errors.name}
           />
           <FieldErrorsFeedback errors={errors} fieldName="name" />
@@ -53,7 +47,7 @@ function SupplierForm() {
           <Form.Control
             type="text"
             placeholder={t('suppliers.enterSupplierWebsite')}
-            {...register('website', websiteConfig.registerConfig)}
+            {...websiteConfig.registerConfig}
             isInvalid={!!errors.website}
           />
           <FieldErrorsFeedback errors={errors} fieldName="website" />
@@ -65,7 +59,7 @@ function SupplierForm() {
           <Form.Control
             type="email"
             placeholder={t('suppliers.enterSupplierEmail')}
-            {...register('email', emailConfig.registerConfig)}
+            {...emailConfig.registerConfig}
             isInvalid={!!errors.email}
           />
           <FieldErrorsFeedback errors={errors} fieldName="email" />
@@ -77,7 +71,7 @@ function SupplierForm() {
           <Form.Control
             type="tel"
             placeholder={t('suppliers.enterSupplierPhoneNumber')}
-            {...register('phoneNumber', phoneNumberConfig.registerConfig)}
+            {...phoneNumberConfig.registerConfig}
             isInvalid={!!errors.phoneNumber}
           />
           <FieldErrorsFeedback errors={errors} fieldName="phoneNumber" />
@@ -89,7 +83,7 @@ function SupplierForm() {
           <Form.Control
             type="text"
             placeholder={t('suppliers.enterSupplierIban')}
-            {...register('iban', ibanConfig.registerConfig)}
+            {...ibanConfig.registerConfig}
             isInvalid={!!errors.iban}
           />
           <FieldErrorsFeedback errors={errors} fieldName="iban" />
@@ -101,7 +95,7 @@ function SupplierForm() {
           <Form.Control
             type="text"
             placeholder={t('suppliers.enterSupplierBic')}
-            {...register('bic', bicConfig.registerConfig)}
+            {...bicConfig.registerConfig}
             isInvalid={!!errors.bic}
           />
           <FieldErrorsFeedback errors={errors} fieldName="bic" />

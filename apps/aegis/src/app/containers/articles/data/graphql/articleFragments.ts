@@ -5,7 +5,6 @@ export const articleFragment = graphql(`
     id
     code
     name
-    description
     price
     sellingUnit
   }

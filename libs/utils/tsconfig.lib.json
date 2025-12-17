@@ -1,28 +1,19 @@
 {
-  "extends": "../../../tsconfig.base.json",
+  "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "outDir": "dist",
     "tsBuildInfoFile": "dist/tsconfig.lib.tsbuildinfo",
     "jsx": "react-jsx",
     "lib": ["es2022", "dom"],
-    "types": [
-      "node",
-      "@nx/react/typings/cssmodule.d.ts",
-      "@nx/react/typings/image.d.ts",
-      "vite/client"
-    ]
+    "types": ["node", "vite/client"]
   },
   "exclude": [
     "out-tsc",
     "dist",
     "src/**/*.spec.ts",
     "src/**/*.test.ts",
-    "src/**/*.spec.tsx",
-    "src/**/*.test.tsx",
     "src/**/*.test.js",
     "src/**/*.spec.js",
-    "src/**/*.test.jsx",
-    "src/**/*.spec.jsx",
     "vite.config.ts",
     "vite.config.mts",
     "vitest.config.ts",
@@ -31,10 +22,5 @@
     "eslint.config.cjs",
     "eslint.config.mjs"
   ],
-  "include": ["src/**/*.js", "src/**/*.jsx", "src/**/*.ts", "src/**/*.tsx"],
-  "references": [
-    {
-      "path": "../../utils/tsconfig.lib.json"
-    }
-  ]
+  "include": ["src/**/*.js", "src/**/*.ts"]
 }

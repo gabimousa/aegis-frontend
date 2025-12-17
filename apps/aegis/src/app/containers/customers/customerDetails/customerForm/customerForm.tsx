@@ -15,12 +15,8 @@ function CustomerForm() {
     phoneNumberConfig,
     ibanConfig,
     bicConfig,
+    formState: { errors }
   } = useCustomerDetailsFormConfig();
-
-  const {
-    register,
-    formState: { errors },
-  } = useFormContext<CustomerDetailsModel>();
 
   return (
     <>
@@ -29,11 +25,11 @@ function CustomerForm() {
           <Form.Control
             type="text"
             placeholder={t('customers.enterCustomerCode')}
-            {...register('code', codeConfig.registerConfig)}
+            {...codeConfig.registerConfig}
             isInvalid={!!errors.code}
           />
+          <FieldErrorsFeedback errors={errors} fieldName="code" />
         </FloatingLabel>
-        <FieldErrorsFeedback errors={errors} fieldName="code" />
       </Form.Group>
 
       <Form.Group className="mb-2" controlId="customerName">
@@ -41,7 +37,7 @@ function CustomerForm() {
           <Form.Control
             type="text"
             placeholder={t('customers.enterCustomerName')}
-            {...register('name', nameConfig.registerConfig)}
+            {...nameConfig.registerConfig}
             isInvalid={!!errors.name}
           />
           <FieldErrorsFeedback errors={errors} fieldName="name" />
@@ -53,7 +49,7 @@ function CustomerForm() {
           <Form.Control
             type="text"
             placeholder={t('customers.enterCustomerWebsite')}
-            {...register('website', websiteConfig.registerConfig)}
+            {...websiteConfig.registerConfig}
             isInvalid={!!errors.website}
           />
           <FieldErrorsFeedback errors={errors} fieldName="website" />
@@ -65,7 +61,7 @@ function CustomerForm() {
           <Form.Control
             type="email"
             placeholder={t('customers.enterCustomerEmail')}
-            {...register('email', emailConfig.registerConfig)}
+            {...emailConfig.registerConfig}
             isInvalid={!!errors.email}
           />
           <FieldErrorsFeedback errors={errors} fieldName="email" />
@@ -77,7 +73,7 @@ function CustomerForm() {
           <Form.Control
             type="tel"
             placeholder={t('customers.enterCustomerPhoneNumber')}
-            {...register('phoneNumber', phoneNumberConfig.registerConfig)}
+            {...phoneNumberConfig.registerConfig}
             isInvalid={!!errors.phoneNumber}
           />
           <FieldErrorsFeedback errors={errors} fieldName="phoneNumber" />
@@ -89,7 +85,7 @@ function CustomerForm() {
           <Form.Control
             type="text"
             placeholder={t('customers.enterCustomerIban')}
-            {...register('iban', ibanConfig.registerConfig)}
+            {...ibanConfig.registerConfig}
             isInvalid={!!errors.iban}
           />
           <FieldErrorsFeedback errors={errors} fieldName="iban" />
@@ -101,7 +97,7 @@ function CustomerForm() {
           <Form.Control
             type="text"
             placeholder={t('customers.enterCustomerBic')}
-            {...register('bic', bicConfig.registerConfig)}
+            {...bicConfig.registerConfig}
             isInvalid={!!errors.bic}
           />
           <FieldErrorsFeedback errors={errors} fieldName="bic" />

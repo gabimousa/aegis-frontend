@@ -1,7 +1,7 @@
 import { createBrowserRouter } from 'react-router';
 import AppShell from './components/layout/app-shell';
 import ArticleDetails from './containers/articles/articleDetails/articleDetails';
-import ArticleList from './containers/articles/articleList/articleList';
+import Articles from './containers/articles/articles';
 import CustomerDetails from './containers/customers/customerDetails/customerDetails';
 import Customers from './containers/customers/customers';
 import SupplierDetails from './containers/suppliers/supplierDetails/supplierDetails';
@@ -37,7 +37,7 @@ export const router = createBrowserRouter([
       },
       {
         path: '/articles',
-        element: <ArticleList />,
+        element: <Articles />,
         children: [
           {
             path: '/articles/:id',

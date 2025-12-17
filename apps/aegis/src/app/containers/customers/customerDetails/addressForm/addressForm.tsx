@@ -1,12 +1,11 @@
+import { AddressType } from '@aegis/shared';
 import { FieldErrorsFeedback } from '@aegis/ui';
 import { useContext } from 'react';
 import { Button, Card, Col, FloatingLabel, Form, Row } from 'react-bootstrap';
-import { useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { Trash } from 'tabler-icons-react';
-import { AddressType } from '@aegis/shared';
 import { CountriesContext } from '../../../../shared/countries/countriesContext';
-import { AddressModel, CustomerDetailsModel } from '../../model';
+import { AddressModel } from '../../model';
 import useCustomerDetailsFormConfig from '../useCustomerDetailsFormConfig';
 
 type AddressFormProps = {
@@ -27,12 +26,8 @@ function AddressForm({ index, address, onRemove }: AddressFormProps) {
       streetConfig,
       countryCodeConfig,
     },
-  } = useCustomerDetailsFormConfig();
-
-  const {
-    register,
     formState: { errors },
-  } = useFormContext<CustomerDetailsModel>();
+  } = useCustomerDetailsFormConfig();
 
   const getAddressTypeLabel = (type: AddressType) => {
     switch (type) {
@@ -65,7 +60,7 @@ function AddressForm({ index, address, onRemove }: AddressFormProps) {
                 <Form.Control
                   type="text"
                   placeholder={t('addresses.street')}
-                  {...register(`addresses.${index}.street`, streetConfig.registerConfig)}
+                  {...streetConfig.registerConfig(index)}
                   isInvalid={!!errors.addresses?.[index]?.street}
                 />
               </FloatingLabel>
@@ -78,7 +73,7 @@ function AddressForm({ index, address, onRemove }: AddressFormProps) {
                 <Form.Control
                   type="text"
                   placeholder={t('addresses.number')}
-                  {...register(`addresses.${index}.number`, numberConfig.registerConfig)}
+                  {...numberConfig.registerConfig(index)}
                   isInvalid={!!errors.addresses?.[index]?.number}
                 />
               </FloatingLabel>
@@ -93,7 +88,7 @@ function AddressForm({ index, address, onRemove }: AddressFormProps) {
                 <Form.Control
                   type="text"
                   placeholder={t('addresses.zipCode')}
-                  {...register(`addresses.${index}.zipCode`, zipCodeConfig.registerConfig)}
+                  {...zipCodeConfig.registerConfig(index)}
                   isInvalid={!!errors.addresses?.[index]?.zipCode}
                 />
               </FloatingLabel>
@@ -106,7 +101,7 @@ function AddressForm({ index, address, onRemove }: AddressFormProps) {
                 <Form.Control
                   type="text"
                   placeholder={t('addresses.city')}
-                  {...register(`addresses.${index}.city`, cityConfig.registerConfig)}
+                  {...cityConfig.registerConfig(index)}
                   isInvalid={!!errors.addresses?.[index]?.city}
                 />
               </FloatingLabel>
@@ -121,7 +116,7 @@ function AddressForm({ index, address, onRemove }: AddressFormProps) {
                 <Form.Control
                   type="text"
                   placeholder={t('addresses.state')}
-                  {...register(`addresses.${index}.state`, stateConfig.registerConfig)}
+                  {...stateConfig.registerConfig(index)}
                   isInvalid={!!errors.addresses?.[index]?.state}
                 />
               </FloatingLabel>
@@ -133,7 +128,7 @@ function AddressForm({ index, address, onRemove }: AddressFormProps) {
               <FloatingLabel controlId="addresses.countryCode" label={t('addresses.country')}>
                 <Form.Select
                   // value={address.countryCode?.toString()}
-                  {...register(`addresses.${index}.countryCode`, countryCodeConfig.registerConfig)}
+                  {...countryCodeConfig.registerConfig(index)}
                   isInvalid={!!errors.addresses?.[index]?.countryCode}
                 >
                   <option value={undefined} />

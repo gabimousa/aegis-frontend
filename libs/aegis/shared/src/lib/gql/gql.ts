@@ -19,6 +19,7 @@ type Documents = {
   '\n  mutation updateArticleDetails($input: UpdateArticleDetailsInput!) {\n    updateArticleDetails(input: $input) {\n      article {\n        ...ArticleFields\n      }\n      errors {\n        ... on ApplicationError {\n          code\n          description\n          type\n          fieldName\n          message\n        }\n      }\n    }\n  }\n': typeof types.UpdateArticleDetailsDocument;
   '\n  mutation discontinueArticle($input: DiscontinueArticleInput!) {\n    discontinueArticle(input: $input) {\n      errors {\n        ... on ApplicationError {\n          code\n          description\n          type\n          fieldName\n          message\n        }\n      }\n    }\n  }\n': typeof types.DiscontinueArticleDocument;
   '\n  query articles(\n    $first: Int\n    $last: Int\n    $after: String\n    $before: String\n    $where: ArticleFilterInput\n    $order: [ArticleSortInput!]\n  ) {\n    articles(\n      first: $first\n      last: $last\n      after: $after\n      before: $before\n      where: $where\n      order: $order\n    ) {\n      nodes {\n        ...ArticleFields\n      }\n      pageInfo {\n        hasNextPage\n        hasPreviousPage\n        startCursor\n        endCursor\n      }\n      totalCount\n    }\n  }\n': typeof types.ArticlesDocument;
+  '\n  query ArticleDetails($id: ID!) {\n    articleById(id: $id) {\n      ...ArticleFields\n    }\n  }\n': typeof types.ArticleDetailsDocument;
   '\n  subscription OnArticleRegistered {\n    onArticleRegistered {\n      ...ArticleFields\n    }\n  }\n': typeof types.OnArticleRegisteredDocument;
   '\n  subscription OnArticleDetailsUpdated {\n    onArticleDetailsUpdated {\n      ...ArticleFields\n    }\n  }\n': typeof types.OnArticleDetailsUpdatedDocument;
   '\n  subscription OnArticleDiscontinued {\n    onArticleDiscontinued {\n      id\n    }\n  }\n': typeof types.OnArticleDiscontinuedDocument;
@@ -55,6 +56,8 @@ const documents: Documents = {
     types.DiscontinueArticleDocument,
   '\n  query articles(\n    $first: Int\n    $last: Int\n    $after: String\n    $before: String\n    $where: ArticleFilterInput\n    $order: [ArticleSortInput!]\n  ) {\n    articles(\n      first: $first\n      last: $last\n      after: $after\n      before: $before\n      where: $where\n      order: $order\n    ) {\n      nodes {\n        ...ArticleFields\n      }\n      pageInfo {\n        hasNextPage\n        hasPreviousPage\n        startCursor\n        endCursor\n      }\n      totalCount\n    }\n  }\n':
     types.ArticlesDocument,
+  '\n  query ArticleDetails($id: ID!) {\n    articleById(id: $id) {\n      ...ArticleFields\n    }\n  }\n':
+    types.ArticleDetailsDocument,
   '\n  subscription OnArticleRegistered {\n    onArticleRegistered {\n      ...ArticleFields\n    }\n  }\n':
     types.OnArticleRegisteredDocument,
   '\n  subscription OnArticleDetailsUpdated {\n    onArticleDetailsUpdated {\n      ...ArticleFields\n    }\n  }\n':
@@ -149,6 +152,12 @@ export function graphql(
 export function graphql(
   source: '\n  query articles(\n    $first: Int\n    $last: Int\n    $after: String\n    $before: String\n    $where: ArticleFilterInput\n    $order: [ArticleSortInput!]\n  ) {\n    articles(\n      first: $first\n      last: $last\n      after: $after\n      before: $before\n      where: $where\n      order: $order\n    ) {\n      nodes {\n        ...ArticleFields\n      }\n      pageInfo {\n        hasNextPage\n        hasPreviousPage\n        startCursor\n        endCursor\n      }\n      totalCount\n    }\n  }\n'
 ): (typeof documents)['\n  query articles(\n    $first: Int\n    $last: Int\n    $after: String\n    $before: String\n    $where: ArticleFilterInput\n    $order: [ArticleSortInput!]\n  ) {\n    articles(\n      first: $first\n      last: $last\n      after: $after\n      before: $before\n      where: $where\n      order: $order\n    ) {\n      nodes {\n        ...ArticleFields\n      }\n      pageInfo {\n        hasNextPage\n        hasPreviousPage\n        startCursor\n        endCursor\n      }\n      totalCount\n    }\n  }\n'];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
+  source: '\n  query ArticleDetails($id: ID!) {\n    articleById(id: $id) {\n      ...ArticleFields\n    }\n  }\n'
+): (typeof documents)['\n  query ArticleDetails($id: ID!) {\n    articleById(id: $id) {\n      ...ArticleFields\n    }\n  }\n'];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
