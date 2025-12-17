@@ -7,8 +7,6 @@ type ListViewProps = PropsWithChildren<{
   searchPlaceholder?: string;
   actions?: ReactElement;
   errorMessage?: string;
-  loading: boolean;
-  loadingLabel?: string;
   showFooter?: boolean;
   loadMoreLabel?: string | ReactElement;
   footerLabel?: string | ReactElement;
@@ -22,8 +20,6 @@ export function ListView({
   searchPlaceholder,
   actions,
   errorMessage,
-  loading,
-  loadingLabel,
   children,
   showFooter,
   footerLabel,

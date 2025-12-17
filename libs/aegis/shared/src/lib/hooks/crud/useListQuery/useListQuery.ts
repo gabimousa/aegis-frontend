@@ -1,6 +1,6 @@
 import { OperationVariables, TypedDocumentNode } from '@apollo/client';
 import { useLazyQuery } from '@apollo/client/react';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { PageInfo } from '../../../gql/graphql';
 import { Connection } from '../../../types';
 import { useEntityStore } from '../../useEntityStore';
@@ -71,39 +71,14 @@ export const useListQuery = <Q, T extends { id: string }>({
     [addMany]
   );
 
-  const ref = useRef({
-    pageSize,
-    executeQuery,
-    searchTerm: listState.searchTerm,
-    connectionSelector,
-    updateData,
-  });
-
   const fetchData = useCallback(
     async (vars?: OperationVariables, updatePageInfo = true) => {
-      console.log('pageSize changed', ref.current.pageSize === pageSize);
-      console.log('executeQuery changed', ref.current.executeQuery === executeQuery);
-      console.log('searchTerm changed', ref.current.searchTerm === listState.searchTerm);
-      console.log(
-        'connectionSelector changed',
-        ref.current.connectionSelector === connectionSelector
-      );
-      console.log('updateData changed', ref.current.updateData === updateData);
-      ref.current = {
-        pageSize,
-        executeQuery,
-        searchTerm: listState.searchTerm,
-        connectionSelector,
-        updateData,
-      };
-
       const variables: OperationVariables = {
         first: pageSize,
         where: listState.searchTerm ? { name: { contains: listState.searchTerm } } : undefined,
         ...vars,
       };
 
-      console.log('🚀 Executing query with variables:', variables);
       const { data } = await executeQuery({ variables });
       const connection = connectionSelector(data);
       updateData(connection, updatePageInfo);
@@ -119,8 +94,7 @@ export const useListQuery = <Q, T extends { id: string }>({
     if (!canLoadMore) return [];
 
     return fetchData({ after: listState.pageInfo?.endCursor });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [canLoadMore, listState.pageInfo]);
+  }, [canLoadMore, listState.pageInfo?.endCursor, fetchData]);
 
   const loadById = useCallback(
     (id: string) => {

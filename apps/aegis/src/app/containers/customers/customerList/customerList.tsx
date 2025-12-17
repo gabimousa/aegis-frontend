@@ -80,8 +80,6 @@ export function CustomerList() {
       searchPlaceholder={t('customers.searchPlaceholder')}
       onSearchChange={setSearchTerm}
       actions={actions}
-      loading={loadingCustomers || deactivatingCustomer}
-      loadingLabel={t('loading')}
       errorMessage={
         loadingCustomersError &&
         t('customers.errorLoading', { error: loadingCustomersError?.message })

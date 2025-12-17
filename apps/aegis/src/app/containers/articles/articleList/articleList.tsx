@@ -74,8 +74,6 @@ export function ArticleList() {
       searchPlaceholder={t('articles.searchPlaceholder')}
       onSearchChange={setSearchTerm}
       actions={actions}
-      loading={loadingArticles || discontinuingArticle}
-      loadingLabel={t('loading')}
       errorMessage={
         loadingArticlesError && t('articles.errorLoading', { error: loadingArticlesError?.message })
       }

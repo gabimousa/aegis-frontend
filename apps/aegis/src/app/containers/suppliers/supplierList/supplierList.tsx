@@ -77,8 +77,6 @@ export function SupplierList() {
       searchPlaceholder={t('suppliers.searchPlaceholder')}
       onSearchChange={setSearchTerm}
       actions={actions}
-      loading={loadingSuppliers || deactivatingSupplier}
-      loadingLabel={t('loading')}
       errorMessage={
         loadingSuppliersError &&
         t('suppliers.errorLoading', { error: loadingSuppliersError?.message })

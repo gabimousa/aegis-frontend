@@ -1,29 +1,41 @@
 import { AnimatePresence, motion, Transition } from 'framer-motion';
-import { PropsWithChildren } from 'react';
+import { PropsWithChildren, useMemo } from 'react';
 import { useLocation } from 'react-router';
 import styles from './bodyWrapper.module.scss';
 
 const pageVariants = {
-  initial: { opacity: 0 },
-  animate: { opacity: 1 },
-  exit: { opacity: 0 },
+  initial: {
+    opacity: 0,
+    x: 100, // start slightly to the right
+  },
+  animate: {
+    opacity: 1,
+    x: 0,
+  },
+  // exit: {
+  //   opacity: 0,
+  //   x: -100, // exit to the left
+  // },
 };
 
 const pageTransition: Transition = {
-  duration: 0.25,
+  duration: 0.2,
   ease: 'easeInOut',
 };
 
 const BodyWrapper = ({ children }: PropsWithChildren) => {
   const location = useLocation();
+  const pathName = useMemo(() => {
+    return location.pathname.split('/')[1];
+  }, [location.pathname]);
   return (
     <AnimatePresence mode="wait">
       <motion.div
-        key={location.pathname}
+        key={pathName}
         className={`${styles.bodyWrapper}`}
         initial="initial"
         animate="animate"
-        exit="exit"
+        // exit="exit"
         variants={pageVariants}
         transition={pageTransition}
       >
