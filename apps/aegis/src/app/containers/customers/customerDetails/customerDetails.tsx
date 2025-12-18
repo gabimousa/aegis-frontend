@@ -1,19 +1,19 @@
-import { setFieldErrors } from '@aegis/shared';
-import { useContext, useEffect, useId, useState } from 'react';
+import {
+  Alpha3Code,
+  CreateAddressInput,
+  RegisterCustomerInput,
+  setFieldErrors,
+  UpdateAddressInput,
+  UpdateCustomerDetailsInput,
+} from '@aegis/shared';
+import { useEffect, useId, useState } from 'react';
 import { Alert, Button, Dropdown, Form, Spinner, Tab, Tabs } from 'react-bootstrap';
 import { FormProvider, useFieldArray, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useMatch, useNavigate } from 'react-router';
 import { User } from 'tabler-icons-react';
 import DetailsPanel from '../../../components/layout/detailsPanel/detailsPanel';
-import {
-  Alpha3Code,
-  CreateAddressInput,
-  RegisterCustomerInput,
-  UpdateAddressInput,
-  UpdateCustomerDetailsInput,
-} from '@aegis/shared';
-import CustomersDataContext from '../data/customersContext';
+import { useCustomers } from '../data/customersContext';
 import { AddressModel, CustomerDetailsModel } from '../model';
 import AddressForm from './addressForm/addressForm';
 import CustomerForm from './customerForm/customerForm';
@@ -43,7 +43,7 @@ function CustomerDetails() {
       saveCustomerDetails,
       savingCustomerDetails,
     },
-  } = useContext(CustomersDataContext);
+  } = useCustomers();
 
   const formProps = useForm<CustomerDetailsModel>({
     mode: 'all',

@@ -1,12 +1,12 @@
 import { RegisterArticleInput, setFieldErrors, UpdateArticleDetailsInput } from '@aegis/shared';
-import { useContext, useEffect, useId, useState } from 'react';
+import { useEffect, useId, useState } from 'react';
 import { Alert, Button, Form, Spinner, Tab, Tabs } from 'react-bootstrap';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useMatch, useNavigate } from 'react-router';
 import { User } from 'tabler-icons-react';
 import DetailsPanel from '../../../components/layout/detailsPanel/detailsPanel';
-import ArticlesDataContext from '../data/articlesContext';
+import { useArticles } from '../data/articlesContext';
 import { ArticleModel } from '../model';
 import ArticleForm from './articleForm/articleForm';
 
@@ -33,7 +33,7 @@ function ArticleDetails() {
       saveArticleDetails,
       savingArticleDetails,
     },
-  } = useContext(ArticlesDataContext);
+  } = useArticles();
 
   const formProps = useForm<ArticleModel>({
     mode: 'all',

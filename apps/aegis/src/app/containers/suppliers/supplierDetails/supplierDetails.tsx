@@ -1,19 +1,19 @@
-import { setFieldErrors } from '@aegis/shared';
-import { useContext, useEffect, useId, useState } from 'react';
+import {
+  Alpha3Code,
+  CreateAddressInput,
+  RegisterSupplierInput,
+  setFieldErrors,
+  UpdateAddressInput,
+  UpdateSupplierDetailsInput,
+} from '@aegis/shared';
+import { useEffect, useId, useState } from 'react';
 import { Alert, Button, Dropdown, Form, Spinner, Tab, Tabs } from 'react-bootstrap';
 import { FormProvider, useFieldArray, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useMatch, useNavigate } from 'react-router';
 import { User } from 'tabler-icons-react';
 import DetailsPanel from '../../../components/layout/detailsPanel/detailsPanel';
-import {
-  Alpha3Code,
-  CreateAddressInput,
-  RegisterSupplierInput,
-  UpdateAddressInput,
-  UpdateSupplierDetailsInput,
-} from '@aegis/shared';
-import SuppliersDataContext from '../data/suppliersContext';
+import { useSuppliers } from '../data/suppliersContext';
 import { AddressModel, SupplierDetailsModel } from '../model';
 import AddressForm from './addressForm/addressForm';
 import SupplierForm from './supplierForm/supplierForm';
@@ -43,7 +43,7 @@ function SupplierDetails() {
       saveSupplierDetails,
       savingSupplierDetails,
     },
-  } = useContext(SuppliersDataContext);
+  } = useSuppliers();
 
   const formProps = useForm<SupplierDetailsModel>({
     mode: 'all',

@@ -1,8 +1,6 @@
 import { FieldErrorsFeedback } from '@aegis/ui';
 import { FloatingLabel, Form } from 'react-bootstrap';
-import { useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { CustomerDetailsModel } from '../../model';
 import useCustomerDetailsFormConfig from '../useCustomerDetailsFormConfig';
 
 function CustomerForm() {
@@ -15,7 +13,7 @@ function CustomerForm() {
     phoneNumberConfig,
     ibanConfig,
     bicConfig,
-    formState: { errors }
+    formState: { errors },
   } = useCustomerDetailsFormConfig();
 
   return (

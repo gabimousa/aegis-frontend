@@ -1,6 +1,6 @@
 import { RegisterSupplierInput, UpdateSupplierDetailsInput } from '@aegis/shared';
 import { ErrorLike } from '@apollo/client';
-import { createContext, PropsWithChildren, useEffect, useState } from 'react';
+import { createContext, PropsWithChildren, useContext, useEffect, useState } from 'react';
 import { SupplierDetailsModel, SupplierModel } from '../model';
 import {
   useDeactivateSupplier,
@@ -42,35 +42,7 @@ type SuppliersContextType = {
   };
 };
 
-export const SuppliersDataContext = createContext<SuppliersContextType>({
-  list: {
-    suppliers: [],
-    loadingSuppliers: false,
-    loadingSuppliersError: undefined,
-    totalCount: 0,
-    load: async () => Promise.resolve([]),
-    loadMore: async () => Promise.resolve([]),
-    loadById: async (id: string) => undefined,
-    getById: (id: string) => undefined,
-    addOne: () => void 0,
-    addMany: () => void 0,
-    deleteOne: () => void 0,
-    clear: () => void 0,
-    canLoadMore: false,
-    searchTerm: '',
-    setSearchTerm: () => void 0,
-  },
-  details: {
-    selectSupplier: () => void 0,
-    selectedSupplier: undefined,
-    loadingSupplierDetails: false,
-    loadingSupplierDetailsError: undefined,
-    saveSupplierDetails: async () => false,
-    savingSupplierDetails: false,
-    deactivate: async () => false,
-    deactivatingSupplier: false,
-  },
-});
+const SuppliersDataContext = createContext<SuppliersContextType | null>(null);
 
 export const SuppliersDataProvider = ({ children }: PropsWithChildren) => {
   const [selectedSupplierId, setSelectedSupplierId] = useState<string | undefined>(undefined);
@@ -175,4 +147,10 @@ export const SuppliersDataProvider = ({ children }: PropsWithChildren) => {
   );
 };
 
-export default SuppliersDataContext;
+export const useSuppliers = () => {
+  const context = useContext(SuppliersDataContext);
+  if (!context) {
+    throw new Error('useSuppliers must be used within a SuppliersDataProvider');
+  }
+  return context;
+};

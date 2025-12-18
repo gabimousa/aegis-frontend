@@ -1,6 +1,6 @@
 import { RegisterArticleInput, UpdateArticleDetailsInput } from '@aegis/shared';
 import { ErrorLike } from '@apollo/client';
-import { createContext, PropsWithChildren, useEffect, useState } from 'react';
+import { createContext, PropsWithChildren, useContext, useEffect, useState } from 'react';
 import { ArticleModel } from '../model';
 import {
   useArticleDetailsQuery,
@@ -42,35 +42,7 @@ type ArticlesContextType = {
   };
 };
 
-export const ArticlesDataContext = createContext<ArticlesContextType>({
-  list: {
-    articles: [],
-    loadingArticles: false,
-    loadingArticlesError: undefined,
-    totalCount: 0,
-    load: async () => Promise.resolve([]),
-    loadMore: async () => Promise.resolve([]),
-    loadById: async (id: string) => undefined,
-    getById: (id: string) => undefined,
-    addOne: () => void 0,
-    addMany: () => void 0,
-    deleteOne: () => void 0,
-    clear: () => void 0,
-    canLoadMore: false,
-    searchTerm: '',
-    setSearchTerm: () => void 0,
-  },
-  details: {
-    selectArticle: () => void 0,
-    selectedArticle: undefined,
-    loadingArticleDetails: false,
-    loadingArticleDetailsError: undefined,
-    saveArticleDetails: async () => false,
-    savingArticleDetails: false,
-    discontinue: async () => false,
-    discontinuingArticle: false,
-  },
-});
+const ArticlesDataContext = createContext<ArticlesContextType | null>(null);
 
 export const ArticlesDataProvider = ({ children }: PropsWithChildren) => {
   const [selectedArticleId, setSelectedArticleId] = useState<string | undefined>(undefined);
@@ -175,4 +147,10 @@ export const ArticlesDataProvider = ({ children }: PropsWithChildren) => {
   );
 };
 
-export default ArticlesDataContext;
+export const useArticles = () => {
+  const context = useContext(ArticlesDataContext);
+  if (!context) {
+    throw new Error('useArticles must be used within a ArticlesDataProvider');
+  }
+  return context;
+};

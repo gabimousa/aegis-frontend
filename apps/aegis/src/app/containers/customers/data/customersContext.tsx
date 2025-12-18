@@ -1,6 +1,6 @@
 import { RegisterCustomerInput, UpdateCustomerDetailsInput } from '@aegis/shared';
 import { ErrorLike } from '@apollo/client';
-import { createContext, PropsWithChildren, useEffect, useState } from 'react';
+import { createContext, PropsWithChildren, useContext, useEffect, useState } from 'react';
 import { CustomerDetailsModel, CustomerModel } from '../model';
 import {
   useCustomerDetailsQuery,
@@ -42,35 +42,7 @@ type CustomersContextType = {
   };
 };
 
-export const CustomersDataContext = createContext<CustomersContextType>({
-  list: {
-    customers: [],
-    loadingCustomers: false,
-    loadingCustomersError: undefined,
-    totalCount: 0,
-    load: async () => Promise.resolve([]),
-    loadMore: async () => Promise.resolve([]),
-    loadById: async (id: string) => undefined,
-    getById: (id: string) => undefined,
-    addOne: () => void 0,
-    addMany: () => void 0,
-    deleteOne: () => void 0,
-    clear: () => void 0,
-    canLoadMore: false,
-    searchTerm: '',
-    setSearchTerm: () => void 0,
-  },
-  details: {
-    selectCustomer: () => void 0,
-    selectedCustomer: undefined,
-    loadingCustomerDetails: false,
-    loadingCustomerDetailsError: undefined,
-    saveCustomerDetails: async () => false,
-    savingCustomerDetails: false,
-    deactivate: async () => false,
-    deactivatingCustomer: false,
-  },
-});
+const CustomersDataContext = createContext<CustomersContextType | null>(null);
 
 export const CustomerDataProvider = ({ children }: PropsWithChildren) => {
   const [selectedCustomerId, setSelectedCustomerId] = useState<string | undefined>(undefined);
@@ -124,7 +96,7 @@ export const CustomerDataProvider = ({ children }: PropsWithChildren) => {
 
   // Subscriptions for real-time updates
   useCustomerSubscriptions({
-    onCustomerUpdated: (customer: CustomerModel) => {
+    onCustomerDetailsUpdated: (customer: CustomerModel) => {
       // Customer updates might change name/sort order - use smart refetch
       addOne(customer);
     },
@@ -175,4 +147,10 @@ export const CustomerDataProvider = ({ children }: PropsWithChildren) => {
   );
 };
 
-export default CustomersDataContext;
+export const useCustomers = () => {
+  const context = useContext(CustomersDataContext);
+  if (!context) {
+    throw new Error('useCustomers must be used within a CustomersDataProvider');
+  }
+  return context;
+};

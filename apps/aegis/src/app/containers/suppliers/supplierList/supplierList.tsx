@@ -1,11 +1,10 @@
 import { useConfirm } from '@aegis/shared';
 import { DataGrid, DataGridColumn, DataGridProps, ListView } from '@aegis/ui';
-import { useContext } from 'react';
 import { Button } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router';
 import { Plus, Users } from 'tabler-icons-react';
-import SuppliersDataContext from '../data/suppliersContext';
+import { useSuppliers } from '../data/suppliersContext';
 import { SupplierModel } from '../model';
 
 export function SupplierList() {
@@ -22,8 +21,8 @@ export function SupplierList() {
       loadMore,
       canLoadMore,
     },
-    details: { deactivate, deactivatingSupplier },
-  } = useContext(SuppliersDataContext);
+    details: { deactivate, deactivatingSupplier, savingSupplierDetails },
+  } = useSuppliers();
 
   const columns: DataGridColumn<SupplierModel>[] = [
     { header: t('common.code'), field: 'code', width: 150 },
@@ -56,6 +55,7 @@ export function SupplierList() {
         await deactivate(item.id);
       }
     },
+    loading: loadingSuppliers || savingSupplierDetails || deactivatingSupplier,
   };
 
   const title = (

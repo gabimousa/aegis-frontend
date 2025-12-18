@@ -1,11 +1,10 @@
 import { useConfirm } from '@aegis/shared';
 import { DataGrid, DataGridColumn, DataGridProps, ListView } from '@aegis/ui';
-import { useContext } from 'react';
 import { Button } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router';
 import { Plus, Users } from 'tabler-icons-react';
-import CustomersDataContext from '../data/customersContext';
+import { useCustomers } from '../data/customersContext';
 import { CustomerModel } from '../model';
 
 export function CustomerList() {
@@ -23,7 +22,7 @@ export function CustomerList() {
       canLoadMore,
     },
     details: { deactivate, deactivatingCustomer, savingCustomerDetails },
-  } = useContext(CustomersDataContext);
+  } = useCustomers();
 
   const columns: DataGridColumn<CustomerModel>[] = [
     { header: t('common.code'), field: 'code', width: 150 },

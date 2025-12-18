@@ -1,11 +1,10 @@
 import { useConfirm } from '@aegis/shared';
 import { DataGrid, DataGridColumn, DataGridProps, ListView } from '@aegis/ui';
-import { useContext } from 'react';
 import { Button } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router';
 import { Plus, Users } from 'tabler-icons-react';
-import ArticlesDataContext from '../data/articlesContext';
+import { useArticles } from '../data/articlesContext';
 import { ArticleModel } from '../model';
 
 export function ArticleList() {
@@ -22,8 +21,8 @@ export function ArticleList() {
       loadMore,
       canLoadMore,
     },
-    details: { discontinue, discontinuingArticle },
-  } = useContext(ArticlesDataContext);
+    details: { discontinue, discontinuingArticle, savingArticleDetails },
+  } = useArticles();
 
   const columns: DataGridColumn<ArticleModel>[] = [
     { header: t('common.code'), field: 'code', width: 150 },
@@ -53,6 +52,7 @@ export function ArticleList() {
         await discontinue(item.id);
       }
     },
+    loading: loadingArticles || savingArticleDetails || discontinuingArticle,
   };
 
   const title = (
