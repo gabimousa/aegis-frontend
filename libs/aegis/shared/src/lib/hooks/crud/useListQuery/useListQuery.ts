@@ -9,6 +9,7 @@ export type UseListQueryProps<Q, T> = {
   pageSize: number;
   query: TypedDocumentNode<Q, OperationVariables>;
   connectionSelector: (data: Q | undefined) => Connection<T> | undefined | null;
+  idSelector: (item: T) => string;
 };
 
 export type UseListQueryReturn<T> = {
@@ -39,6 +40,7 @@ export const useListQuery = <Q, T extends { id: string }>({
   pageSize,
   query,
   connectionSelector,
+  idSelector,
 }: UseListQueryProps<Q, T>): UseListQueryReturn<T> => {
   const [listState, setListState] = useState<ListState>({
     totalCount: 0,
@@ -46,9 +48,7 @@ export const useListQuery = <Q, T extends { id: string }>({
     searchTerm: undefined,
   });
 
-  const { items, getByKey, addOne, addMany, clear, deleteOne } = useEntityStore<T>(
-    (item) => item.id
-  );
+  const { items, getByKey, addOne, addMany, clear, deleteOne } = useEntityStore<T>(idSelector);
 
   const [executeQuery, { loading, error }] = useLazyQuery(query, {
     fetchPolicy: 'no-cache',
