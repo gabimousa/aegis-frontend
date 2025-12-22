@@ -45,12 +45,6 @@ export function DataGrid<T>({
   const onTableScroll = (event: React.UIEvent<HTMLTableElement>) => {
     const target = event.target as HTMLDivElement;
     if (canLoadMore && onLoadMore) {
-      console.table({
-        scrollTop: target.scrollTop,
-        clientHeight: target.clientHeight,
-        scrollHeight: target.scrollHeight,
-        shouldLoadMore: target.scrollHeight - target.scrollTop <= target.clientHeight + 100,
-      });
       if (target.scrollHeight - target.scrollTop <= target.clientHeight + 100) {
         onLoadMore();
       }
