@@ -1,6 +1,6 @@
 import { graphql } from '@aegis/shared';
 
-export const supplierFragment = graphql(`
+export const SUPPLIER_FRAGMENT = graphql(`
   fragment SupplierFields on Supplier {
     id
     code
@@ -13,7 +13,7 @@ export const supplierFragment = graphql(`
   }
 `);
 
-export const supplierAddressFragment = graphql(`
+export const SUPPLIER_ADDRESS_FRAGMENT = graphql(`
   fragment SupplierAddressFields on Address {
     id
     type

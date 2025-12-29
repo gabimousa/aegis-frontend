@@ -1,64 +1,36 @@
 import { useConfirm } from '@aegis/shared';
-import { DataGrid, DataGridColumn, DataGridProps, ListView } from '@aegis/ui';
+import { DataGrid, ListView } from '@aegis/ui';
+import { useState } from 'react';
 import { Button } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router';
 import { Plus, Users } from 'tabler-icons-react';
-import { useCustomers } from '../data/customersContext';
-import { CustomerModel } from '../model';
+import { useCustomersQuery, useDeactivateCustomer } from '../data/hooks';
 
 export function CustomerList() {
+  const [searchTerm, setSearchTerm] = useState('');
   const { confirm } = useConfirm();
   const navigate = useNavigate();
   const { t } = useTranslation();
   const {
-    list: {
-      customers,
-      loadingCustomers,
-      loadingCustomersError,
-      setSearchTerm,
-      totalCount,
-      loadMore,
-      canLoadMore,
-    },
-    details: { deactivate, deactivatingCustomer, savingCustomerDetails },
-  } = useCustomers();
-
-  const columns: DataGridColumn<CustomerModel>[] = [
-    { header: t('common.code'), field: 'code', width: 150 },
-    { header: t('common.name'), field: 'name' },
-    { header: t('common.website'), field: 'website', width: 200 },
-    { header: t('common.email'), field: 'email', width: 200 },
-    { header: t('common.phoneNumber'), field: 'phoneNumber', width: 150 },
-    { header: t('common.iban'), field: 'iban', width: 200 },
-    { header: t('common.bic'), field: 'bic', width: 100 },
-  ];
-
+    customers,
+    totalCount,
+    isLoading,
+    error,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useCustomersQuery({
+    pageSize: 50,
+    filters: searchTerm ? { name: { contains: searchTerm } } : undefined,
+  });
+  const { mutate: deactivate } = useDeactivateCustomer();
   const actions = (
     <Button variant="primary" className="text-nowrap" onClick={() => navigate('./NEW')}>
       <Plus size={16} className="me-2" />
       {t('common.add')}
     </Button>
   );
-
-  const dataGridProps: DataGridProps<CustomerModel> = {
-    keyAccessor: 'id',
-    columns,
-    data: customers ?? [],
-    onEdit: (item) => navigate(`./${encodeURIComponent(item.id)}`),
-    onDelete: async (item) => {
-      const confirmed = await confirm(
-        t('customers.deactivateCustomerTitle'),
-        t('customers.deactivateCustomerMessage', { name: item.name })
-      );
-      if (confirmed) {
-        await deactivate(item.id);
-      }
-    },
-    canLoadMore,
-    onLoadMore: () => loadMore(),
-    loading: loadingCustomers || deactivatingCustomer || savingCustomerDetails,
-  };
 
   const title = (
     <div className="d-flex align-items-center">
@@ -67,29 +39,49 @@ export function CustomerList() {
     </div>
   );
 
-  const footerLabel = totalCount
-    ? t('customers.totalCount', {
-        count: totalCount,
-      })
-    : '';
-
   return (
     <ListView
       header={title}
+      searchValue={searchTerm}
       searchPlaceholder={t('customers.searchPlaceholder')}
       onSearchChange={setSearchTerm}
       actions={actions}
       errorMessage={
-        loadingCustomersError &&
-        t('customers.errorLoading', { error: loadingCustomersError?.message })
+        error
+          ? t('customers.errorLoading', { error: error?.message }) + (console.error(error) ?? '')
+          : undefined
       }
       showFooter={!!customers}
-      footerLabel={footerLabel}
-      loadMoreLabel={t('common.loadMore')}
-      onLoadMore={() => loadMore()}
-      canLoadMore={canLoadMore}
+      footerLabel={t('customers.totalCount', {
+        count: totalCount || 0,
+      })}
     >
-      <DataGrid {...dataGridProps} />
+      <DataGrid
+        keyAccessor="id"
+        columns={[
+          { header: t('common.code'), field: 'code', width: 150 },
+          { header: t('common.name'), field: 'name' },
+          { header: t('common.website'), field: 'website', width: 200 },
+          { header: t('common.email'), field: 'email', width: 200 },
+          { header: t('common.phoneNumber'), field: 'phoneNumber', width: 150 },
+          { header: t('common.iban'), field: 'iban', width: 200 },
+          { header: t('common.bic'), field: 'bic', width: 100 },
+        ]}
+        data={customers}
+        onEdit={(item) => navigate(`./${encodeURIComponent(item.id)}`)}
+        onDelete={async (item) => {
+          const confirmed = await confirm(
+            t('customers.deactivateCustomerTitle'),
+            t('customers.deactivateCustomerMessage', { name: item.name })
+          );
+          if (confirmed) {
+            await deactivate(item.id);
+          }
+        }}
+        canLoadMore={hasNextPage && !isFetchingNextPage}
+        onLoadMore={() => fetchNextPage()}
+        loading={isLoading}
+      />
     </ListView>
   );
 }

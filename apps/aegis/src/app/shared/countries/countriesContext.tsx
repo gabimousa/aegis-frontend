@@ -1,7 +1,8 @@
-import { useQuery } from '@apollo/client/react';
+import { Alpha3Code, Country } from '@aegis/shared';
+import { useQuery } from '@tanstack/react-query';
 import { createContext, PropsWithChildren } from 'react';
-import { Alpha3Code, Country } from '../../gql/graphql';
-import { CountriesQuery } from './graphql/countriesQueries';
+import { gqlClient } from '../services';
+import { COUNTRIES_QUERY, COUNTRIES_QUERY_KEY } from './graphql/countriesQueries';
 
 type CountriesContextType = {
   countries: { code: Alpha3Code; name: string }[];
@@ -14,8 +15,9 @@ export const CountriesContext = createContext<CountriesContextType>({
 });
 
 export const CountriesProvider = ({ children }: PropsWithChildren) => {
-  const { data } = useQuery(CountriesQuery, {
-    fetchPolicy: 'cache-first',
+  const { data } = useQuery({
+    queryKey: [COUNTRIES_QUERY_KEY],
+    queryFn: async () => gqlClient.request(COUNTRIES_QUERY),
   });
 
   const createMap = (countries: Country[]): Record<Alpha3Code, string> => {
@@ -38,5 +40,3 @@ export const CountriesProvider = ({ children }: PropsWithChildren) => {
     </CountriesContext.Provider>
   );
 };
-
-export default CountriesContext;

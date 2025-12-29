@@ -2,8 +2,8 @@ import { useSaveEntity } from '@aegis/shared';
 import type { ErrorLike } from '@apollo/client';
 import { SupplierDetailsModel } from '../../model';
 import {
-  registerSupplierMutation,
-  updateSupplierDetailsMutation,
+  REGISTER_SUPPLIER_MUTATION,
+  UPDATE_SUPPLIER_DETAILS_MUTATION,
 } from '../graphql/suppliersMutations';
 export interface UseSaveSupplierProps {
   onDataSaved?: (supplier: SupplierDetailsModel) => void;
@@ -14,8 +14,8 @@ export const useSaveSupplier = ({ onDataSaved, onError }: UseSaveSupplierProps =
   return useSaveEntity({
     onDataSaved,
     onError,
-    createMutation: registerSupplierMutation,
-    updateMutation: updateSupplierDetailsMutation,
+    createMutation: REGISTER_SUPPLIER_MUTATION,
+    updateMutation: UPDATE_SUPPLIER_DETAILS_MUTATION,
     updateResultSelector: (data) => data?.updateSupplierDetails,
     createResultSelector: (data) => data?.registerSupplier,
     saveResultEntitySelector: (data) =>

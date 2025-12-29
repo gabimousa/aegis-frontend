@@ -1,18 +1,17 @@
 import { useMatch, useNavigate } from 'react-router';
 import MasterDetail from '../../components/layout/masterDetail/masterDetail';
 import CustomerList from './customerList/customerList';
-import { CustomerDataProvider } from './data/customersContext';
+import { useCustomerSubscriptions } from './data/hooks';
 
 function Customers() {
+  useCustomerSubscriptions();
   const match = useMatch('/customers/:id');
   const navigate = useNavigate();
 
   return (
-    <CustomerDataProvider>
-      <MasterDetail detailsOpen={!!match} onBackdropClick={() => navigate('')}>
-        <CustomerList />
-      </MasterDetail>
-    </CustomerDataProvider>
+    <MasterDetail detailsOpen={!!match} onBackdropClick={() => navigate('')}>
+      <CustomerList />
+    </MasterDetail>
   );
 }
 

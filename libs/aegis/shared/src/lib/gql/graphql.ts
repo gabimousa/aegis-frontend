@@ -1008,9 +1008,9 @@ export type UpdateArticleDetailsInput = {
   description?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['ID']['input'];
   name?: InputMaybe<Scalars['String']['input']>;
-  price?: Scalars['Int']['input'];
+  price?: Scalars['Float']['input'];
   removedSuppliers?: InputMaybe<Array<IdInputOfGuidInput>>;
-  sellingUnit?: Scalars['Int']['input'];
+  sellingUnit?: Scalars['Float']['input'];
 };
 
 export type UpdateArticleDetailsPayload = {
@@ -1094,7 +1094,6 @@ export type ArticleFieldsFragment = {
   id: string;
   code: string;
   name: string;
-  description?: string | null;
   price: any;
   sellingUnit: any;
 } & { ' $fragmentName'?: 'ArticleFieldsFragment' };
@@ -1266,14 +1265,9 @@ export type RegisterCustomerMutation = {
   registerCustomer: {
     __typename?: 'RegisterCustomerPayload';
     customer?:
-      | ({
-          __typename?: 'Customer';
-          addresses: Array<
-            { __typename?: 'Address' } & {
-              ' $fragmentRefs'?: { CustomerAddressFieldsFragment: CustomerAddressFieldsFragment };
-            }
-          >;
-        } & { ' $fragmentRefs'?: { CustomerFieldsFragment: CustomerFieldsFragment } })
+      | ({ __typename?: 'Customer' } & {
+          ' $fragmentRefs'?: { CustomerFieldsFragment: CustomerFieldsFragment };
+        })
       | null;
     errors?: Array<{
       __typename?: 'ApplicationError';
@@ -1295,14 +1289,9 @@ export type UpdateCustomerDetailsMutation = {
   updateCustomerDetails: {
     __typename?: 'UpdateCustomerDetailsPayload';
     customer?:
-      | ({
-          __typename?: 'Customer';
-          addresses: Array<
-            { __typename?: 'Address' } & {
-              ' $fragmentRefs'?: { CustomerAddressFieldsFragment: CustomerAddressFieldsFragment };
-            }
-          >;
-        } & { ' $fragmentRefs'?: { CustomerFieldsFragment: CustomerFieldsFragment } })
+      | ({ __typename?: 'Customer' } & {
+          ' $fragmentRefs'?: { CustomerFieldsFragment: CustomerFieldsFragment };
+        })
       | null;
     errors?: Array<{
       __typename?: 'ApplicationError';
@@ -1323,6 +1312,7 @@ export type DeactivateCustomerMutation = {
   __typename?: 'Mutation';
   deactivateCustomer: {
     __typename?: 'DeactivateCustomerPayload';
+    boolean?: boolean | null;
     errors?: Array<{
       __typename?: 'ApplicationError';
       code: string;
@@ -1599,7 +1589,6 @@ export const ArticleFieldsFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'code' } },
           { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'description' } },
           { kind: 'Field', name: { kind: 'Name', value: 'price' } },
           { kind: 'Field', name: { kind: 'Name', value: 'sellingUnit' } },
         ],
@@ -1784,7 +1773,6 @@ export const RegisterArticleDocument = {
           { kind: 'Field', name: { kind: 'Name', value: 'id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'code' } },
           { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'description' } },
           { kind: 'Field', name: { kind: 'Name', value: 'price' } },
           { kind: 'Field', name: { kind: 'Name', value: 'sellingUnit' } },
         ],
@@ -1877,7 +1865,6 @@ export const UpdateArticleDetailsDocument = {
           { kind: 'Field', name: { kind: 'Name', value: 'id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'code' } },
           { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'description' } },
           { kind: 'Field', name: { kind: 'Name', value: 'price' } },
           { kind: 'Field', name: { kind: 'Name', value: 'sellingUnit' } },
         ],
@@ -2078,7 +2065,6 @@ export const ArticlesDocument = {
           { kind: 'Field', name: { kind: 'Name', value: 'id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'code' } },
           { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'description' } },
           { kind: 'Field', name: { kind: 'Name', value: 'price' } },
           { kind: 'Field', name: { kind: 'Name', value: 'sellingUnit' } },
         ],
@@ -2136,7 +2122,6 @@ export const ArticleDetailsDocument = {
           { kind: 'Field', name: { kind: 'Name', value: 'id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'code' } },
           { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'description' } },
           { kind: 'Field', name: { kind: 'Name', value: 'price' } },
           { kind: 'Field', name: { kind: 'Name', value: 'sellingUnit' } },
         ],
@@ -2177,7 +2162,6 @@ export const OnArticleRegisteredDocument = {
           { kind: 'Field', name: { kind: 'Name', value: 'id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'code' } },
           { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'description' } },
           { kind: 'Field', name: { kind: 'Name', value: 'price' } },
           { kind: 'Field', name: { kind: 'Name', value: 'sellingUnit' } },
         ],
@@ -2221,7 +2205,6 @@ export const OnArticleDetailsUpdatedDocument = {
           { kind: 'Field', name: { kind: 'Name', value: 'id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'code' } },
           { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'description' } },
           { kind: 'Field', name: { kind: 'Name', value: 'price' } },
           { kind: 'Field', name: { kind: 'Name', value: 'sellingUnit' } },
         ],
@@ -2298,19 +2281,6 @@ export const RegisterCustomerDocument = {
                     kind: 'SelectionSet',
                     selections: [
                       { kind: 'FragmentSpread', name: { kind: 'Name', value: 'CustomerFields' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'addresses' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'FragmentSpread',
-                              name: { kind: 'Name', value: 'CustomerAddressFields' },
-                            },
-                          ],
-                        },
-                      },
                     ],
                   },
                 },
@@ -2361,24 +2331,6 @@ export const RegisterCustomerDocument = {
           { kind: 'Field', name: { kind: 'Name', value: 'phoneNumber' } },
           { kind: 'Field', name: { kind: 'Name', value: 'iban' } },
           { kind: 'Field', name: { kind: 'Name', value: 'bic' } },
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'CustomerAddressFields' },
-      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Address' } },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'street' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'number' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'zipCode' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'city' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'state' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'countryCode' } },
         ],
       },
     },
@@ -2427,19 +2379,6 @@ export const UpdateCustomerDetailsDocument = {
                     kind: 'SelectionSet',
                     selections: [
                       { kind: 'FragmentSpread', name: { kind: 'Name', value: 'CustomerFields' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'addresses' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'FragmentSpread',
-                              name: { kind: 'Name', value: 'CustomerAddressFields' },
-                            },
-                          ],
-                        },
-                      },
                     ],
                   },
                 },
@@ -2493,24 +2432,6 @@ export const UpdateCustomerDetailsDocument = {
         ],
       },
     },
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'CustomerAddressFields' },
-      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Address' } },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'street' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'number' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'zipCode' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'city' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'state' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'countryCode' } },
-        ],
-      },
-    },
   ],
 } as unknown as DocumentNode<UpdateCustomerDetailsMutation, UpdateCustomerDetailsMutationVariables>;
 export const DeactivateCustomerDocument = {
@@ -2546,6 +2467,7 @@ export const DeactivateCustomerDocument = {
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'boolean' } },
                 {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'errors' },

@@ -1,6 +1,6 @@
 import { Connection, SuppliersQuery as SuppliersQueryType, useListQuery } from '@aegis/shared';
 import { SupplierModel } from '../../model';
-import { SuppliersQuery } from '../graphql/suppliersQueries';
+import { SUPPLIERS_QUERY } from '../graphql/suppliersQueries';
 
 export interface UseSuppliersQueryProps {
   pageSize: number;
@@ -12,7 +12,7 @@ const idSelector = (item: SupplierModel) => item.id;
 export const useSuppliersQuery = ({ pageSize }: UseSuppliersQueryProps) => {
   return useListQuery({
     pageSize,
-    query: SuppliersQuery,
+    query: SUPPLIERS_QUERY,
     connectionSelector,
     idSelector,
   });

@@ -1,13 +1,10 @@
 import { graphql } from '@aegis/shared';
 
-export const registerCustomerMutation = graphql(`
+export const REGISTER_CUSTOMER_MUTATION = graphql(`
   mutation registerCustomer($input: RegisterCustomerInput!) {
     registerCustomer(input: $input) {
       customer {
         ...CustomerFields
-        addresses {
-          ...CustomerAddressFields
-        }
       }
       errors {
         ... on ApplicationError {
@@ -22,14 +19,11 @@ export const registerCustomerMutation = graphql(`
   }
 `);
 
-export const updateCustomerDetailsMutation = graphql(`
+export const UPDATE_CUSTOMER_DETAILS_MUTATION = graphql(`
   mutation updateCustomerDetails($input: UpdateCustomerDetailsInput!) {
     updateCustomerDetails(input: $input) {
       customer {
         ...CustomerFields
-        addresses {
-          ...CustomerAddressFields
-        }
       }
       errors {
         ... on ApplicationError {
@@ -44,9 +38,10 @@ export const updateCustomerDetailsMutation = graphql(`
   }
 `);
 
-export const deactivateCustomerMutation = graphql(`
+export const DEACTIVATE_CUSTOMER_MUTATION = graphql(`
   mutation deactivateCustomer($input: DeactivateCustomerInput!) {
     deactivateCustomer(input: $input) {
+      boolean
       errors {
         ... on ApplicationError {
           code

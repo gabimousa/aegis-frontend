@@ -1,5 +1,5 @@
 import { PropsWithChildren, ReactElement, useCallback, useState } from 'react';
-import { Alert, Button, Card, Col, Container, Row } from 'react-bootstrap';
+import { Alert, Card, Col, Container, Row } from 'react-bootstrap';
 import { SearchInput } from '../searchInput';
 
 type ListViewProps = PropsWithChildren<{
@@ -8,11 +8,10 @@ type ListViewProps = PropsWithChildren<{
   actions?: ReactElement;
   errorMessage?: string;
   showFooter?: boolean;
-  loadMoreLabel?: string | ReactElement;
   footerLabel?: string | ReactElement;
-  canLoadMore?: boolean;
-  onSearchChange: (value: string) => void;
-  onLoadMore?: () => void;
+  allowSearch?: boolean;
+  searchValue?: string;
+  onSearchChange?: (value: string) => void;
 }>;
 
 export function ListView({
@@ -23,17 +22,16 @@ export function ListView({
   children,
   showFooter,
   footerLabel,
-  loadMoreLabel,
-  canLoadMore,
+
+  allowSearch = true,
   onSearchChange,
-  onLoadMore,
 }: ListViewProps) {
   const [searchTerm, setSearchTerm] = useState('');
 
   const handleSearchChange = useCallback(
     (value: string) => {
       setSearchTerm(value);
-      onSearchChange(value);
+      onSearchChange?.(value);
     },
     [onSearchChange]
   );
@@ -47,17 +45,19 @@ export function ListView({
         </Col>
       </Row>
 
-      <Row className="mb-3">
-        <Col>
-          <div className="d-flex">
-            <SearchInput
-              placeholder={searchPlaceholder}
-              value={searchTerm}
-              onSearchChange={handleSearchChange}
-            />
-          </div>
-        </Col>
-      </Row>
+      {allowSearch && (
+        <Row className="mb-3">
+          <Col>
+            <div className="d-flex">
+              <SearchInput
+                placeholder={searchPlaceholder}
+                value={searchTerm}
+                onSearchChange={handleSearchChange}
+              />
+            </div>
+          </Col>
+        </Row>
+      )}
 
       {errorMessage && (
         <Row className="mb-3">
@@ -73,35 +73,10 @@ export function ListView({
             {/* <Card.Header>
               <h5 className="mb-0">{cardTitle}</h5>
             </Card.Header> */}
-            <Card.Body className="flex-grow-1 overflow-auto p-0">
-              {/* {loading ? (
-                <div className="text-center p-4">
-                  <Spinner animation="border" role="status">
-                    <span className="visually-hidden">{loadingLabel}</span>
-                  </Spinner>
-                </div>
-              ) : ( */}
-              {children}
-              {/* )} */}
-            </Card.Body>
+            <Card.Body className="flex-grow-1 overflow-auto p-0">{children}</Card.Body>
             {showFooter && (
               <Card.Footer>
-                <div className="d-flex justify-content-between align-items-center">
-                  <div>
-                    <small className="text-muted">{footerLabel}</small>
-                  </div>
-                  <div>
-                    <Button
-                      onClick={onLoadMore}
-                      variant="outline-secondary"
-                      size="sm"
-                      disabled={!canLoadMore}
-                      className="me-2"
-                    >
-                      {loadMoreLabel}
-                    </Button>
-                  </div>
-                </div>
+                <small className="text-muted">{footerLabel}</small>
               </Card.Footer>
             )}
           </Card>

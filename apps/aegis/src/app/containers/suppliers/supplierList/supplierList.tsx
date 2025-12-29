@@ -83,9 +83,6 @@ export function SupplierList() {
       }
       showFooter={!!suppliers}
       footerLabel={footerLabel}
-      loadMoreLabel={t('common.loadMore')}
-      onLoadMore={() => loadMore()}
-      canLoadMore={canLoadMore}
     >
       <DataGrid {...dataGridProps} />
     </ListView>

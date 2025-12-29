@@ -1,6 +1,6 @@
 import { graphql } from '@aegis/shared';
 
-export const SuppliersQuery = graphql(`
+export const SUPPLIERS_QUERY = graphql(`
   query suppliers(
     $first: Int
     $last: Int
@@ -31,7 +31,7 @@ export const SuppliersQuery = graphql(`
   }
 `);
 
-export const supplierDetailsQuery = graphql(`
+export const SUPPLIER_DETAILS_QUERY = graphql(`
   query SupplierDetails($id: ID!) {
     supplierById(id: $id) {
       ...SupplierFields

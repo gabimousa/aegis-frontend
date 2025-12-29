@@ -79,9 +79,6 @@ export function ArticleList() {
       }
       showFooter={!!articles}
       footerLabel={footerLabel}
-      loadMoreLabel={t('common.loadMore')}
-      onLoadMore={() => loadMore()}
-      canLoadMore={canLoadMore}
     >
       <DataGrid {...dataGridProps} />
     </ListView>

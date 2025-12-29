@@ -1,8 +1,11 @@
-import { useEntityDetailsQuery, UseEntityDetailsQueryReturn } from '@aegis/shared';
+import {
+  SupplierDetailsQuery,
+  useEntityDetailsQuery,
+  UseEntityDetailsQueryReturn,
+} from '@aegis/shared';
 import { useCallback } from 'react';
-import { SupplierDetailsQuery } from '@aegis/shared';
 import { SupplierDetailsModel } from '../../model';
-import { supplierDetailsQuery } from '../graphql/suppliersQueries';
+import { SUPPLIER_DETAILS_QUERY } from '../graphql/suppliersQueries';
 
 export interface UseSupplierDetailsQueryProps {
   id?: string;
@@ -19,7 +22,7 @@ export const useSupplierDetailsQuery = (
 
   return useEntityDetailsQuery({
     ...props,
-    query: supplierDetailsQuery,
+    query: SUPPLIER_DETAILS_QUERY,
     resultSelector,
   });
 };

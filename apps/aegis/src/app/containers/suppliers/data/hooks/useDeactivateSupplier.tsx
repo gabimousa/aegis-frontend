@@ -1,6 +1,6 @@
-import type { ErrorLike } from '@apollo/client';
 import { useRemoveEntity } from '@aegis/shared';
-import { deactivateSupplierMutation } from '../graphql/suppliersMutations';
+import type { ErrorLike } from '@apollo/client';
+import { DEACTIVATE_SUPPLIER_MUTATION } from '../graphql/suppliersMutations';
 
 export interface UseDeactivateSupplierProps {
   onSupplierDeactivated?: (supplierId: string) => void;
@@ -20,7 +20,7 @@ export const useDeactivateSupplier = ({
   const { remove, removingEntity, error } = useRemoveEntity({
     onEntityRemoved: onSupplierDeactivated,
     onError,
-    mutation: deactivateSupplierMutation,
+    mutation: DEACTIVATE_SUPPLIER_MUTATION,
     mutationResultSelector: (data) => data?.deactivateSupplier,
   });
 

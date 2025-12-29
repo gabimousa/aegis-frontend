@@ -1,6 +1,11 @@
 import { graphql } from '@aegis/shared';
 
-export const CustomersQuery = graphql(`
+export const CUSTOMERS_QUERY_KEY = (args?: { [key: string]: unknown }) => {
+  return args ? ['CUSTOMERS', args] : ['CUSTOMERS'];
+};
+export const CUSTOMER_DETAILS_QUERY_KEY = (id?: string) => ['CUSTOMER_DETAILS', id];
+
+export const CUSTOMERS_QUERY = graphql(`
   query customers(
     $first: Int
     $last: Int
@@ -31,7 +36,7 @@ export const CustomersQuery = graphql(`
   }
 `);
 
-export const customerDetailsQuery = graphql(`
+export const CUSTOMER_DETAILS_QUERY = graphql(`
   query CustomerDetails($id: ID!) {
     customerById(id: $id) {
       ...CustomerFields

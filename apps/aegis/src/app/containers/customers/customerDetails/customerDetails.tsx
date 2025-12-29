@@ -13,7 +13,7 @@ import { useTranslation } from 'react-i18next';
 import { useMatch, useNavigate } from 'react-router';
 import { User } from 'tabler-icons-react';
 import DetailsPanel from '../../../components/layout/detailsPanel/detailsPanel';
-import { useCustomers } from '../data/customersContext';
+import { useCustomerDetailsQuery, useSaveCustomer } from '../data/hooks';
 import { AddressModel, CustomerDetailsModel } from '../model';
 import AddressForm from './addressForm/addressForm';
 import CustomerForm from './customerForm/customerForm';
@@ -35,15 +35,17 @@ function CustomerDetails() {
   const match = useMatch('/customers/:id');
   const { t } = useTranslation();
   const {
-    details: {
-      selectCustomer,
-      selectedCustomer: customer,
-      loadingCustomerDetails,
-      loadingCustomerDetailsError,
-      saveCustomerDetails,
-      savingCustomerDetails,
-    },
-  } = useCustomers();
+    data: customer,
+    isError,
+    isLoading,
+    error,
+  } = useCustomerDetailsQuery({ id: match?.params.id === 'NEW' ? undefined : match?.params.id });
+
+  const {
+    mutate: saveCustomerDetails,
+    isPending: savingCustomerDetails,
+    isSuccess: saveCustomerSuccess,
+  } = useSaveCustomer();
 
   const formProps = useForm<CustomerDetailsModel>({
     mode: 'all',
@@ -72,14 +74,14 @@ function CustomerDetails() {
   });
 
   useEffect(() => {
-    const customerId = match?.params.id;
-    selectCustomer(customerId);
-    return () => selectCustomer(undefined);
-  }, [match?.params.id, selectCustomer]);
-
-  useEffect(() => {
     reset(customer);
   }, [customer, reset]);
+
+  useEffect(() => {
+    if (saveCustomerSuccess) {
+      navigate('..');
+    }
+  }, [saveCustomerSuccess, navigate]);
 
   const canAppendAddressTypes = (addressType: 'VISITING' | 'MAILING' | 'DELIVERY') => {
     return !fields.some((address) => address.type === addressType);
@@ -152,7 +154,6 @@ function CustomerDetails() {
   };
 
   const onSubmit = async (formState: CustomerDetailsModel) => {
-    console.log('Submitting customer details:', formState);
     const idInput = formState?.id ? { id: formState.id } : {};
     try {
       const customerInput = {
@@ -166,11 +167,7 @@ function CustomerDetails() {
         bic: formState.bic,
       } as RegisterCustomerInput | UpdateCustomerDetailsInput;
 
-      const result = await saveCustomerDetails(
-        getCustomerInputWithAddresses(formState, customerInput)
-      );
-
-      result && navigate('..');
+      saveCustomerDetails(getCustomerInputWithAddresses(formState, customerInput));
     } catch (error) {
       setFieldErrors(error, setError, serverErrorMap);
     }
@@ -234,7 +231,7 @@ function CustomerDetails() {
       }
       onClose={() => navigate('..')}
       actions={actions}
-      loading={loadingCustomerDetails || savingCustomerDetails}
+      loading={isLoading || savingCustomerDetails}
     >
       {errors.root &&
         (errors.root.types ? (
@@ -252,8 +249,8 @@ function CustomerDetails() {
         <Form id={detailsFormId} noValidate onSubmit={handleSubmit(onSubmit)}>
           <Tabs activeKey={activeTab} onSelect={(tab) => setActiveTab(tab ?? 'details')}>
             <Tab className="pt-3" eventKey="details" title={t('common.details')}>
-              {loadingCustomerDetailsError ? (
-                <p>Error: {loadingCustomerDetailsError.message}</p>
+              {isError ? (
+                <p>Error: {error.message}</p>
               ) : (
                 <CustomerForm />
               )}

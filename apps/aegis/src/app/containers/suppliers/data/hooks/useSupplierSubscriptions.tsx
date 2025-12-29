@@ -1,9 +1,9 @@
 import { useSubscription } from '@apollo/client/react';
 import { SupplierModel } from '../../model';
 import {
-  onSupplierDeactivatedSubscription,
-  onSupplierDetailsUpdatedSubscription,
-  onSupplierRegisteredSubscription,
+  SUPPLIER_DEACTIVATED_SUBSCRIPTION,
+  SUPPLIER_DETAILS_UPDATED_SUBSCRIPTION,
+  SUPPLIER_REGISTERED_SUBSCRIPTION,
 } from '../graphql/suppliersSubscriptions';
 
 type useSupplierSubscriptionsProps = {
@@ -21,7 +21,7 @@ export const useSupplierSubscriptions = ({
     data: registeredData,
     restart: restartRegisteredSubscription,
     error: registeredError,
-  } = useSubscription(onSupplierRegisteredSubscription, {
+  } = useSubscription(SUPPLIER_REGISTERED_SUBSCRIPTION, {
     onData(options) {
       const supplier = options.data.data?.onSupplierRegistered;
       supplier && onSupplierRegistered?.(supplier as SupplierModel);
@@ -32,7 +32,7 @@ export const useSupplierSubscriptions = ({
     data: updateData,
     restart: restartUpdateSubscription,
     error: updateError,
-  } = useSubscription(onSupplierDetailsUpdatedSubscription, {
+  } = useSubscription(SUPPLIER_DETAILS_UPDATED_SUBSCRIPTION, {
     onData(options) {
       const supplier = options.data.data?.onSupplierDetailsUpdated;
       supplier && onSupplierDetailsUpdated?.(supplier as SupplierModel);
@@ -43,7 +43,7 @@ export const useSupplierSubscriptions = ({
     data: deactivatedData,
     restart: restartDeactivatedSubscription,
     error: deactivatedError,
-  } = useSubscription(onSupplierDeactivatedSubscription, {
+  } = useSubscription(SUPPLIER_DEACTIVATED_SUBSCRIPTION, {
     onData(options) {
       const supplierId = options.data.data?.onSupplierDeactivated.id;
       supplierId && onSupplierDeactivated?.(supplierId);
