@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { Link, useMatch } from 'react-router';
 import { Package, TruckDelivery, Users } from 'tabler-icons-react';
 
-export const TopBar = () => {
+export function TopBar() {
   const { mode, setMode, isDark } = useColorMode();
   const { t, i18n } = useTranslation();
   const [expanded, setExpanded] = useState(false);
@@ -77,6 +77,4 @@ export const TopBar = () => {
       </Container>
     </Navbar>
   );
-};
-
-export default TopBar;
+}

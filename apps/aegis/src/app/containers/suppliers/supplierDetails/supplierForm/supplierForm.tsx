@@ -3,7 +3,7 @@ import { FloatingLabel, Form } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import useSupplierDetailsFormConfig from '../useSupplierDetailsFormConfig';
 
-function SupplierForm() {
+export function SupplierForm() {
   const { t } = useTranslation();
   const {
     codeConfig,
@@ -104,5 +104,3 @@ function SupplierForm() {
     </>
   );
 }
-
-export default SupplierForm;

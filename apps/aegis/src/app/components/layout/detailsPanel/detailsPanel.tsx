@@ -1,7 +1,7 @@
 import { PropsWithChildren, ReactElement } from 'react';
 import { Button, Spinner } from 'react-bootstrap';
 import { X } from 'tabler-icons-react';
-import styles from './detailsPanel.module.scss';
+import styles from './DetailsPanel.module.scss';
 
 type DetailsPanelProps = {
   title: ReactElement | string;
@@ -10,7 +10,7 @@ type DetailsPanelProps = {
   loading?: boolean;
 };
 
-function DetailsPanel({
+export function DetailsPanel({
   title,
   actions,
   children,
@@ -37,4 +37,3 @@ function DetailsPanel({
     </div>
   );
 }
-export default DetailsPanel;

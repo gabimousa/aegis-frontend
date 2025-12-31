@@ -1,21 +1,22 @@
-import { Customer, useMutateCache } from '@aegis/shared';
+import { useMutateCache } from '@aegis/shared';
 import { print } from 'graphql';
 import { useEffect } from 'react';
 import { wsClient } from '../../../../shared';
-import { CUSTOMERS_QUERY_KEY } from '../graphql';
+import { CustomerModel } from '../../model';
 import {
   CUSTOMER_DEACTIVATED_SUBSCRIPTION,
   CUSTOMER_DETAILS_UPDATED_SUBSCRIPTION,
   CUSTOMER_REGISTERED_SUBSCRIPTION,
-} from '../graphql/customersSubscriptions';
+  CUSTOMERS_QUERY_KEY,
+} from '../graphql';
 
 const registerSubString = print(CUSTOMER_REGISTERED_SUBSCRIPTION);
 const updateSubString = print(CUSTOMER_DETAILS_UPDATED_SUBSCRIPTION);
 const deactivateSubString = print(CUSTOMER_DEACTIVATED_SUBSCRIPTION);
 
 export const useCustomerSubscriptions = () => {
-  const { addToInfiniteData, updateInInfiniteData, removeFromInfiniteData } =
-    useMutateCache<Customer>();
+  const { upsertInfiniteData, updateInInfiniteData, removeFromInfiniteData } =
+    useMutateCache<CustomerModel>();
 
   useEffect(() => {
     // 1. Create the iterators
@@ -29,8 +30,8 @@ export const useCustomerSubscriptions = () => {
         for await (const result of registerIter) {
           const data = result.data;
           if (data?.onCustomerRegistered) {
-            addToInfiniteData(
-              data.onCustomerRegistered as Customer,
+            upsertInfiniteData(
+              data.onCustomerRegistered as CustomerModel,
               CUSTOMERS_QUERY_KEY(),
               'customers'
             );
@@ -47,7 +48,7 @@ export const useCustomerSubscriptions = () => {
           const data = result.data;
           if (data?.onCustomerDetailsUpdated) {
             updateInInfiniteData(
-              data.onCustomerDetailsUpdated as Customer,
+              data.onCustomerDetailsUpdated as CustomerModel,
               CUSTOMERS_QUERY_KEY(),
               'customers'
             );
@@ -64,7 +65,7 @@ export const useCustomerSubscriptions = () => {
           const data = result.data;
           if (data?.onCustomerDeactivated) {
             const id = (data.onCustomerDeactivated as { id: string }).id;
-            removeFromInfiniteData(id, [CUSTOMERS_QUERY_KEY], 'customers');
+            removeFromInfiniteData(id, CUSTOMERS_QUERY_KEY(), 'customers');
           }
         }
       } catch (err) {
@@ -95,5 +96,5 @@ export const useCustomerSubscriptions = () => {
       unlistenErr();
       unlistenClose();
     };
-  }, [addToInfiniteData, removeFromInfiniteData, updateInInfiniteData]);
+  }, [upsertInfiniteData, removeFromInfiniteData, updateInInfiniteData]);
 };

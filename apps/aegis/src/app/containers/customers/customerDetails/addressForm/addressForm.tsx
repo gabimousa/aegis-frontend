@@ -14,7 +14,7 @@ type AddressFormProps = {
   onRemove?: () => void;
 };
 
-function AddressForm({ index, address, onRemove }: AddressFormProps) {
+export function AddressForm({ index, address, onRemove }: AddressFormProps) {
   const { t } = useTranslation();
   const { countries } = useContext(CountriesContext);
   const {
@@ -147,5 +147,3 @@ function AddressForm({ index, address, onRemove }: AddressFormProps) {
     </Card>
   );
 }
-
-export default AddressForm;

@@ -3,7 +3,7 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
 import { gqlClient } from '../../../../shared';
 import { CustomerModel } from '../../model';
-import { CUSTOMERS_QUERY, CUSTOMERS_QUERY_KEY } from '../graphql/customersQueries';
+import { CUSTOMERS_QUERY, CUSTOMERS_QUERY_KEY } from '../graphql';
 
 export interface UseCustomersQueryProps {
   pageSize: number;

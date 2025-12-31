@@ -12,11 +12,11 @@ import { FormProvider, useFieldArray, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useMatch, useNavigate } from 'react-router';
 import { User } from 'tabler-icons-react';
-import DetailsPanel from '../../../components/layout/detailsPanel/detailsPanel';
-import { useCustomerDetailsQuery, useSaveCustomer } from '../data/hooks';
+import { DetailsPanel } from '../../../components';
+import { useCustomerDetailsQuery, useSaveCustomer } from '../data';
 import { AddressModel, CustomerDetailsModel } from '../model';
-import AddressForm from './addressForm/addressForm';
-import CustomerForm from './customerForm/customerForm';
+import { AddressForm } from './addressForm';
+import { CustomerForm } from './customerForm';
 
 const serverErrorMap: Record<string, string> = {
   Code: 'code',
@@ -28,7 +28,7 @@ const serverErrorMap: Record<string, string> = {
   BIC: 'bic',
 };
 
-function CustomerDetails() {
+export function CustomerDetails() {
   const [activeTab, setActiveTab] = useState('details');
   const detailsFormId = useId();
   const navigate = useNavigate();
@@ -60,6 +60,7 @@ function CustomerDetails() {
       addresses: [],
     },
   });
+
   const {
     reset,
     setError,
@@ -153,7 +154,7 @@ function CustomerDetails() {
     }
   };
 
-  const onSubmit = async (formState: CustomerDetailsModel) => {
+  const onSubmit = (formState: CustomerDetailsModel) => {
     const idInput = formState?.id ? { id: formState.id } : {};
     try {
       const customerInput = {
@@ -249,11 +250,7 @@ function CustomerDetails() {
         <Form id={detailsFormId} noValidate onSubmit={handleSubmit(onSubmit)}>
           <Tabs activeKey={activeTab} onSelect={(tab) => setActiveTab(tab ?? 'details')}>
             <Tab className="pt-3" eventKey="details" title={t('common.details')}>
-              {isError ? (
-                <p>Error: {error.message}</p>
-              ) : (
-                <CustomerForm />
-              )}
+              {isError ? <p>Error: {error.message}</p> : <CustomerForm />}
             </Tab>
             <Tab eventKey="addresses" title={t('common.addresses')}>
               {fields.map((address, index) => (
@@ -272,4 +269,3 @@ function CustomerDetails() {
     </DetailsPanel>
   );
 }
-export default CustomerDetails;

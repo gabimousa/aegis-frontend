@@ -1,11 +1,8 @@
 import { createBrowserRouter } from 'react-router';
-import AppShell from './components/layout/app-shell';
-import ArticleDetails from './containers/articles/articleDetails/articleDetails';
-import Articles from './containers/articles/articles';
-import CustomerDetails from './containers/customers/customerDetails/customerDetails';
-import Customers from './containers/customers/customers';
-import SupplierDetails from './containers/suppliers/supplierDetails/supplierDetails';
-import Suppliers from './containers/suppliers/suppliers';
+import { AppShell } from './components';
+import { ArticleDetails, Articles } from './containers/articles';
+import { CustomerDetails, Customers } from './containers/customers';
+import { SupplierDetails, Suppliers } from './containers/suppliers';
 
 export const router = createBrowserRouter([
   {

@@ -1,62 +1,36 @@
 import { useConfirm } from '@aegis/shared';
-import { DataGrid, DataGridColumn, DataGridProps, ListView } from '@aegis/ui';
+import { DataGrid, ListView } from '@aegis/ui';
+import { useState } from 'react';
 import { Button } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router';
 import { Plus, Users } from 'tabler-icons-react';
-import { useSuppliers } from '../data/suppliersContext';
-import { SupplierModel } from '../model';
+import { useDeactivateSupplier, useSuppliersQuery } from '../data';
 
 export function SupplierList() {
+  const [searchTerm, setSearchTerm] = useState('');
   const { confirm } = useConfirm();
   const navigate = useNavigate();
   const { t } = useTranslation();
   const {
-    list: {
-      suppliers,
-      loadingSuppliers,
-      loadingSuppliersError,
-      setSearchTerm,
-      totalCount,
-      loadMore,
-      canLoadMore,
-    },
-    details: { deactivate, deactivatingSupplier, savingSupplierDetails },
-  } = useSuppliers();
-
-  const columns: DataGridColumn<SupplierModel>[] = [
-    { header: t('common.code'), field: 'code', width: 150 },
-    { header: t('common.name'), field: 'name' },
-    { header: t('common.website'), field: 'website', width: 200 },
-    { header: t('common.email'), field: 'email', width: 200 },
-    { header: t('common.phoneNumber'), field: 'phoneNumber', width: 150 },
-    { header: t('common.iban'), field: 'iban', width: 200 },
-    { header: t('common.bic'), field: 'bic', width: 100 },
-  ];
-
+    suppliers,
+    totalCount,
+    isLoading,
+    error,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useSuppliersQuery({
+    pageSize: 50,
+    filters: searchTerm ? { name: { contains: searchTerm } } : undefined,
+  });
+  const { mutate: deactivate } = useDeactivateSupplier();
   const actions = (
     <Button variant="primary" className="text-nowrap" onClick={() => navigate('./NEW')}>
       <Plus size={16} className="me-2" />
       {t('common.add')}
     </Button>
   );
-
-  const dataGridProps: DataGridProps<SupplierModel> = {
-    keyAccessor: 'id',
-    columns,
-    data: suppliers ?? [],
-    onEdit: (item) => navigate(`./${encodeURIComponent(item.id)}`),
-    onDelete: async (item) => {
-      const confirmed = await confirm(
-        t('suppliers.deactivateSupplierTitle'),
-        t('suppliers.deactivateSupplierMessage', { name: item.name })
-      );
-      if (confirmed) {
-        await deactivate(item.id);
-      }
-    },
-    loading: loadingSuppliers || savingSupplierDetails || deactivatingSupplier,
-  };
 
   const title = (
     <div className="d-flex align-items-center">
@@ -65,27 +39,45 @@ export function SupplierList() {
     </div>
   );
 
-  const footerLabel = totalCount
-    ? t('suppliers.totalCount', {
-        count: totalCount,
-      })
-    : '';
-
   return (
     <ListView
       header={title}
+      searchValue={searchTerm}
       searchPlaceholder={t('suppliers.searchPlaceholder')}
       onSearchChange={setSearchTerm}
       actions={actions}
-      errorMessage={
-        loadingSuppliersError &&
-        t('suppliers.errorLoading', { error: loadingSuppliersError?.message })
-      }
+      errorMessage={error ? t('suppliers.errorLoading', { error: error?.message }) : undefined}
       showFooter={!!suppliers}
-      footerLabel={footerLabel}
+      footerLabel={t('suppliers.totalCount', {
+        count: totalCount || 0,
+      })}
     >
-      <DataGrid {...dataGridProps} />
+      <DataGrid
+        keyAccessor="id"
+        columns={[
+          { header: t('common.code'), field: 'code', width: 150 },
+          { header: t('common.name'), field: 'name' },
+          { header: t('common.website'), field: 'website', width: 200 },
+          { header: t('common.email'), field: 'email', width: 200 },
+          { header: t('common.phoneNumber'), field: 'phoneNumber', width: 150 },
+          { header: t('common.iban'), field: 'iban', width: 200 },
+          { header: t('common.bic'), field: 'bic', width: 100 },
+        ]}
+        data={suppliers}
+        onEdit={(item) => navigate(`./${encodeURIComponent(item.id)}`)}
+        onDelete={async (item) => {
+          const confirmed = await confirm(
+            t('suppliers.deactivateSupplierTitle'),
+            t('suppliers.deactivateSupplierMessage', { name: item.name })
+          );
+          if (confirmed) {
+            deactivate(item.id);
+          }
+        }}
+        canLoadMore={hasNextPage && !isFetchingNextPage}
+        onLoadMore={() => fetchNextPage()}
+        loading={isLoading}
+      />
     </ListView>
   );
 }
-export default SupplierList;

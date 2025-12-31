@@ -1094,6 +1094,7 @@ export type ArticleFieldsFragment = {
   id: string;
   code: string;
   name: string;
+  description?: string | null;
   price: any;
   sellingUnit: any;
 } & { ' $fragmentName'?: 'ArticleFieldsFragment' };
@@ -1154,6 +1155,7 @@ export type DiscontinueArticleMutation = {
   __typename?: 'Mutation';
   discontinueArticle: {
     __typename?: 'DiscontinueArticlePayload';
+    boolean?: boolean | null;
     errors?: Array<{
       __typename?: 'ApplicationError';
       code: string;
@@ -1429,14 +1431,9 @@ export type RegisterSupplierMutation = {
   registerSupplier: {
     __typename?: 'RegisterSupplierPayload';
     supplier?:
-      | ({
-          __typename?: 'Supplier';
-          addresses: Array<
-            { __typename?: 'Address' } & {
-              ' $fragmentRefs'?: { SupplierAddressFieldsFragment: SupplierAddressFieldsFragment };
-            }
-          >;
-        } & { ' $fragmentRefs'?: { SupplierFieldsFragment: SupplierFieldsFragment } })
+      | ({ __typename?: 'Supplier' } & {
+          ' $fragmentRefs'?: { SupplierFieldsFragment: SupplierFieldsFragment };
+        })
       | null;
     errors?: Array<{
       __typename?: 'ApplicationError';
@@ -1458,14 +1455,9 @@ export type UpdateSupplierDetailsMutation = {
   updateSupplierDetails: {
     __typename?: 'UpdateSupplierDetailsPayload';
     supplier?:
-      | ({
-          __typename?: 'Supplier';
-          addresses: Array<
-            { __typename?: 'Address' } & {
-              ' $fragmentRefs'?: { SupplierAddressFieldsFragment: SupplierAddressFieldsFragment };
-            }
-          >;
-        } & { ' $fragmentRefs'?: { SupplierFieldsFragment: SupplierFieldsFragment } })
+      | ({ __typename?: 'Supplier' } & {
+          ' $fragmentRefs'?: { SupplierFieldsFragment: SupplierFieldsFragment };
+        })
       | null;
     errors?: Array<{
       __typename?: 'ApplicationError';
@@ -1486,6 +1478,7 @@ export type DeactivateSupplierMutation = {
   __typename?: 'Mutation';
   deactivateSupplier: {
     __typename?: 'DeactivateSupplierPayload';
+    boolean?: boolean | null;
     errors?: Array<{
       __typename?: 'ApplicationError';
       code: string;
@@ -1589,6 +1582,7 @@ export const ArticleFieldsFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'code' } },
           { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'description' } },
           { kind: 'Field', name: { kind: 'Name', value: 'price' } },
           { kind: 'Field', name: { kind: 'Name', value: 'sellingUnit' } },
         ],
@@ -1773,6 +1767,7 @@ export const RegisterArticleDocument = {
           { kind: 'Field', name: { kind: 'Name', value: 'id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'code' } },
           { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'description' } },
           { kind: 'Field', name: { kind: 'Name', value: 'price' } },
           { kind: 'Field', name: { kind: 'Name', value: 'sellingUnit' } },
         ],
@@ -1865,6 +1860,7 @@ export const UpdateArticleDetailsDocument = {
           { kind: 'Field', name: { kind: 'Name', value: 'id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'code' } },
           { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'description' } },
           { kind: 'Field', name: { kind: 'Name', value: 'price' } },
           { kind: 'Field', name: { kind: 'Name', value: 'sellingUnit' } },
         ],
@@ -1905,6 +1901,7 @@ export const DiscontinueArticleDocument = {
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'boolean' } },
                 {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'errors' },
@@ -2065,6 +2062,7 @@ export const ArticlesDocument = {
           { kind: 'Field', name: { kind: 'Name', value: 'id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'code' } },
           { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'description' } },
           { kind: 'Field', name: { kind: 'Name', value: 'price' } },
           { kind: 'Field', name: { kind: 'Name', value: 'sellingUnit' } },
         ],
@@ -2122,6 +2120,7 @@ export const ArticleDetailsDocument = {
           { kind: 'Field', name: { kind: 'Name', value: 'id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'code' } },
           { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'description' } },
           { kind: 'Field', name: { kind: 'Name', value: 'price' } },
           { kind: 'Field', name: { kind: 'Name', value: 'sellingUnit' } },
         ],
@@ -2162,6 +2161,7 @@ export const OnArticleRegisteredDocument = {
           { kind: 'Field', name: { kind: 'Name', value: 'id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'code' } },
           { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'description' } },
           { kind: 'Field', name: { kind: 'Name', value: 'price' } },
           { kind: 'Field', name: { kind: 'Name', value: 'sellingUnit' } },
         ],
@@ -2205,6 +2205,7 @@ export const OnArticleDetailsUpdatedDocument = {
           { kind: 'Field', name: { kind: 'Name', value: 'id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'code' } },
           { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'description' } },
           { kind: 'Field', name: { kind: 'Name', value: 'price' } },
           { kind: 'Field', name: { kind: 'Name', value: 'sellingUnit' } },
         ],
@@ -2887,19 +2888,6 @@ export const RegisterSupplierDocument = {
                     kind: 'SelectionSet',
                     selections: [
                       { kind: 'FragmentSpread', name: { kind: 'Name', value: 'SupplierFields' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'addresses' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'FragmentSpread',
-                              name: { kind: 'Name', value: 'SupplierAddressFields' },
-                            },
-                          ],
-                        },
-                      },
                     ],
                   },
                 },
@@ -2950,24 +2938,6 @@ export const RegisterSupplierDocument = {
           { kind: 'Field', name: { kind: 'Name', value: 'phoneNumber' } },
           { kind: 'Field', name: { kind: 'Name', value: 'iban' } },
           { kind: 'Field', name: { kind: 'Name', value: 'bic' } },
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'SupplierAddressFields' },
-      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Address' } },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'street' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'number' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'zipCode' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'city' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'state' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'countryCode' } },
         ],
       },
     },
@@ -3016,19 +2986,6 @@ export const UpdateSupplierDetailsDocument = {
                     kind: 'SelectionSet',
                     selections: [
                       { kind: 'FragmentSpread', name: { kind: 'Name', value: 'SupplierFields' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'addresses' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'FragmentSpread',
-                              name: { kind: 'Name', value: 'SupplierAddressFields' },
-                            },
-                          ],
-                        },
-                      },
                     ],
                   },
                 },
@@ -3082,24 +3039,6 @@ export const UpdateSupplierDetailsDocument = {
         ],
       },
     },
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'SupplierAddressFields' },
-      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Address' } },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'street' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'number' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'zipCode' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'city' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'state' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'countryCode' } },
-        ],
-      },
-    },
   ],
 } as unknown as DocumentNode<UpdateSupplierDetailsMutation, UpdateSupplierDetailsMutationVariables>;
 export const DeactivateSupplierDocument = {
@@ -3135,6 +3074,7 @@ export const DeactivateSupplierDocument = {
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'boolean' } },
                 {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'errors' },

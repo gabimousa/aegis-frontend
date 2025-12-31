@@ -1,19 +1,16 @@
 import { useMatch, useNavigate } from 'react-router';
-import MasterDetail from '../../components/layout/masterDetail/masterDetail';
-import ArticleList from './articleList/articleList';
-import { ArticlesDataProvider } from './data/articlesContext';
+import { MasterDetail } from '../../components';
+import { ArticleList } from './articleList';
+import { useArticleSubscriptions } from './data';
 
-function Articles() {
+export function Articles() {
+  useArticleSubscriptions();
   const match = useMatch('/articles/:id');
   const navigate = useNavigate();
 
   return (
-    <ArticlesDataProvider>
-      <MasterDetail detailsOpen={!!match} onBackdropClick={() => navigate('')}>
-        <ArticleList />
-      </MasterDetail>
-    </ArticlesDataProvider>
+    <MasterDetail detailsOpen={!!match} onBackdropClick={() => navigate('')}>
+      <ArticleList />
+    </MasterDetail>
   );
 }
-
-export default Articles;

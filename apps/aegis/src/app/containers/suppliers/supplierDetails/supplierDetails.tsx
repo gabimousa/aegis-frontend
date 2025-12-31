@@ -12,11 +12,11 @@ import { FormProvider, useFieldArray, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useMatch, useNavigate } from 'react-router';
 import { User } from 'tabler-icons-react';
-import DetailsPanel from '../../../components/layout/detailsPanel/detailsPanel';
-import { useSuppliers } from '../data/suppliersContext';
+import { DetailsPanel } from '../../../components';
+import { useSaveSupplier, useSupplierDetailsQuery } from '../data';
 import { AddressModel, SupplierDetailsModel } from '../model';
-import AddressForm from './addressForm/addressForm';
-import SupplierForm from './supplierForm/supplierForm';
+import { AddressForm } from './addressForm';
+import { SupplierForm } from './supplierForm';
 
 const serverErrorMap: Record<string, string> = {
   Code: 'code',
@@ -28,22 +28,24 @@ const serverErrorMap: Record<string, string> = {
   BIC: 'bic',
 };
 
-function SupplierDetails() {
+export function SupplierDetails() {
   const [activeTab, setActiveTab] = useState('details');
   const detailsFormId = useId();
   const navigate = useNavigate();
   const match = useMatch('/suppliers/:id');
   const { t } = useTranslation();
   const {
-    details: {
-      selectSupplier,
-      selectedSupplier: supplier,
-      loadingSupplierDetails,
-      loadingSupplierDetailsError,
-      saveSupplierDetails,
-      savingSupplierDetails,
-    },
-  } = useSuppliers();
+    data: supplier,
+    isError,
+    isLoading,
+    error,
+  } = useSupplierDetailsQuery({ id: match?.params.id === 'NEW' ? undefined : match?.params.id });
+  const {
+    mutate: saveSupplierDetails,
+    isPending: savingSupplierDetails,
+    isSuccess: saveSupplierSuccess,
+    error: saveSupplierErrorData,
+  } = useSaveSupplier();
 
   const formProps = useForm<SupplierDetailsModel>({
     mode: 'all',
@@ -58,6 +60,7 @@ function SupplierDetails() {
       addresses: [],
     },
   });
+
   const {
     reset,
     setError,
@@ -72,14 +75,22 @@ function SupplierDetails() {
   });
 
   useEffect(() => {
-    const supplierId = match?.params.id;
-    selectSupplier(supplierId);
-    return () => selectSupplier(undefined);
-  }, [match?.params.id, selectSupplier]);
+    if (saveSupplierErrorData) {
+      console.log('Setting field errors', saveSupplierErrorData);
+      setFieldErrors(saveSupplierErrorData, setError, serverErrorMap);
+    }
+  }, [saveSupplierErrorData, setError]);
 
   useEffect(() => {
     reset(supplier);
   }, [supplier, reset]);
+
+  useEffect(() => {
+    if (saveSupplierSuccess) {
+      navigate('..');
+    }
+  }, [saveSupplierSuccess, navigate]);
+
   const canAppendAddressTypes = (addressType: 'VISITING' | 'MAILING' | 'DELIVERY') => {
     return !fields.some((address) => address.type === addressType);
   };
@@ -150,29 +161,21 @@ function SupplierDetails() {
     }
   };
 
-  const onSubmit = async (formState: SupplierDetailsModel) => {
-    console.log('Submitting supplier details:', formState);
+  const onSubmit = (formState: SupplierDetailsModel) => {
     const idInput = formState?.id ? { id: formState.id } : {};
-    try {
-      const supplierInput = {
-        ...idInput,
-        code: formState.code,
-        name: formState.name,
-        website: formState.website,
-        email: formState.email,
-        phoneNumber: formState.phoneNumber,
-        iban: formState.iban,
-        bic: formState.bic,
-      } as RegisterSupplierInput | UpdateSupplierDetailsInput;
 
-      const result = await saveSupplierDetails(
-        getSupplierInputWithAddresses(formState, supplierInput)
-      );
+    const supplierInput = {
+      ...idInput,
+      code: formState.code,
+      name: formState.name,
+      website: formState.website,
+      email: formState.email,
+      phoneNumber: formState.phoneNumber,
+      iban: formState.iban,
+      bic: formState.bic,
+    } as RegisterSupplierInput | UpdateSupplierDetailsInput;
 
-      result && navigate('..');
-    } catch (error) {
-      setFieldErrors(error, setError, serverErrorMap);
-    }
+    saveSupplierDetails(getSupplierInputWithAddresses(formState, supplierInput));
   };
 
   const actions = (
@@ -233,7 +236,7 @@ function SupplierDetails() {
       }
       onClose={() => navigate('..')}
       actions={actions}
-      loading={loadingSupplierDetails || savingSupplierDetails}
+      loading={isLoading || savingSupplierDetails}
     >
       {errors.root &&
         (errors.root.types ? (
@@ -251,11 +254,7 @@ function SupplierDetails() {
         <Form id={detailsFormId} noValidate onSubmit={handleSubmit(onSubmit)}>
           <Tabs activeKey={activeTab} onSelect={(tab) => setActiveTab(tab ?? 'details')}>
             <Tab className="pt-3" eventKey="details" title={t('common.details')}>
-              {loadingSupplierDetailsError ? (
-                <p>Error: {loadingSupplierDetailsError.message}</p>
-              ) : (
-                <SupplierForm />
-              )}
+              {isError ? <p>Error: {error.message}</p> : <SupplierForm />}
             </Tab>
             <Tab eventKey="addresses" title={t('common.addresses')}>
               {fields.map((address, index) => (
@@ -274,4 +273,3 @@ function SupplierDetails() {
     </DetailsPanel>
   );
 }
-export default SupplierDetails;

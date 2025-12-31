@@ -1,35 +1,23 @@
 import { useConfirm } from '@aegis/shared';
-import { DataGrid, DataGridColumn, DataGridProps, ListView } from '@aegis/ui';
+import { DataGrid, ListView } from '@aegis/ui';
 import { Button } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router';
 import { Plus, Users } from 'tabler-icons-react';
-import { useArticles } from '../data/articlesContext';
-import { ArticleModel } from '../model';
+import { useState } from 'react';
+import { useArticlesQuery, useDiscontinueArticle } from '../data';
 
 export function ArticleList() {
+  const [searchTerm, setSearchTerm] = useState('');
   const { confirm } = useConfirm();
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const {
-    list: {
-      articles,
-      loadingArticles,
-      loadingArticlesError,
-      setSearchTerm,
-      totalCount,
-      loadMore,
-      canLoadMore,
-    },
-    details: { discontinue, discontinuingArticle, savingArticleDetails },
-  } = useArticles();
-
-  const columns: DataGridColumn<ArticleModel>[] = [
-    { header: t('common.code'), field: 'code', width: 150 },
-    { header: t('common.name'), field: 'name' },
-    { header: t('common.price'), field: 'price', width: 150 },
-    { header: t('common.sellingUnit'), field: 'sellingUnit', width: 100 },
-  ];
+  const { articles, totalCount, isLoading, error, fetchNextPage, hasNextPage, isFetchingNextPage } =
+    useArticlesQuery({
+      pageSize: 50,
+      filters: searchTerm ? { name: { contains: searchTerm } } : undefined,
+    });
+  const { mutate: discontinue } = useDiscontinueArticle();
 
   const actions = (
     <Button variant="primary" className="text-nowrap" onClick={() => navigate('./NEW')}>
@@ -38,23 +26,6 @@ export function ArticleList() {
     </Button>
   );
 
-  const dataGridProps: DataGridProps<ArticleModel> = {
-    keyAccessor: 'id',
-    columns,
-    data: articles ?? [],
-    onEdit: (item) => navigate(`./${encodeURIComponent(item.id)}`),
-    onDelete: async (item) => {
-      const confirmed = await confirm(
-        t('articles.discontinueArticleTitle'),
-        t('articles.discontinueArticleMessage', { name: item.name })
-      );
-      if (confirmed) {
-        await discontinue(item.id);
-      }
-    },
-    loading: loadingArticles || savingArticleDetails || discontinuingArticle,
-  };
-
   const title = (
     <div className="d-flex align-items-center">
       <Users size={32} className="me-3" />
@@ -62,26 +33,42 @@ export function ArticleList() {
     </div>
   );
 
-  const footerLabel = totalCount
-    ? t('articles.totalCount', {
-        count: totalCount,
-      })
-    : '';
-
   return (
     <ListView
       header={title}
+      searchValue={searchTerm}
       searchPlaceholder={t('articles.searchPlaceholder')}
       onSearchChange={setSearchTerm}
       actions={actions}
-      errorMessage={
-        loadingArticlesError && t('articles.errorLoading', { error: loadingArticlesError?.message })
-      }
+      errorMessage={error ? t('articles.errorLoading', { error: error?.message }) : undefined}
       showFooter={!!articles}
-      footerLabel={footerLabel}
+      footerLabel={t('articles.totalCount', {
+        count: totalCount,
+      })}
     >
-      <DataGrid {...dataGridProps} />
+      <DataGrid
+        keyAccessor="id"
+        columns={[
+          { header: t('common.code'), field: 'code', width: 150 },
+          { header: t('common.name'), field: 'name' },
+          { header: t('common.price'), field: 'price', width: 150 },
+          { header: t('common.sellingUnit'), field: 'sellingUnit', width: 100 },
+        ]}
+        data={articles}
+        onEdit={(item) => navigate(`./${encodeURIComponent(item.id)}`)}
+        onDelete={async (item) => {
+          const confirmed = await confirm(
+            t('articles.discontinueArticleTitle'),
+            t('articles.discontinueArticleMessage', { name: item.name })
+          );
+          if (confirmed) {
+            discontinue(item.id);
+          }
+        }}
+        canLoadMore={hasNextPage && !isFetchingNextPage}
+        onLoadMore={() => fetchNextPage()}
+        loading={isLoading}
+      />
     </ListView>
   );
 }
-export default ArticleList;

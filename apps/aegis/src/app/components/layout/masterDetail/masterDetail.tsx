@@ -1,6 +1,6 @@
 import { PropsWithChildren } from 'react';
 import { Outlet } from 'react-router';
-import styles from './masterDetail.module.scss';
+import styles from './MasterDetail.module.scss';
 
 type MasterDetailProps = {
   // title?: string;
@@ -10,7 +10,7 @@ type MasterDetailProps = {
   onBackdropClick?: () => void;
 };
 
-function MasterDetail({
+export function MasterDetail({
   detailsOpen,
   onBackdropClick,
   children,
@@ -37,5 +37,3 @@ function MasterDetail({
     </div>
   );
 }
-
-export default MasterDetail;

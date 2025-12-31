@@ -1,7 +1,7 @@
 import { AnimatePresence, motion, Transition } from 'framer-motion';
 import { PropsWithChildren, useMemo } from 'react';
 import { useLocation } from 'react-router';
-import styles from './bodyWrapper.module.scss';
+import styles from './BodyWrapper.module.scss';
 
 const pageVariants = {
   initial: {
@@ -23,7 +23,7 @@ const pageTransition: Transition = {
   ease: 'easeInOut',
 };
 
-const BodyWrapper = ({ children }: PropsWithChildren) => {
+export function BodyWrapper({ children }: PropsWithChildren) {
   const location = useLocation();
   const pathName = useMemo(() => {
     return location.pathname.split('/')[1];
@@ -43,6 +43,4 @@ const BodyWrapper = ({ children }: PropsWithChildren) => {
       </motion.div>
     </AnimatePresence>
   );
-};
-
-export default BodyWrapper;
+}

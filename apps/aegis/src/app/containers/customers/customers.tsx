@@ -1,9 +1,9 @@
 import { useMatch, useNavigate } from 'react-router';
-import MasterDetail from '../../components/layout/masterDetail/masterDetail';
-import CustomerList from './customerList/customerList';
-import { useCustomerSubscriptions } from './data/hooks';
+import { MasterDetail } from '../../components';
+import { CustomerList } from './customerList/CustomerList';
+import { useCustomerSubscriptions } from './data';
 
-function Customers() {
+export function Customers() {
   useCustomerSubscriptions();
   const match = useMatch('/customers/:id');
   const navigate = useNavigate();
@@ -14,5 +14,3 @@ function Customers() {
     </MasterDetail>
   );
 }
-
-export default Customers;

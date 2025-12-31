@@ -3,7 +3,7 @@ import { FloatingLabel, Form } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import useCustomerDetailsFormConfig from '../useCustomerDetailsFormConfig';
 
-function CustomerForm() {
+export function CustomerForm() {
   const { t } = useTranslation();
   const {
     codeConfig,
@@ -104,5 +104,3 @@ function CustomerForm() {
     </>
   );
 }
-
-export default CustomerForm;

@@ -1,6 +1,13 @@
 import { graphql } from '@aegis/shared';
 
-export const ArticlesQuery = graphql(`
+const ARTICLES_QUERY_BASE_KEY = 'ARTICLE_LIST';
+export const ARTICLES_QUERY_KEY = (args?: { [key: string]: unknown }) => {
+  return args ? [ARTICLES_QUERY_BASE_KEY, args] : [ARTICLES_QUERY_BASE_KEY];
+};
+const ARTICLE_DETAILS_QUERY_BASE_KEY = 'ARTICLE_DETAILS';
+export const ARTICLE_DETAILS_QUERY_KEY = (id?: string) => [ARTICLE_DETAILS_QUERY_BASE_KEY, id];
+
+export const ARTICLES_QUERY = graphql(`
   query articles(
     $first: Int
     $last: Int
@@ -31,7 +38,7 @@ export const ArticlesQuery = graphql(`
   }
 `);
 
-export const articleDetailsQuery = graphql(`
+export const ARTICLE_DETAILS_QUERY = graphql(`
   query ArticleDetails($id: ID!) {
     articleById(id: $id) {
       ...ArticleFields

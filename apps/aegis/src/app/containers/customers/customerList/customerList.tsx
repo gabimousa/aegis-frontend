@@ -5,7 +5,7 @@ import { Button } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router';
 import { Plus, Users } from 'tabler-icons-react';
-import { useCustomersQuery, useDeactivateCustomer } from '../data/hooks';
+import { useCustomersQuery, useDeactivateCustomer } from '../data';
 
 export function CustomerList() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -46,11 +46,7 @@ export function CustomerList() {
       searchPlaceholder={t('customers.searchPlaceholder')}
       onSearchChange={setSearchTerm}
       actions={actions}
-      errorMessage={
-        error
-          ? t('customers.errorLoading', { error: error?.message }) + (console.error(error) ?? '')
-          : undefined
-      }
+      errorMessage={error ? t('customers.errorLoading', { error: error?.message }) : undefined}
       showFooter={!!customers}
       footerLabel={t('customers.totalCount', {
         count: totalCount || 0,
@@ -75,7 +71,7 @@ export function CustomerList() {
             t('customers.deactivateCustomerMessage', { name: item.name })
           );
           if (confirmed) {
-            await deactivate(item.id);
+            deactivate(item.id);
           }
         }}
         canLoadMore={hasNextPage && !isFetchingNextPage}
@@ -85,4 +81,3 @@ export function CustomerList() {
     </ListView>
   );
 }
-export default CustomerList;

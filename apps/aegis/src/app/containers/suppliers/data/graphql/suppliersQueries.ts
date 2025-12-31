@@ -1,4 +1,10 @@
 import { graphql } from '@aegis/shared';
+const SUPPLIERS_QUERY_BASE_KEY = 'SUPPLIER_LIST';
+export const SUPPLIERS_QUERY_KEY = (args?: { [key: string]: unknown }) => {
+  return args ? [SUPPLIERS_QUERY_BASE_KEY, args] : [SUPPLIERS_QUERY_BASE_KEY];
+};
+const SUPPLIER_DETAILS_QUERY_BASE_KEY = 'SUPPLIER_DETAILS';
+export const SUPPLIER_DETAILS_QUERY_KEY = (id?: string) => [SUPPLIER_DETAILS_QUERY_BASE_KEY, id];
 
 export const SUPPLIERS_QUERY = graphql(`
   query suppliers(

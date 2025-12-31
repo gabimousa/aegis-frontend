@@ -14,10 +14,10 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  * Learn more about it here: https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#reducing-bundle-size
  */
 type Documents = {
-  '\n  fragment ArticleFields on Article {\n    id\n    code\n    name\n    price\n    sellingUnit\n  }\n': typeof types.ArticleFieldsFragmentDoc;
+  '\n  fragment ArticleFields on Article {\n    id\n    code\n    name\n    description\n    price\n    sellingUnit\n  }\n': typeof types.ArticleFieldsFragmentDoc;
   '\n  mutation registerArticle($input: RegisterArticleInput!) {\n    registerArticle(input: $input) {\n      article {\n        ...ArticleFields\n      }\n      errors {\n        ... on ApplicationError {\n          code\n          description\n          type\n          fieldName\n          message\n        }\n      }\n    }\n  }\n': typeof types.RegisterArticleDocument;
   '\n  mutation updateArticleDetails($input: UpdateArticleDetailsInput!) {\n    updateArticleDetails(input: $input) {\n      article {\n        ...ArticleFields\n      }\n      errors {\n        ... on ApplicationError {\n          code\n          description\n          type\n          fieldName\n          message\n        }\n      }\n    }\n  }\n': typeof types.UpdateArticleDetailsDocument;
-  '\n  mutation discontinueArticle($input: DiscontinueArticleInput!) {\n    discontinueArticle(input: $input) {\n      errors {\n        ... on ApplicationError {\n          code\n          description\n          type\n          fieldName\n          message\n        }\n      }\n    }\n  }\n': typeof types.DiscontinueArticleDocument;
+  '\n  mutation discontinueArticle($input: DiscontinueArticleInput!) {\n    discontinueArticle(input: $input) {\n      boolean\n      errors {\n        ... on ApplicationError {\n          code\n          description\n          type\n          fieldName\n          message\n        }\n      }\n    }\n  }\n': typeof types.DiscontinueArticleDocument;
   '\n  query articles(\n    $first: Int\n    $last: Int\n    $after: String\n    $before: String\n    $where: ArticleFilterInput\n    $order: [ArticleSortInput!]\n  ) {\n    articles(\n      first: $first\n      last: $last\n      after: $after\n      before: $before\n      where: $where\n      order: $order\n    ) {\n      nodes {\n        ...ArticleFields\n      }\n      pageInfo {\n        hasNextPage\n        hasPreviousPage\n        startCursor\n        endCursor\n      }\n      totalCount\n    }\n  }\n': typeof types.ArticlesDocument;
   '\n  query ArticleDetails($id: ID!) {\n    articleById(id: $id) {\n      ...ArticleFields\n    }\n  }\n': typeof types.ArticleDetailsDocument;
   '\n  subscription OnArticleRegistered {\n    onArticleRegistered {\n      ...ArticleFields\n    }\n  }\n': typeof types.OnArticleRegisteredDocument;
@@ -35,9 +35,9 @@ type Documents = {
   '\n  subscription OnCustomerDeactivated {\n    onCustomerDeactivated {\n      id\n    }\n  }\n': typeof types.OnCustomerDeactivatedDocument;
   '\n  fragment SupplierFields on Supplier {\n    id\n    code\n    name\n    website\n    email\n    phoneNumber\n    iban\n    bic\n  }\n': typeof types.SupplierFieldsFragmentDoc;
   '\n  fragment SupplierAddressFields on Address {\n    id\n    type\n    street\n    number\n    zipCode\n    city\n    state\n    countryCode\n  }\n': typeof types.SupplierAddressFieldsFragmentDoc;
-  '\n  mutation registerSupplier($input: RegisterSupplierInput!) {\n    registerSupplier(input: $input) {\n      supplier {\n        ...SupplierFields\n        addresses {\n          ...SupplierAddressFields\n        }\n      }\n      errors {\n        ... on ApplicationError {\n          code\n          description\n          type\n          fieldName\n          message\n        }\n      }\n    }\n  }\n': typeof types.RegisterSupplierDocument;
-  '\n  mutation updateSupplierDetails($input: UpdateSupplierDetailsInput!) {\n    updateSupplierDetails(input: $input) {\n      supplier {\n        ...SupplierFields\n        addresses {\n          ...SupplierAddressFields\n        }\n      }\n      errors {\n        ... on ApplicationError {\n          code\n          description\n          type\n          fieldName\n          message\n        }\n      }\n    }\n  }\n': typeof types.UpdateSupplierDetailsDocument;
-  '\n  mutation deactivateSupplier($input: DeactivateSupplierInput!) {\n    deactivateSupplier(input: $input) {\n      errors {\n        ... on ApplicationError {\n          code\n          description\n          type\n          fieldName\n          message\n        }\n      }\n    }\n  }\n': typeof types.DeactivateSupplierDocument;
+  '\n  mutation registerSupplier($input: RegisterSupplierInput!) {\n    registerSupplier(input: $input) {\n      supplier {\n        ...SupplierFields\n      }\n      errors {\n        ... on ApplicationError {\n          code\n          description\n          type\n          fieldName\n          message\n        }\n      }\n    }\n  }\n': typeof types.RegisterSupplierDocument;
+  '\n  mutation updateSupplierDetails($input: UpdateSupplierDetailsInput!) {\n    updateSupplierDetails(input: $input) {\n      supplier {\n        ...SupplierFields\n      }\n      errors {\n        ... on ApplicationError {\n          code\n          description\n          type\n          fieldName\n          message\n        }\n      }\n    }\n  }\n': typeof types.UpdateSupplierDetailsDocument;
+  '\n  mutation deactivateSupplier($input: DeactivateSupplierInput!) {\n    deactivateSupplier(input: $input) {\n      boolean\n      errors {\n        ... on ApplicationError {\n          code\n          description\n          type\n          fieldName\n          message\n        }\n      }\n    }\n  }\n': typeof types.DeactivateSupplierDocument;
   '\n  query suppliers(\n    $first: Int\n    $last: Int\n    $after: String\n    $before: String\n    $where: SupplierFilterInput\n    $order: [SupplierSortInput!]\n  ) {\n    suppliers(\n      first: $first\n      last: $last\n      after: $after\n      before: $before\n      where: $where\n      order: $order\n    ) {\n      nodes {\n        ...SupplierFields\n      }\n      pageInfo {\n        hasNextPage\n        hasPreviousPage\n        startCursor\n        endCursor\n      }\n      totalCount\n    }\n  }\n': typeof types.SuppliersDocument;
   '\n  query SupplierDetails($id: ID!) {\n    supplierById(id: $id) {\n      ...SupplierFields\n      addresses {\n        ...SupplierAddressFields\n      }\n    }\n  }\n': typeof types.SupplierDetailsDocument;
   '\n  subscription OnSupplierRegistered {\n    onSupplierRegistered {\n      ...SupplierFields\n    }\n  }\n': typeof types.OnSupplierRegisteredDocument;
@@ -46,13 +46,13 @@ type Documents = {
   '\n  query Countries {\n    countries {\n      code\n      name\n    }\n  }\n': typeof types.CountriesDocument;
 };
 const documents: Documents = {
-  '\n  fragment ArticleFields on Article {\n    id\n    code\n    name\n    price\n    sellingUnit\n  }\n':
+  '\n  fragment ArticleFields on Article {\n    id\n    code\n    name\n    description\n    price\n    sellingUnit\n  }\n':
     types.ArticleFieldsFragmentDoc,
   '\n  mutation registerArticle($input: RegisterArticleInput!) {\n    registerArticle(input: $input) {\n      article {\n        ...ArticleFields\n      }\n      errors {\n        ... on ApplicationError {\n          code\n          description\n          type\n          fieldName\n          message\n        }\n      }\n    }\n  }\n':
     types.RegisterArticleDocument,
   '\n  mutation updateArticleDetails($input: UpdateArticleDetailsInput!) {\n    updateArticleDetails(input: $input) {\n      article {\n        ...ArticleFields\n      }\n      errors {\n        ... on ApplicationError {\n          code\n          description\n          type\n          fieldName\n          message\n        }\n      }\n    }\n  }\n':
     types.UpdateArticleDetailsDocument,
-  '\n  mutation discontinueArticle($input: DiscontinueArticleInput!) {\n    discontinueArticle(input: $input) {\n      errors {\n        ... on ApplicationError {\n          code\n          description\n          type\n          fieldName\n          message\n        }\n      }\n    }\n  }\n':
+  '\n  mutation discontinueArticle($input: DiscontinueArticleInput!) {\n    discontinueArticle(input: $input) {\n      boolean\n      errors {\n        ... on ApplicationError {\n          code\n          description\n          type\n          fieldName\n          message\n        }\n      }\n    }\n  }\n':
     types.DiscontinueArticleDocument,
   '\n  query articles(\n    $first: Int\n    $last: Int\n    $after: String\n    $before: String\n    $where: ArticleFilterInput\n    $order: [ArticleSortInput!]\n  ) {\n    articles(\n      first: $first\n      last: $last\n      after: $after\n      before: $before\n      where: $where\n      order: $order\n    ) {\n      nodes {\n        ...ArticleFields\n      }\n      pageInfo {\n        hasNextPage\n        hasPreviousPage\n        startCursor\n        endCursor\n      }\n      totalCount\n    }\n  }\n':
     types.ArticlesDocument,
@@ -88,11 +88,11 @@ const documents: Documents = {
     types.SupplierFieldsFragmentDoc,
   '\n  fragment SupplierAddressFields on Address {\n    id\n    type\n    street\n    number\n    zipCode\n    city\n    state\n    countryCode\n  }\n':
     types.SupplierAddressFieldsFragmentDoc,
-  '\n  mutation registerSupplier($input: RegisterSupplierInput!) {\n    registerSupplier(input: $input) {\n      supplier {\n        ...SupplierFields\n        addresses {\n          ...SupplierAddressFields\n        }\n      }\n      errors {\n        ... on ApplicationError {\n          code\n          description\n          type\n          fieldName\n          message\n        }\n      }\n    }\n  }\n':
+  '\n  mutation registerSupplier($input: RegisterSupplierInput!) {\n    registerSupplier(input: $input) {\n      supplier {\n        ...SupplierFields\n      }\n      errors {\n        ... on ApplicationError {\n          code\n          description\n          type\n          fieldName\n          message\n        }\n      }\n    }\n  }\n':
     types.RegisterSupplierDocument,
-  '\n  mutation updateSupplierDetails($input: UpdateSupplierDetailsInput!) {\n    updateSupplierDetails(input: $input) {\n      supplier {\n        ...SupplierFields\n        addresses {\n          ...SupplierAddressFields\n        }\n      }\n      errors {\n        ... on ApplicationError {\n          code\n          description\n          type\n          fieldName\n          message\n        }\n      }\n    }\n  }\n':
+  '\n  mutation updateSupplierDetails($input: UpdateSupplierDetailsInput!) {\n    updateSupplierDetails(input: $input) {\n      supplier {\n        ...SupplierFields\n      }\n      errors {\n        ... on ApplicationError {\n          code\n          description\n          type\n          fieldName\n          message\n        }\n      }\n    }\n  }\n':
     types.UpdateSupplierDetailsDocument,
-  '\n  mutation deactivateSupplier($input: DeactivateSupplierInput!) {\n    deactivateSupplier(input: $input) {\n      errors {\n        ... on ApplicationError {\n          code\n          description\n          type\n          fieldName\n          message\n        }\n      }\n    }\n  }\n':
+  '\n  mutation deactivateSupplier($input: DeactivateSupplierInput!) {\n    deactivateSupplier(input: $input) {\n      boolean\n      errors {\n        ... on ApplicationError {\n          code\n          description\n          type\n          fieldName\n          message\n        }\n      }\n    }\n  }\n':
     types.DeactivateSupplierDocument,
   '\n  query suppliers(\n    $first: Int\n    $last: Int\n    $after: String\n    $before: String\n    $where: SupplierFilterInput\n    $order: [SupplierSortInput!]\n  ) {\n    suppliers(\n      first: $first\n      last: $last\n      after: $after\n      before: $before\n      where: $where\n      order: $order\n    ) {\n      nodes {\n        ...SupplierFields\n      }\n      pageInfo {\n        hasNextPage\n        hasPreviousPage\n        startCursor\n        endCursor\n      }\n      totalCount\n    }\n  }\n':
     types.SuppliersDocument,
@@ -126,8 +126,8 @@ export function graphql(source: string): unknown;
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(
-  source: '\n  fragment ArticleFields on Article {\n    id\n    code\n    name\n    price\n    sellingUnit\n  }\n'
-): (typeof documents)['\n  fragment ArticleFields on Article {\n    id\n    code\n    name\n    price\n    sellingUnit\n  }\n'];
+  source: '\n  fragment ArticleFields on Article {\n    id\n    code\n    name\n    description\n    price\n    sellingUnit\n  }\n'
+): (typeof documents)['\n  fragment ArticleFields on Article {\n    id\n    code\n    name\n    description\n    price\n    sellingUnit\n  }\n'];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -144,8 +144,8 @@ export function graphql(
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(
-  source: '\n  mutation discontinueArticle($input: DiscontinueArticleInput!) {\n    discontinueArticle(input: $input) {\n      errors {\n        ... on ApplicationError {\n          code\n          description\n          type\n          fieldName\n          message\n        }\n      }\n    }\n  }\n'
-): (typeof documents)['\n  mutation discontinueArticle($input: DiscontinueArticleInput!) {\n    discontinueArticle(input: $input) {\n      errors {\n        ... on ApplicationError {\n          code\n          description\n          type\n          fieldName\n          message\n        }\n      }\n    }\n  }\n'];
+  source: '\n  mutation discontinueArticle($input: DiscontinueArticleInput!) {\n    discontinueArticle(input: $input) {\n      boolean\n      errors {\n        ... on ApplicationError {\n          code\n          description\n          type\n          fieldName\n          message\n        }\n      }\n    }\n  }\n'
+): (typeof documents)['\n  mutation discontinueArticle($input: DiscontinueArticleInput!) {\n    discontinueArticle(input: $input) {\n      boolean\n      errors {\n        ... on ApplicationError {\n          code\n          description\n          type\n          fieldName\n          message\n        }\n      }\n    }\n  }\n'];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -252,20 +252,20 @@ export function graphql(
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(
-  source: '\n  mutation registerSupplier($input: RegisterSupplierInput!) {\n    registerSupplier(input: $input) {\n      supplier {\n        ...SupplierFields\n        addresses {\n          ...SupplierAddressFields\n        }\n      }\n      errors {\n        ... on ApplicationError {\n          code\n          description\n          type\n          fieldName\n          message\n        }\n      }\n    }\n  }\n'
-): (typeof documents)['\n  mutation registerSupplier($input: RegisterSupplierInput!) {\n    registerSupplier(input: $input) {\n      supplier {\n        ...SupplierFields\n        addresses {\n          ...SupplierAddressFields\n        }\n      }\n      errors {\n        ... on ApplicationError {\n          code\n          description\n          type\n          fieldName\n          message\n        }\n      }\n    }\n  }\n'];
+  source: '\n  mutation registerSupplier($input: RegisterSupplierInput!) {\n    registerSupplier(input: $input) {\n      supplier {\n        ...SupplierFields\n      }\n      errors {\n        ... on ApplicationError {\n          code\n          description\n          type\n          fieldName\n          message\n        }\n      }\n    }\n  }\n'
+): (typeof documents)['\n  mutation registerSupplier($input: RegisterSupplierInput!) {\n    registerSupplier(input: $input) {\n      supplier {\n        ...SupplierFields\n      }\n      errors {\n        ... on ApplicationError {\n          code\n          description\n          type\n          fieldName\n          message\n        }\n      }\n    }\n  }\n'];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(
-  source: '\n  mutation updateSupplierDetails($input: UpdateSupplierDetailsInput!) {\n    updateSupplierDetails(input: $input) {\n      supplier {\n        ...SupplierFields\n        addresses {\n          ...SupplierAddressFields\n        }\n      }\n      errors {\n        ... on ApplicationError {\n          code\n          description\n          type\n          fieldName\n          message\n        }\n      }\n    }\n  }\n'
-): (typeof documents)['\n  mutation updateSupplierDetails($input: UpdateSupplierDetailsInput!) {\n    updateSupplierDetails(input: $input) {\n      supplier {\n        ...SupplierFields\n        addresses {\n          ...SupplierAddressFields\n        }\n      }\n      errors {\n        ... on ApplicationError {\n          code\n          description\n          type\n          fieldName\n          message\n        }\n      }\n    }\n  }\n'];
+  source: '\n  mutation updateSupplierDetails($input: UpdateSupplierDetailsInput!) {\n    updateSupplierDetails(input: $input) {\n      supplier {\n        ...SupplierFields\n      }\n      errors {\n        ... on ApplicationError {\n          code\n          description\n          type\n          fieldName\n          message\n        }\n      }\n    }\n  }\n'
+): (typeof documents)['\n  mutation updateSupplierDetails($input: UpdateSupplierDetailsInput!) {\n    updateSupplierDetails(input: $input) {\n      supplier {\n        ...SupplierFields\n      }\n      errors {\n        ... on ApplicationError {\n          code\n          description\n          type\n          fieldName\n          message\n        }\n      }\n    }\n  }\n'];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(
-  source: '\n  mutation deactivateSupplier($input: DeactivateSupplierInput!) {\n    deactivateSupplier(input: $input) {\n      errors {\n        ... on ApplicationError {\n          code\n          description\n          type\n          fieldName\n          message\n        }\n      }\n    }\n  }\n'
-): (typeof documents)['\n  mutation deactivateSupplier($input: DeactivateSupplierInput!) {\n    deactivateSupplier(input: $input) {\n      errors {\n        ... on ApplicationError {\n          code\n          description\n          type\n          fieldName\n          message\n        }\n      }\n    }\n  }\n'];
+  source: '\n  mutation deactivateSupplier($input: DeactivateSupplierInput!) {\n    deactivateSupplier(input: $input) {\n      boolean\n      errors {\n        ... on ApplicationError {\n          code\n          description\n          type\n          fieldName\n          message\n        }\n      }\n    }\n  }\n'
+): (typeof documents)['\n  mutation deactivateSupplier($input: DeactivateSupplierInput!) {\n    deactivateSupplier(input: $input) {\n      boolean\n      errors {\n        ... on ApplicationError {\n          code\n          description\n          type\n          fieldName\n          message\n        }\n      }\n    }\n  }\n'];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

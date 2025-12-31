@@ -1,6 +1,6 @@
 import { graphql } from '@aegis/shared';
 
-export const registerArticleMutation = graphql(`
+export const REGISTER_ARTICLE_MUTATION = graphql(`
   mutation registerArticle($input: RegisterArticleInput!) {
     registerArticle(input: $input) {
       article {
@@ -19,7 +19,7 @@ export const registerArticleMutation = graphql(`
   }
 `);
 
-export const updateArticleDetailsMutation = graphql(`
+export const UPDATE_ARTICLE_DETAILS_MUTATION = graphql(`
   mutation updateArticleDetails($input: UpdateArticleDetailsInput!) {
     updateArticleDetails(input: $input) {
       article {
@@ -38,9 +38,10 @@ export const updateArticleDetailsMutation = graphql(`
   }
 `);
 
-export const discontinueArticleMutation = graphql(`
+export const DISCONTINUE_ARTICLE_MUTATION = graphql(`
   mutation discontinueArticle($input: DiscontinueArticleInput!) {
     discontinueArticle(input: $input) {
+      boolean
       errors {
         ... on ApplicationError {
           code

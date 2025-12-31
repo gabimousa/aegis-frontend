@@ -5,10 +5,10 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useMatch, useNavigate } from 'react-router';
 import { User } from 'tabler-icons-react';
-import DetailsPanel from '../../../components/layout/detailsPanel/detailsPanel';
-import { useArticles } from '../data/articlesContext';
+import { DetailsPanel } from '../../../components';
+import { useArticleDetailsQuery, useSaveArticle } from '../data';
 import { ArticleModel } from '../model';
-import ArticleForm from './articleForm/articleForm';
+import { ArticleForm } from './articleForm';
 
 const serverErrorMap: Record<string, string> = {
   Code: 'code',
@@ -18,22 +18,24 @@ const serverErrorMap: Record<string, string> = {
   SellingUnit: 'sellingUnit',
 };
 
-function ArticleDetails() {
+export function ArticleDetails() {
   const [activeTab, setActiveTab] = useState('details');
   const detailsFormId = useId();
   const navigate = useNavigate();
   const match = useMatch('/articles/:id');
   const { t } = useTranslation();
   const {
-    details: {
-      selectArticle,
-      selectedArticle: article,
-      loadingArticleDetails,
-      loadingArticleDetailsError,
-      saveArticleDetails,
-      savingArticleDetails,
-    },
-  } = useArticles();
+    data: article,
+    isError,
+    isLoading,
+    error,
+  } = useArticleDetailsQuery({ id: match?.params.id === 'NEW' ? undefined : match?.params.id });
+
+  const {
+    mutate: saveArticleDetails,
+    isPending: savingArticleDetails,
+    isSuccess: saveArticleSuccess,
+  } = useSaveArticle();
 
   const formProps = useForm<ArticleModel>({
     mode: 'all',
@@ -53,14 +55,14 @@ function ArticleDetails() {
   } = formProps;
 
   useEffect(() => {
-    const articleId = match?.params.id;
-    selectArticle(articleId);
-    return () => selectArticle(undefined);
-  }, [match?.params.id, selectArticle]);
-
-  useEffect(() => {
     reset(article);
   }, [article, reset]);
+
+  useEffect(() => {
+    if (saveArticleSuccess) {
+      navigate('..');
+    }
+  }, [saveArticleSuccess, navigate]);
 
   const onSubmit = async (formState: ArticleModel) => {
     console.log('Submitting article details:', formState);
@@ -75,8 +77,7 @@ function ArticleDetails() {
         sellingUnit: Number.parseFloat(formState.sellingUnit),
       } as RegisterArticleInput | UpdateArticleDetailsInput;
 
-      const result = await saveArticleDetails(articleInput);
-      result && navigate('..');
+      saveArticleDetails(articleInput);
     } catch (error) {
       setFieldErrors(error, setError, serverErrorMap);
     }
@@ -108,7 +109,7 @@ function ArticleDetails() {
       }
       onClose={() => navigate('..')}
       actions={actions}
-      loading={loadingArticleDetails || savingArticleDetails}
+      loading={isLoading || savingArticleDetails}
     >
       {errors.root &&
         (errors.root.types ? (
@@ -126,11 +127,7 @@ function ArticleDetails() {
         <Form id={detailsFormId} noValidate onSubmit={handleSubmit(onSubmit)}>
           <Tabs activeKey={activeTab} onSelect={(tab) => setActiveTab(tab ?? 'details')}>
             <Tab className="pt-3" eventKey="details" title={t('common.details')}>
-              {loadingArticleDetailsError ? (
-                <p>Error: {loadingArticleDetailsError.message}</p>
-              ) : (
-                <ArticleForm />
-              )}
+              {isError ? <p>Error: {error?.message}</p> : <ArticleForm />}
             </Tab>
           </Tabs>
         </Form>
@@ -138,4 +135,3 @@ function ArticleDetails() {
     </DetailsPanel>
   );
 }
-export default ArticleDetails;

@@ -1,4 +1,4 @@
-import { RegisterOptions, useFormContext } from 'react-hook-form';
+import { useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { CustomerDetailsModel } from '../model';
 

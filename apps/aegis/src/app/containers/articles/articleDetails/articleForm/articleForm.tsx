@@ -3,7 +3,7 @@ import { FloatingLabel, Form } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import useArticleDetailsFormConfig from '../useArticleDetailsFormConfig';
 
-function ArticleForm() {
+export function ArticleForm() {
   const { t } = useTranslation();
   const {
     codeConfig,
@@ -80,5 +80,3 @@ function ArticleForm() {
     </>
   );
 }
-
-export default ArticleForm;

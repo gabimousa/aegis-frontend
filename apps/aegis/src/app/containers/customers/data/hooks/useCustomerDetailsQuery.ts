@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
 import { gqlClient } from '../../../../shared';
 import { CustomerDetailsModel } from '../../model';
-import { CUSTOMER_DETAILS_QUERY, CUSTOMER_DETAILS_QUERY_KEY } from '../graphql/customersQueries';
+import { CUSTOMER_DETAILS_QUERY, CUSTOMER_DETAILS_QUERY_KEY } from '../graphql';
 
 export interface UseCustomerDetailsQueryProps {
   id?: string;

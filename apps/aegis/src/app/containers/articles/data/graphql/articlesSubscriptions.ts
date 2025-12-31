@@ -1,6 +1,6 @@
 import { graphql } from '@aegis/shared';
 
-export const onArticleRegisteredSubscription = graphql(`
+export const ARTICLE_REGISTERED_SUBSCRIPTION = graphql(`
   subscription OnArticleRegistered {
     onArticleRegistered {
       ...ArticleFields
@@ -8,7 +8,7 @@ export const onArticleRegisteredSubscription = graphql(`
   }
 `);
 
-export const onArticleDetailsUpdatedSubscription = graphql(`
+export const ARTICLE_DETAILS_UPDATED_SUBSCRIPTION = graphql(`
   subscription OnArticleDetailsUpdated {
     onArticleDetailsUpdated {
       ...ArticleFields
@@ -16,7 +16,7 @@ export const onArticleDetailsUpdatedSubscription = graphql(`
   }
 `);
 
-export const onArticleDiscontinuedSubscription = graphql(`
+export const ARTICLE_DISCONTINUED_SUBSCRIPTION = graphql(`
   subscription OnArticleDiscontinued {
     onArticleDiscontinued {
       id

@@ -1,9 +1,11 @@
 import { graphql } from '@aegis/shared';
 
+const CUSTOMERS_QUERY_BASE_KEY = 'CUSTOMER_LIST';
 export const CUSTOMERS_QUERY_KEY = (args?: { [key: string]: unknown }) => {
-  return args ? ['CUSTOMERS', args] : ['CUSTOMERS'];
+  return args ? [CUSTOMERS_QUERY_BASE_KEY, args] : [CUSTOMERS_QUERY_BASE_KEY];
 };
-export const CUSTOMER_DETAILS_QUERY_KEY = (id?: string) => ['CUSTOMER_DETAILS', id];
+const CUSTOMER_DETAILS_QUERY_BASE_KEY = 'CUSTOMER_DETAILS';
+export const CUSTOMER_DETAILS_QUERY_KEY = (id?: string) => [CUSTOMER_DETAILS_QUERY_BASE_KEY, id];
 
 export const CUSTOMERS_QUERY = graphql(`
   query customers(

@@ -56,6 +56,21 @@ export const useMutateCache = <T extends { id: string }>() => {
     });
   };
 
+  const upsertInfiniteData = (node: T, queryKey: unknown[], connectionKey: string) => {
+    queryClient.setQueriesData({ queryKey }, (oldData: InfiniteData<Page<T>>) => {
+      if (!oldData || !node) return oldData;
+      const exists = oldData.pages.some((page) =>
+        page[connectionKey].nodes?.some((n) => n.id === node.id)
+      );
+
+      if (exists) {
+        return updateInInfiniteData(node, queryKey, connectionKey);
+      } else {
+        return addToInfiniteData(node, queryKey, connectionKey);
+      }
+    });
+  };
+
   const removeFromInfiniteData = (id: string, queryKey: unknown[], connectionKey: string) => {
     queryClient.setQueriesData(
       {
@@ -74,5 +89,13 @@ export const useMutateCache = <T extends { id: string }>() => {
     );
   };
 
-  return { add, update, remove, addToInfiniteData, updateInInfiniteData, removeFromInfiniteData };
+  return {
+    add,
+    update,
+    remove,
+    addToInfiniteData,
+    updateInInfiniteData,
+    upsertInfiniteData,
+    removeFromInfiniteData,
+  };
 };
