@@ -1,4 +1,9 @@
-import { SupplierFilterInput, SuppliersQuery } from '@aegis/shared';
+import {
+  Connection,
+  connectionsToDistinctArray,
+  SupplierFilterInput,
+  SuppliersQuery,
+} from '@aegis/shared';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
 import { gqlClient } from '../../../../shared';
@@ -34,8 +39,9 @@ export const useSuppliersQuery = ({ pageSize, filters }: UseSuppliersQueryProps)
   });
 
   const suppliers = useMemo(() => {
-    return (result.data?.pages.flatMap((page) => page.suppliers?.nodes ?? []) ||
-      []) as SupplierModel[];
+    const connections =
+      result.data?.pages.map((page) => page.suppliers as Connection<SupplierModel>) ?? [];
+    return connectionsToDistinctArray(connections);
   }, [result.data]);
 
   const totalCount = useMemo(() => {

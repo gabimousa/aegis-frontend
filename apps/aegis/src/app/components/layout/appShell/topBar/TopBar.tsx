@@ -24,7 +24,7 @@ export function TopBar() {
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
-          <Nav variant="underline" className="me-auto">
+          <Nav variant="underline" className="me-auto align-items-lg-end">
             <Nav.Link as={Link} to="/" eventKey="/" active={!!homeIsActive}>
               {t('common.home')}
             </Nav.Link>

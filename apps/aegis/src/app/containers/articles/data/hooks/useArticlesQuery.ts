@@ -1,4 +1,9 @@
-import { ArticleFilterInput, ArticlesQuery } from '@aegis/shared';
+import {
+  ArticleFilterInput,
+  ArticlesQuery,
+  Connection,
+  connectionsToDistinctArray,
+} from '@aegis/shared';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
 import { gqlClient } from '../../../../shared';
@@ -34,8 +39,9 @@ export const useArticlesQuery = ({ pageSize, filters }: UseArticlesQueryProps) =
   });
 
   const articles = useMemo(() => {
-    return (result.data?.pages.flatMap((page) => page.articles?.nodes ?? []) ||
-      []) as ArticleModel[];
+    const connections =
+      result.data?.pages.map((page) => page.articles as Connection<ArticleModel>) ?? [];
+    return connectionsToDistinctArray(connections);
   }, [result.data]);
 
   const totalCount = useMemo(() => {
