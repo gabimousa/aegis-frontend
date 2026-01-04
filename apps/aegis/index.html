@@ -10,16 +10,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
     <link rel="stylesheet" href="/src/styles.css" />
-    <script>
-      (function () {
-        const storageKey = 'theme'; // 'light' | 'dark' | 'auto'
-        const saved = localStorage.getItem(storageKey);
-        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        const resolved =
-          saved === 'dark' || ((!saved || saved === 'auto') && prefersDark) ? 'dark' : 'light';
-        document.documentElement.setAttribute('data-theme', resolved);
-      })();
-    </script>
   </head>
   <body>
     <div id="root"></div>
