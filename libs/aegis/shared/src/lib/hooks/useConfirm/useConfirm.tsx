@@ -1,9 +1,10 @@
 import { ReactNode } from 'react';
-import { Button } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
 import { useDialog } from '../useDialog/useDialog';
 
 export const useConfirm = () => {
   const { showDialog, closeDialog } = useDialog();
+  const { t } = useTranslation();
 
   const confirm = (title: string | ReactNode, message: string | ReactNode): Promise<boolean> => {
     return new Promise((resolve) => {
@@ -12,24 +13,24 @@ export const useConfirm = () => {
         content: message,
         actions: (
           <>
-            <Button
-              variant="secondary"
+            <button
+              className="btn btn-secondary"
               onClick={() => {
                 closeDialog(id);
                 resolve(false);
               }}
             >
-              Cancel
-            </Button>
-            <Button
-              variant="primary"
+              {t('common.cancel')}
+            </button>
+            <button
+              className="btn btn-primary"
               onClick={() => {
                 closeDialog(id);
                 resolve(true);
               }}
             >
-              Confirm
-            </Button>
+              {t('common.confirm')}
+            </button>
           </>
         ),
       });

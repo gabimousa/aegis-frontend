@@ -1,7 +1,7 @@
 /// <reference types='vitest' />
+import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
 import { resolve } from 'path';
-import { deprecations } from 'sass';
 import { defineConfig } from 'vite';
 
 export default defineConfig(() => ({
@@ -31,11 +31,7 @@ export default defineConfig(() => ({
     port: 4300,
     host: 'localhost',
   },
-  plugins: [react()],
-  // Uncomment this if you are using workers.
-  // worker: {
-  //  plugins: [ nxViteTsPaths() ],
-  // },
+  plugins: [react(), tailwindcss()],
   build: {
     outDir: './dist',
     emptyOutDir: true,
@@ -57,17 +53,6 @@ export default defineConfig(() => ({
     coverage: {
       reportsDirectory: './test-output/vitest/coverage',
       provider: 'v8' as const,
-    },
-  },
-  css: {
-    preprocessorOptions: {
-      scss: {
-        silenceDeprecations: [
-          deprecations['color-functions'],
-          deprecations['global-builtin'],
-          deprecations['import'],
-        ],
-      },
     },
   },
 }));

@@ -1,6 +1,6 @@
 import { FieldErrorsFeedback } from '@aegis/ui';
-import { FloatingLabel, Form } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
+import { FloatingLabelInput } from '../../../../components';
 import useSupplierDetailsFormConfig from '../useSupplierDetailsFormConfig';
 
 export function SupplierForm() {
@@ -18,89 +18,75 @@ export function SupplierForm() {
 
   return (
     <>
-      <Form.Group className="mb-2" controlId="supplierCode">
-        <FloatingLabel controlId="supplierCode" label={t('common.code')}>
-          <Form.Control
-            type="text"
-            placeholder={t('suppliers.enterSupplierCode')}
-            {...codeConfig.registerConfig}
-            isInvalid={!!errors.code}
-          />
-          <FieldErrorsFeedback errors={errors} fieldName="code" />
-        </FloatingLabel>
-      </Form.Group>
+      <FloatingLabelInput
+        label={t('common.code')}
+        type="text"
+        placeholder={t('suppliers.enterSupplierCode')}
+        className="mb-2"
+        {...codeConfig.registerConfig}
+        errors={errors}
+        fieldName="code"
+      />
 
-      <Form.Group className="mb-2" controlId="supplierName">
-        <FloatingLabel controlId="supplierName" label={t('common.name')}>
-          <Form.Control
-            type="text"
-            placeholder={t('suppliers.enterSupplierName')}
-            {...nameConfig.registerConfig}
-            isInvalid={!!errors.name}
-          />
-          <FieldErrorsFeedback errors={errors} fieldName="name" />
-        </FloatingLabel>
-      </Form.Group>
+      <FloatingLabelInput
+        label={t('common.name')}
+        type="text"
+        placeholder={t('suppliers.enterSupplierName')}
+        className="mb-2"
+        {...nameConfig.registerConfig}
+        errors={errors}
+        fieldName="name"
+      />
 
-      <Form.Group className="mb-2" controlId="supplierWebsite">
-        <FloatingLabel controlId="supplierWebsite" label={t('common.website')}>
-          <Form.Control
-            type="text"
-            placeholder={t('suppliers.enterSupplierWebsite')}
-            {...websiteConfig.registerConfig}
-            isInvalid={!!errors.website}
-          />
-          <FieldErrorsFeedback errors={errors} fieldName="website" />
-        </FloatingLabel>
-      </Form.Group>
+      <FloatingLabelInput
+        label={t('common.website')}
+        type="text"
+        placeholder={t('suppliers.enterSupplierWebsite')}
+        className="mb-2"
+        {...websiteConfig.registerConfig}
+        errors={errors}
+        fieldName="website"
+      />
 
-      <Form.Group className="mb-2" controlId="supplierEmail">
-        <FloatingLabel controlId="supplierEmail" label={t('common.email')}>
-          <Form.Control
-            type="email"
-            placeholder={t('suppliers.enterSupplierEmail')}
-            {...emailConfig.registerConfig}
-            isInvalid={!!errors.email}
-          />
-          <FieldErrorsFeedback errors={errors} fieldName="email" />
-        </FloatingLabel>
-      </Form.Group>
+      <FloatingLabelInput
+        label={t('common.email')}
+        type="email"
+        placeholder={t('suppliers.enterSupplierEmail')}
+        className="mb-2"
+        {...emailConfig.registerConfig}
+        errors={errors}
+        fieldName="email"
+      />
 
-      <Form.Group className="mb-2" controlId="supplierPhoneNumber">
-        <FloatingLabel controlId="supplierPhoneNumber" label={t('common.phoneNumber')}>
-          <Form.Control
-            type="tel"
-            placeholder={t('suppliers.enterSupplierPhoneNumber')}
-            {...phoneNumberConfig.registerConfig}
-            isInvalid={!!errors.phoneNumber}
-          />
-          <FieldErrorsFeedback errors={errors} fieldName="phoneNumber" />
-        </FloatingLabel>
-      </Form.Group>
+      <FloatingLabelInput
+        label={t('common.phoneNumber')}
+        type="tel"
+        placeholder={t('suppliers.enterSupplierPhoneNumber')}
+        className="mb-2"
+        {...phoneNumberConfig.registerConfig}
+        errors={errors}
+        fieldName="phoneNumber"
+      />
 
-      <Form.Group className="mb-2" controlId="supplierIban">
-        <FloatingLabel controlId="supplierIban" label={t('common.iban')}>
-          <Form.Control
-            type="text"
-            placeholder={t('suppliers.enterSupplierIban')}
-            {...ibanConfig.registerConfig}
-            isInvalid={!!errors.iban}
-          />
-          <FieldErrorsFeedback errors={errors} fieldName="iban" />
-        </FloatingLabel>
-      </Form.Group>
+      <FloatingLabelInput
+        label={t('common.iban')}
+        type="text"
+        placeholder={t('suppliers.enterSupplierIban')}
+        className="mb-2"
+        {...ibanConfig.registerConfig}
+        errors={errors}
+        fieldName="iban"
+      />
 
-      <Form.Group className="mb-2" controlId="supplierBic">
-        <FloatingLabel controlId="supplierBic" label={t('common.bic')}>
-          <Form.Control
-            type="text"
-            placeholder={t('suppliers.enterSupplierBic')}
-            {...bicConfig.registerConfig}
-            isInvalid={!!errors.bic}
-          />
-          <FieldErrorsFeedback errors={errors} fieldName="bic" />
-        </FloatingLabel>
-      </Form.Group>
+      <FloatingLabelInput
+        label={t('common.bic')}
+        type="text"
+        placeholder={t('suppliers.enterSupplierBic')}
+        className="mb-2"
+        {...bicConfig.registerConfig}
+        errors={errors}
+        fieldName="bic"
+      />
     </>
   );
 }

@@ -1,9 +1,9 @@
 import { AddressType } from '@aegis/shared';
 import { FieldErrorsFeedback } from '@aegis/ui';
 import { useContext } from 'react';
-import { Button, Card, Col, FloatingLabel, Form, Row } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { Trash } from 'tabler-icons-react';
+import { FloatingLabelInput } from '../../../../components';
 import { CountriesContext } from '../../../../shared/countries/countriesContext';
 import { AddressModel } from '../../model';
 import useCustomerDetailsFormConfig from '../useCustomerDetailsFormConfig';
@@ -43,107 +43,92 @@ export function AddressForm({ index, address, onRemove }: AddressFormProps) {
   };
 
   return (
-    <Card>
-      <Card.Header>
-        <div className="d-flex justify-content-between align-items-center">
-          {getAddressTypeLabel(address.type)}
-          <Button variant="outline-danger" className="ms-1" onClick={onRemove}>
-            <Trash size={16} />
-          </Button>
+    <div className="card bg-base-100 shadow-xl">
+      <div className="card-header flex justify-between items-center p-4">
+        <div>{getAddressTypeLabel(address.type)}</div>
+        <button className="btn btn-outline btn-error" onClick={onRemove}>
+          <Trash size={16} />
+        </button>
+      </div>
+      <div className="card-body p-4">
+        <div className="grid grid-cols-12 gap-2 mb-2">
+          <div className="col-span-7">
+            <FloatingLabelInput
+              label={t('addresses.street')}
+              type="text"
+              placeholder={t('addresses.street')}
+              {...streetConfig.registerConfig(index)}
+              errors={errors}
+              fieldName={`addresses.${index}.street`}
+            />
+          </div>
+          <div className="col-span-5">
+            <FloatingLabelInput
+              label={t('addresses.number')}
+              type="text"
+              placeholder={t('addresses.number')}
+              {...numberConfig.registerConfig(index)}
+              errors={errors}
+              fieldName={`addresses.${index}.number`}
+            />
+          </div>
         </div>
-      </Card.Header>
-      <Card.Body>
-        <Row className="g-2 mb-2">
-          <Col sm={7}>
-            <Form.Group>
-              <FloatingLabel controlId="addresses.street" label={t('addresses.street')}>
-                <Form.Control
-                  type="text"
-                  placeholder={t('addresses.street')}
-                  {...streetConfig.registerConfig(index)}
-                  isInvalid={!!errors.addresses?.[index]?.street}
-                />
-              </FloatingLabel>
-              <FieldErrorsFeedback errors={errors} fieldName={`addresses.${index}.street`} />
-            </Form.Group>
-          </Col>
-          <Col sm={5}>
-            <Form.Group>
-              <FloatingLabel controlId="addresses.number" label={t('addresses.number')}>
-                <Form.Control
-                  type="text"
-                  placeholder={t('addresses.number')}
-                  {...numberConfig.registerConfig(index)}
-                  isInvalid={!!errors.addresses?.[index]?.number}
-                />
-              </FloatingLabel>
-              <FieldErrorsFeedback errors={errors} fieldName={`addresses.${index}.number`} />
-            </Form.Group>
-          </Col>
-        </Row>
-        <Row className="mb-2">
-          <Col sm={4}>
-            <Form.Group>
-              <FloatingLabel controlId="addresses.zipCode" label={t('addresses.zipCode')}>
-                <Form.Control
-                  type="text"
-                  placeholder={t('addresses.zipCode')}
-                  {...zipCodeConfig.registerConfig(index)}
-                  isInvalid={!!errors.addresses?.[index]?.zipCode}
-                />
-              </FloatingLabel>
-              <FieldErrorsFeedback errors={errors} fieldName={`addresses.${index}.zipCode`} />
-            </Form.Group>
-          </Col>
-          <Col sm={8}>
-            <Form.Group>
-              <FloatingLabel controlId="addresses.city" label={t('addresses.city')}>
-                <Form.Control
-                  type="text"
-                  placeholder={t('addresses.city')}
-                  {...cityConfig.registerConfig(index)}
-                  isInvalid={!!errors.addresses?.[index]?.city}
-                />
-              </FloatingLabel>
-              <FieldErrorsFeedback errors={errors} fieldName={`addresses.${index}.city`} />
-            </Form.Group>
-          </Col>
-        </Row>
-        <Row>
-          <Col sm={6}>
-            <Form.Group>
-              <FloatingLabel controlId="addresses.state" label={t('addresses.state')}>
-                <Form.Control
-                  type="text"
-                  placeholder={t('addresses.state')}
-                  {...stateConfig.registerConfig(index)}
-                  isInvalid={!!errors.addresses?.[index]?.state}
-                />
-              </FloatingLabel>
-              <FieldErrorsFeedback errors={errors} fieldName={`addresses.${index}.state`} />
-            </Form.Group>
-          </Col>
-          <Col sm={6}>
-            <Form.Group>
-              <FloatingLabel controlId="addresses.countryCode" label={t('addresses.country')}>
-                <Form.Select
-                  // value={address.countryCode?.toString()}
-                  {...countryCodeConfig.registerConfig(index)}
-                  isInvalid={!!errors.addresses?.[index]?.countryCode}
-                >
-                  <option value={undefined} />
-                  {countries.map((country) => (
-                    <option key={country.code.toString()} value={country.code.toString()}>
-                      {country.name}
-                    </option>
-                  ))}
-                </Form.Select>
-              </FloatingLabel>
-              <FieldErrorsFeedback errors={errors} fieldName={`addresses.${index}.countryCode`} />
-            </Form.Group>
-          </Col>
-        </Row>
-      </Card.Body>
-    </Card>
+        <div className="grid grid-cols-12 gap-2 mb-2">
+          <div className="col-span-4">
+            <FloatingLabelInput
+              label={t('addresses.zipCode')}
+              type="text"
+              placeholder={t('addresses.zipCode')}
+              {...zipCodeConfig.registerConfig(index)}
+              errors={errors}
+              fieldName={`addresses.${index}.zipCode`}
+            />
+          </div>
+          <div className="col-span-8">
+            <FloatingLabelInput
+              label={t('addresses.city')}
+              type="text"
+              placeholder={t('addresses.city')}
+              {...cityConfig.registerConfig(index)}
+              errors={errors}
+              fieldName={`addresses.${index}.city`}
+            />
+          </div>
+        </div>
+        <div className="grid grid-cols-12 gap-2">
+          <div className="col-span-6">
+            <FloatingLabelInput
+              label={t('addresses.state')}
+              type="text"
+              placeholder={t('addresses.state')}
+              {...stateConfig.registerConfig(index)}
+              errors={errors}
+              fieldName={`addresses.${index}.state`}
+            />
+          </div>
+          <div className="col-span-6">
+            <FloatingLabelInput
+              label={t('addresses.country')}
+              errors={errors}
+              fieldName={`addresses.${index}.countryCode`}
+            >
+              <select
+                className={`select select-bordered w-full ${
+                  errors.addresses?.[index]?.countryCode ? 'select-error' : ''
+                }`}
+                {...countryCodeConfig.registerConfig(index)}
+              >
+                <option value={undefined} />
+                {countries.map((country) => (
+                  <option key={country.code.toString()} value={country.code.toString()}>
+                    {country.name}
+                  </option>
+                ))}
+              </select>
+            </FloatingLabelInput>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }

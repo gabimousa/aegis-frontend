@@ -1,6 +1,6 @@
 import { FieldErrorsFeedback } from '@aegis/ui';
-import { FloatingLabel, Form } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
+import { FloatingLabelInput } from '../../../../components';
 import useArticleDetailsFormConfig from '../useArticleDetailsFormConfig';
 
 export function ArticleForm() {
@@ -16,67 +16,62 @@ export function ArticleForm() {
 
   return (
     <>
-      <Form.Group className="mb-2" controlId="articleCode">
-        <FloatingLabel controlId="articleCode" label={t('common.code')}>
-          <Form.Control
-            type="text"
-            placeholder={t('articles.enterArticleCode')}
-            {...codeConfig.registerConfig}
-            isInvalid={!!errors.code}
-          />
-          <FieldErrorsFeedback errors={errors} fieldName="code" />
-        </FloatingLabel>
-      </Form.Group>
+      <FloatingLabelInput
+        label={t('common.code')}
+        type="text"
+        placeholder={t('articles.enterArticleCode')}
+        className="mb-2"
+        {...codeConfig.registerConfig}
+        errors={errors}
+        fieldName="code"
+      />
 
-      <Form.Group className="mb-2" controlId="articleName">
-        <FloatingLabel controlId="articleName" label={t('common.name')}>
-          <Form.Control
-            type="text"
-            placeholder={t('articles.enterArticleName')}
-            {...nameConfig.registerConfig}
-            isInvalid={!!errors.name}
-          />
-          <FieldErrorsFeedback errors={errors} fieldName="name" />
-        </FloatingLabel>
-      </Form.Group>
+      <FloatingLabelInput
+        label={t('common.name')}
+        type="text"
+        placeholder={t('articles.enterArticleName')}
+        className="mb-2"
+        {...nameConfig.registerConfig}
+        errors={errors}
+        fieldName="name"
+      />
 
-      <Form.Group className="mb-2" controlId="articleDescription">
-        <FloatingLabel controlId="articleDescription" label={t('common.description')}>
-          <Form.Control
-            as="textarea"
-            rows={5}
-            style={{ height: '100px' }}
-            placeholder={t('articles.enterArticleDescription')}
-            {...descriptionConfig.registerConfig}
-            isInvalid={!!errors.description}
-          />
-          <FieldErrorsFeedback errors={errors} fieldName="description" />
-        </FloatingLabel>
-      </Form.Group>
+      <FloatingLabelInput
+        label={t('common.description')}
+        className="mb-2"
+        errors={errors}
+        fieldName="description"
+      >
+        <textarea
+          rows={5}
+          style={{ height: '100px' }}
+          className={`textarea textarea-bordered w-full ${
+            errors.description ? 'textarea-error' : ''
+          }`}
+          placeholder={t('articles.enterArticleDescription')}
+          {...descriptionConfig.registerConfig}
+        />
+      </FloatingLabelInput>
 
-      <Form.Group className="mb-2" controlId="price">
-        <FloatingLabel controlId="price" label={t('common.price')}>
-          <Form.Control
-            type="number"
-            placeholder={t('articles.enterArticlePrice')}
-            {...priceConfig.registerConfig}
-            isInvalid={!!errors.price}
-          />
-          <FieldErrorsFeedback errors={errors} fieldName="price" />
-        </FloatingLabel>
-      </Form.Group>
+      <FloatingLabelInput
+        label={t('common.price')}
+        type="number"
+        placeholder={t('articles.enterArticlePrice')}
+        className="mb-2"
+        {...priceConfig.registerConfig}
+        errors={errors}
+        fieldName="price"
+      />
 
-      <Form.Group className="mb-2" controlId="sellingUnit">
-        <FloatingLabel controlId="sellingUnit" label={t('common.sellingUnit')}>
-          <Form.Control
-            type="tel"
-            placeholder={t('articles.enterArticleSellingUnit')}
-            {...sellingUnitConfig.registerConfig}
-            isInvalid={!!errors.sellingUnit}
-          />
-          <FieldErrorsFeedback errors={errors} fieldName="sellingUnit" />
-        </FloatingLabel>
-      </Form.Group>
+      <FloatingLabelInput
+        label={t('common.sellingUnit')}
+        type="tel"
+        placeholder={t('articles.enterArticleSellingUnit')}
+        className="mb-2"
+        {...sellingUnitConfig.registerConfig}
+        errors={errors}
+        fieldName="sellingUnit"
+      />
     </>
   );
 }

@@ -1,80 +1,152 @@
-import { useColorMode } from '@aegis/shared';
 import { useState } from 'react';
-import { Container, NavDropdown } from 'react-bootstrap';
-import Nav from 'react-bootstrap/Nav';
-import Navbar from 'react-bootstrap/Navbar';
 import { useTranslation } from 'react-i18next';
 import { Link, useMatch } from 'react-router';
-import { Package, TruckDelivery, Users } from 'tabler-icons-react';
+import { Package, TruckDelivery, Users, World } from 'tabler-icons-react';
+import { ThemeSwitcher } from '../../../ThemeSwitcher';
 
 export function TopBar() {
-  const { mode, setMode, isDark } = useColorMode();
   const { t, i18n } = useTranslation();
-  const [expanded, setExpanded] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const homeIsActive = useMatch('/');
   const customersIsActive = useMatch('/customers/*');
   const articlesIsActive = useMatch('/articles/*');
   const suppliersIsActive = useMatch('/suppliers/*');
 
   return (
-    <Navbar expanded={expanded} expand="lg" bg="primary" variant="dark" onToggle={setExpanded}>
-      <Container fluid>
-        <Navbar.Brand as={Link} to="/">
-          Aegis
-        </Navbar.Brand>
-        <Navbar.Toggle aria-controls="basic-navbar-nav" />
-        <Navbar.Collapse id="basic-navbar-nav">
-          <Nav variant="underline" className="me-auto align-items-lg-end">
-            <Nav.Link as={Link} to="/" eventKey="/" active={!!homeIsActive}>
-              {t('common.home')}
-            </Nav.Link>
-            <Nav.Link as={Link} to="/suppliers" eventKey="/suppliers" active={!!suppliersIsActive}>
-              <TruckDelivery size={16} className="me-2" />
-              {t('common.suppliers')}
-            </Nav.Link>
-            <Nav.Link as={Link} to="/articles" eventKey="/articles" active={!!articlesIsActive}>
-              <Package size={16} className="me-2" />
-              {t('common.articles')}
-            </Nav.Link>
-            <Nav.Link as={Link} to="/customers" eventKey="/customers" active={!!customersIsActive}>
-              <Users size={16} className="me-2" />
-              {t('common.customers')}
-            </Nav.Link>
-          </Nav>
-          <div className={'d-flex gap-3 align-items-center text-white px-2 mt-2 mt-lg-0'}>
-            <NavDropdown
-              align={expanded ? 'start' : 'end'}
-              title={i18n.language === 'nl' ? t('common.dutch') : t('common.english')}
-              id="settings-nav-dropdown"
+    <header className="bg-blue-600 text-white shadow-lg">
+      <div className="px-4 py-3">
+        <div className="flex items-center justify-between">
+          {/* Brand and Mobile Menu */}
+          <div className="flex items-center space-x-4">
+            {/* Mobile Menu Button */}
+            <button
+              className="lg:hidden p-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-white"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              aria-label="Toggle mobile menu"
             >
-              <NavDropdown.Item onClick={() => i18n.changeLanguage('en')}>
-                {t('common.english')}
-              </NavDropdown.Item>
-              <NavDropdown.Item onClick={() => i18n.changeLanguage('nl')}>
-                {t('common.dutch')}
-              </NavDropdown.Item>
-            </NavDropdown>
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4 6h16M4 12h16M4 18h16"
+                />
+              </svg>
+            </button>
 
-            <NavDropdown
-              title={isDark ? t('Dark') : t('Light')}
-              id="theme-dropdown"
-              align={expanded ? 'start' : 'end'}
-            >
-              <NavDropdown.Item onClick={() => setMode('light')} active={mode === 'light'}>
-                {t('Light')}
-              </NavDropdown.Item>
-
-              <NavDropdown.Item onClick={() => setMode('dark')} active={mode === 'dark'}>
-                {t('Dark')}
-              </NavDropdown.Item>
-
-              <NavDropdown.Item onClick={() => setMode('auto')} active={mode === 'auto'}>
-                {t('System')}
-              </NavDropdown.Item>
-            </NavDropdown>
+            {/* Brand */}
+            <Link to="/" className="text-xl font-bold hover:text-blue-200 transition-colors">
+              Aegis
+            </Link>
           </div>
-        </Navbar.Collapse>
-      </Container>
-    </Navbar>
+
+          {/* Desktop Navigation */}
+          <nav className="hidden lg:flex space-x-6">
+            <Link
+              to="/"
+              className={`px-3 py-2 rounded-md transition-colors ${
+                homeIsActive ? 'bg-blue-700 text-white' : 'hover:bg-blue-700'
+              }`}
+            >
+              {t('common.home')}
+            </Link>
+            <Link
+              to="/suppliers"
+              className={`px-3 py-2 rounded-md transition-colors flex items-center space-x-2 ${
+                suppliersIsActive ? 'bg-blue-700 text-white' : 'hover:bg-blue-700'
+              }`}
+            >
+              <TruckDelivery size={16} />
+              <span>{t('common.suppliers')}</span>
+            </Link>
+            <Link
+              to="/articles"
+              className={`px-3 py-2 rounded-md transition-colors flex items-center space-x-2 ${
+                articlesIsActive ? 'bg-blue-700 text-white' : 'hover:bg-blue-700'
+              }`}
+            >
+              <Package size={16} />
+              <span>{t('common.articles')}</span>
+            </Link>
+            <Link
+              to="/customers"
+              className={`px-3 py-2 rounded-md transition-colors flex items-center space-x-2 ${
+                customersIsActive ? 'bg-blue-700 text-white' : 'hover:bg-blue-700'
+              }`}
+            >
+              <Users size={16} />
+              <span>{t('common.customers')}</span>
+            </Link>
+          </nav>
+
+          {/* Right Side Actions */}
+          <div className="flex items-center space-x-2">
+            {/* Language Switcher */}
+            <div className="relative">
+              <button
+                className="p-2 rounded-full hover:bg-blue-700 transition-colors"
+                onClick={() => {
+                  const newLang = i18n.language === 'en' ? 'nl' : 'en';
+                  i18n.changeLanguage(newLang);
+                }}
+                title={`Switch to ${i18n.language === 'en' ? 'Dutch' : 'English'}`}
+              >
+                <World size={20} />
+              </button>
+            </div>
+
+            {/* Theme Switcher */}
+            <ThemeSwitcher />
+          </div>
+        </div>
+
+        {/* Mobile Navigation Menu */}
+        {mobileMenuOpen && (
+          <div className="lg:hidden mt-4 border-t border-blue-500 pt-4">
+            <nav className="flex flex-col space-y-2">
+              <Link
+                to="/"
+                className={`px-3 py-2 rounded-md transition-colors ${
+                  homeIsActive ? 'bg-blue-700 text-white' : 'hover:bg-blue-700'
+                }`}
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                {t('common.home')}
+              </Link>
+              <Link
+                to="/suppliers"
+                className={`px-3 py-2 rounded-md transition-colors flex items-center space-x-2 ${
+                  suppliersIsActive ? 'bg-blue-700 text-white' : 'hover:bg-blue-700'
+                }`}
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                <TruckDelivery size={16} />
+                <span>{t('common.suppliers')}</span>
+              </Link>
+              <Link
+                to="/articles"
+                className={`px-3 py-2 rounded-md transition-colors flex items-center space-x-2 ${
+                  articlesIsActive ? 'bg-blue-700 text-white' : 'hover:bg-blue-700'
+                }`}
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                <Package size={16} />
+                <span>{t('common.articles')}</span>
+              </Link>
+              <Link
+                to="/customers"
+                className={`px-3 py-2 rounded-md transition-colors flex items-center space-x-2 ${
+                  customersIsActive ? 'bg-blue-700 text-white' : 'hover:bg-blue-700'
+                }`}
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                <Users size={16} />
+                <span>{t('common.customers')}</span>
+              </Link>
+            </nav>
+          </div>
+        )}
+      </div>
+    </header>
   );
 }

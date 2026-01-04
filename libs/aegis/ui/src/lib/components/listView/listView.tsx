@@ -1,5 +1,4 @@
 import { PropsWithChildren, ReactElement, useCallback, useState } from 'react';
-import { Alert, Card, Col, Container, Row } from 'react-bootstrap';
 import { SearchInput } from '../searchInput';
 
 type ListViewProps = PropsWithChildren<{
@@ -22,7 +21,6 @@ export function ListView({
   children,
   showFooter,
   footerLabel,
-
   allowSearch = true,
   onSearchChange,
 }: ListViewProps) {
@@ -37,51 +35,46 @@ export function ListView({
   );
 
   return (
-    <Container fluid className="h-100 overflow-hidden d-flex flex-column">
-      <Row className="mb-2">
-        <Col md={12} className="d-flex align-items-center flex-wrap">
-          <div className="flex-grow-1">{header}</div>
-          <div className="flex-grow-1 flex-sm-grow-0">{actions}</div>
-        </Col>
-      </Row>
+    <div className="h-full overflow-hidden flex flex-col p-4">
+      {/* Header row with title and actions */}
+      <div className="mb-4">
+        <div className="flex items-center justify-between flex-wrap gap-4">
+          <div className="flex-grow min-w-0">{header}</div>
+          <div className="flex-shrink-0">{actions}</div>
+        </div>
+      </div>
 
+      {/* Search row */}
       {allowSearch && (
-        <Row className="mb-3">
-          <Col>
-            <div className="d-flex">
-              <SearchInput
-                placeholder={searchPlaceholder}
-                value={searchTerm}
-                onSearchChange={handleSearchChange}
-              />
-            </div>
-          </Col>
-        </Row>
+        <div className="mb-6">
+          <SearchInput
+            placeholder={searchPlaceholder}
+            value={searchTerm}
+            onSearchChange={handleSearchChange}
+          />
+        </div>
       )}
 
+      {/* Error message */}
       {errorMessage && (
-        <Row className="mb-3">
-          <Col>
-            <Alert variant="danger">{errorMessage}</Alert>
-          </Col>
-        </Row>
+        <div className="mb-6">
+          <div className="alert alert-error">
+            <span>{errorMessage}</span>
+          </div>
+        </div>
       )}
 
-      <Row className="flex-grow-1 overflow-auto">
-        <Col className="h-100">
-          <Card className="h-100 d-flex flex-column">
-            {/* <Card.Header>
-              <h5 className="mb-0">{cardTitle}</h5>
-            </Card.Header> */}
-            <Card.Body className="flex-grow-1 overflow-auto p-0">{children}</Card.Body>
-            {showFooter && (
-              <Card.Footer>
-                <small className="text-muted">{footerLabel}</small>
-              </Card.Footer>
-            )}
-          </Card>
-        </Col>
-      </Row>
-    </Container>
+      {/* Main content card */}
+      <div className="flex-grow overflow-auto">
+        <div className="card bg-base-100 shadow-xl h-full flex flex-col">
+          <div className="card-body flex-grow overflow-auto p-0">{children}</div>
+          {showFooter && (
+            <div className="card-actions justify-end p-4 border-t">
+              <div className="text-sm opacity-70">{footerLabel}</div>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
   );
 }

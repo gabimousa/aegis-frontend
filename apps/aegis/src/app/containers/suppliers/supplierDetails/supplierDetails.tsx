@@ -7,7 +7,7 @@ import {
   UpdateSupplierDetailsInput,
 } from '@aegis/shared';
 import { useEffect, useId, useState } from 'react';
-import { Alert, Button, Dropdown, Form, Spinner, Tab, Tabs } from 'react-bootstrap';
+
 import { FormProvider, useFieldArray, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useMatch, useNavigate } from 'react-router';
@@ -181,49 +181,55 @@ export function SupplierDetails() {
   const actions = (
     <>
       {activeTab === 'addresses' && (
-        <Dropdown className="ms-2">
-          <Dropdown.Toggle
+        <div className="dropdown dropdown-end mr-2">
+          <button
             disabled={!canAppendAddress}
-            variant="outline-secondary"
-            id="dropdown-add-address"
+            className="btn btn-outline"
+            tabIndex={0}
+            role="button"
           >
             {t('addresses.addAddress')}
-          </Dropdown.Toggle>
-
-          <Dropdown.Menu>
-            <Dropdown.Item
-              disabled={!canAppendAddressTypes('VISITING')}
-              onClick={() => appendAddress('VISITING')}
-            >
-              {t('addresses.visiting')}
-            </Dropdown.Item>
-            <Dropdown.Item
-              disabled={!canAppendAddressTypes('MAILING')}
-              onClick={() => appendAddress('MAILING')}
-            >
-              {t('addresses.mailing')}
-            </Dropdown.Item>
-            <Dropdown.Item
-              disabled={!canAppendAddressTypes('DELIVERY')}
-              onClick={() => appendAddress('DELIVERY')}
-            >
-              {t('addresses.delivery')}
-            </Dropdown.Item>
-          </Dropdown.Menu>
-        </Dropdown>
+          </button>
+          <ul className="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow">
+            <li>
+              <button
+                disabled={!canAppendAddressTypes('VISITING')}
+                onClick={() => appendAddress('VISITING')}
+              >
+                {t('addresses.visiting')}
+              </button>
+            </li>
+            <li>
+              <button
+                disabled={!canAppendAddressTypes('MAILING')}
+                onClick={() => appendAddress('MAILING')}
+              >
+                {t('addresses.mailing')}
+              </button>
+            </li>
+            <li>
+              <button
+                disabled={!canAppendAddressTypes('DELIVERY')}
+                onClick={() => appendAddress('DELIVERY')}
+              >
+                {t('addresses.delivery')}
+              </button>
+            </li>
+          </ul>
+        </div>
       )}
-      <Button variant="secondary" onClick={() => navigate('..')}>
+      <button className="btn btn-secondary" onClick={() => navigate('..')}>
         {t('common.cancel')}
-      </Button>
-      <Button
-        variant="primary"
+      </button>
+      <button
+        className="btn btn-primary"
         form={detailsFormId}
         type="submit"
         disabled={savingSupplierDetails || !isValid || !isDirty}
       >
-        {savingSupplierDetails ? <Spinner animation="border" size="sm" className="me-2" /> : null}
+        {savingSupplierDetails ? <span className="loading loading-spinner mr-2" /> : null}
         {t('common.save')}
-      </Button>
+      </button>
     </>
   );
 
@@ -231,7 +237,7 @@ export function SupplierDetails() {
     <DetailsPanel
       title={
         <>
-          <User size={24} className="me-2" /> {supplier?.name || t('New Supplier')}
+          <User size={24} className="mr-2" /> {supplier?.name || t('New Supplier')}
         </>
       }
       onClose={() => navigate('..')}
@@ -243,20 +249,45 @@ export function SupplierDetails() {
           Object.values(errors.root.types)
             .flatMap((v) => v)
             .map((error, idx) => (
-              <Alert key={'root-error-' + idx} variant="danger">
+              <div key={'root-error-' + idx} className="alert alert-error">
                 {error}
-              </Alert>
+              </div>
             ))
         ) : (
-          <Alert variant="danger">{errors.root?.message}</Alert>
+          <div className="alert alert-error">{errors.root?.message}</div>
         ))}
       <FormProvider {...formProps}>
-        <Form id={detailsFormId} noValidate onSubmit={handleSubmit(onSubmit)}>
-          <Tabs activeKey={activeTab} onSelect={(tab) => setActiveTab(tab ?? 'details')}>
-            <Tab className="pt-3" eventKey="details" title={t('common.details')}>
+        <form id={detailsFormId} noValidate onSubmit={handleSubmit(onSubmit)}>
+          <div role="tablist" className="tabs tabs-lifted">
+            <input
+              type="radio"
+              name="supplier_tabs"
+              role="tab"
+              className="tab"
+              aria-label={t('common.details')}
+              checked={activeTab === 'details'}
+              onChange={() => setActiveTab('details')}
+            />
+            <div
+              role="tabpanel"
+              className="tab-content bg-base-100 border-base-300 rounded-box p-6"
+            >
               {isError ? <p>Error: {error.message}</p> : <SupplierForm />}
-            </Tab>
-            <Tab eventKey="addresses" title={t('common.addresses')}>
+            </div>
+
+            <input
+              type="radio"
+              name="supplier_tabs"
+              role="tab"
+              className="tab"
+              aria-label={t('common.addresses')}
+              checked={activeTab === 'addresses'}
+              onChange={() => setActiveTab('addresses')}
+            />
+            <div
+              role="tabpanel"
+              className="tab-content bg-base-100 border-base-300 rounded-box p-6"
+            >
               {fields.map((address, index) => (
                 <div className="mt-2" key={fields[index].id}>
                   <AddressForm
@@ -266,9 +297,9 @@ export function SupplierDetails() {
                   ></AddressForm>
                 </div>
               ))}
-            </Tab>
-          </Tabs>
-        </Form>
+            </div>
+          </div>
+        </form>
       </FormProvider>
     </DetailsPanel>
   );

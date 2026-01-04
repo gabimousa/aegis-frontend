@@ -1,7 +1,6 @@
 import { AnimatePresence, motion, Transition } from 'framer-motion';
 import { PropsWithChildren, useMemo } from 'react';
 import { useLocation } from 'react-router';
-import styles from './BodyWrapper.module.scss';
 
 const pageVariants = {
   initial: {
@@ -32,7 +31,7 @@ export function BodyWrapper({ children }: PropsWithChildren) {
     <AnimatePresence mode="wait">
       <motion.div
         key={pathName}
-        className={`${styles.bodyWrapper}`}
+        className="h-[calc(100vh-56px)] mx-auto overflow-x-hidden overflow-y-auto"
         initial="initial"
         animate="animate"
         // exit="exit"

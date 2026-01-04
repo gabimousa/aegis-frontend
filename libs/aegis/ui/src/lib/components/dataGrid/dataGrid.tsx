@@ -1,6 +1,4 @@
-import { Button, Table } from 'react-bootstrap';
 import { Edit, Trash } from 'tabler-icons-react';
-import styles from './dataGrid.module.scss';
 import { DataGridColumn } from './dataGridColumn';
 
 export type DataGridProps<T> = {
@@ -55,31 +53,34 @@ export function DataGrid<T>({
   const numberOfActions = (onEdit ? 1 : 0) + (onDelete ? 1 : 0);
 
   return (
-    <div className={`${styles.dataGridWrapper}  ${loading ? styles.loading : ''}`}>
-      <div className={styles.tableWrapper} onScroll={onTableScroll}>
-        <Table hover striped className={styles.table}>
-          <thead>
+    <div className="relative h-full w-full">
+      {loading && (
+        <div className="absolute inset-0 flex items-center justify-center bg-base-100 bg-opacity-80 z-10">
+          <span className="loading loading-spinner loading-md"></span>
+        </div>
+      )}
+      <div className="h-full w-full overflow-x-auto" onScroll={onTableScroll}>
+        <table className="isolate table w-full table-pin-rows table-pin-cols">
+          <thead className="bg-base-200">
             <tr>
               {columns.map((column, index) => (
                 <th
-                  className="no-wrap"
+                  className="whitespace-nowrap"
                   key={`${column.field?.toString()}-${index}`}
                   style={{ minWidth: getWidth(column.width), textAlign: column.align }}
                 >
                   {column.header}
                 </th>
               ))}
-              {hasActionColumn && (
-                <th className="sticky-column" style={{ width: `${numberOfActions * 50}px` }} />
-              )}
+              {hasActionColumn && <th style={{ width: `${numberOfActions * 50}px` }}>Actions</th>}
             </tr>
           </thead>
           <tbody>
             {data?.map((item, index) => (
-              <tr className={styles.row} key={`${getKey(item, index)}-${index}`}>
+              <tr className="hover" key={`${getKey(item, index)}-${index}`}>
                 {columns.map((column) => (
                   <td
-                    className={styles.cell}
+                    className="align-middle whitespace-nowrap"
                     key={`${index}-${column.field?.toString()}`}
                     style={{
                       width: getWidth(column.width),
@@ -92,23 +93,32 @@ export function DataGrid<T>({
                   </td>
                 ))}
                 {hasActionColumn && (
-                  <td className={styles.stickyCell}>
-                    {onEdit ? (
-                      <Button variant="outline-primary" size="sm" onClick={() => onEdit(item)}>
-                        <Edit size="16" />
-                      </Button>
-                    ) : null}
-                    {onDelete ? (
-                      <Button variant="outline-danger" size="sm" onClick={() => onDelete(item)}>
-                        <Trash size="16" />
-                      </Button>
-                    ) : null}
-                  </td>
+                  // Fix 1 pix border on action column to separate from data columns */}
+                  <th className="pl-0 shadow-[1px_0_0_0_var(--color-base-100)]">
+                    <div className="join join-horizontal pr-0">
+                      {onEdit && (
+                        <button
+                          className="btn btn-ghost btn-warning btn-xs join-item"
+                          onClick={() => onEdit(item)}
+                        >
+                          <Edit size="16" />
+                        </button>
+                      )}
+                      {onDelete && (
+                        <button
+                          className="btn btn-ghost btn-error btn-xs join-item"
+                          onClick={() => onDelete(item)}
+                        >
+                          <Trash size="16" />
+                        </button>
+                      )}
+                    </div>
+                  </th>
                 )}
               </tr>
             ))}
           </tbody>
-        </Table>
+        </table>
       </div>
     </div>
   );

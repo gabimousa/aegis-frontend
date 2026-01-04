@@ -1,0 +1,16 @@
+@import 'tailwindcss';
+@plugin "daisyui" {
+  themes: light, dark;
+}
+
+@source "./src/**/*.{js,ts,jsx,tsx}";
+@source "../../../libs/aegis/shared/src/**/*.{js,ts,jsx,tsx}";
+@source "../../../libs/aegis/ui/src/**/*.{js,ts,jsx,tsx}";
+@source "../../../libs/utils/src/**/*.{js,ts,jsx,tsx}";
+
+/* Global styles */
+html,
+body {
+  min-height: 100vh;
+  overflow: hidden;
+}

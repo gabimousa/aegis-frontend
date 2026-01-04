@@ -1,6 +1,5 @@
 import { RegisterArticleInput, setFieldErrors, UpdateArticleDetailsInput } from '@aegis/shared';
 import { useEffect, useId, useState } from 'react';
-import { Alert, Button, Form, Spinner, Tab, Tabs } from 'react-bootstrap';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useMatch, useNavigate } from 'react-router';
@@ -84,28 +83,32 @@ export function ArticleDetails() {
   };
 
   const actions = (
-    <>
-      <Button variant="secondary" onClick={() => navigate('..')}>
+    <div className="flex gap-2">
+      <button className="btn btn-secondary" onClick={() => navigate('...')}>
         {t('common.cancel')}
-      </Button>
-      <Button
-        variant="primary"
+      </button>
+      <button
+        className={`btn btn-primary ${
+          savingArticleDetails || !isValid || !isDirty ? 'btn-disabled' : ''
+        }`}
         form={detailsFormId}
         type="submit"
         disabled={savingArticleDetails || !isValid || !isDirty}
       >
-        {savingArticleDetails ? <Spinner animation="border" size="sm" className="me-2" /> : null}
+        {savingArticleDetails ? (
+          <span className="loading loading-spinner loading-sm mr-2"></span>
+        ) : null}
         {t('common.save')}
-      </Button>
-    </>
+      </button>
+    </div>
   );
 
   return (
     <DetailsPanel
       title={
-        <>
-          <User size={24} className="me-2" /> {article?.name || t('New Article')}
-        </>
+        <div className="flex items-center">
+          <User size={24} className="mr-2" /> {article?.name || t('New Article')}
+        </div>
       }
       onClose={() => navigate('..')}
       actions={actions}
@@ -116,21 +119,31 @@ export function ArticleDetails() {
           Object.values(errors.root.types)
             .flatMap((v) => v)
             .map((error, idx) => (
-              <Alert key={'root-error-' + idx} variant="danger">
-                {error}
-              </Alert>
+              <div key={'root-error-' + idx} className="alert alert-error mb-4">
+                <span>{error}</span>
+              </div>
             ))
         ) : (
-          <Alert variant="danger">{errors.root?.message}</Alert>
+          <div className="alert alert-error mb-4">
+            <span>{errors.root?.message}</span>
+          </div>
         ))}
       <FormProvider {...formProps}>
-        <Form id={detailsFormId} noValidate onSubmit={handleSubmit(onSubmit)}>
-          <Tabs activeKey={activeTab} onSelect={(tab) => setActiveTab(tab ?? 'details')}>
-            <Tab className="pt-3" eventKey="details" title={t('common.details')}>
-              {isError ? <p>Error: {error?.message}</p> : <ArticleForm />}
-            </Tab>
-          </Tabs>
-        </Form>
+        <form id={detailsFormId} noValidate onSubmit={handleSubmit(onSubmit)}>
+          <div className="tabs tabs-bordered">
+            <button
+              type="button"
+              className={`tab tab-bordered ${activeTab === 'details' ? 'tab-active' : ''}`}
+              onClick={() => setActiveTab('details')}
+            >
+              {t('common.details')}
+            </button>
+          </div>
+          <div className="pt-6">
+            {activeTab === 'details' &&
+              (isError ? <p className="text-error">Error: {error?.message}</p> : <ArticleForm />)}
+          </div>
+        </form>
       </FormProvider>
     </DetailsPanel>
   );

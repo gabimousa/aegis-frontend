@@ -1,4 +1,3 @@
-import { Form } from 'react-bootstrap';
 import { FieldErrors } from 'react-hook-form';
 
 type FieldErrorProps = {
@@ -11,8 +10,12 @@ export function FieldErrorsFeedback({ errors, fieldName }: FieldErrorProps) {
     .filter(([key, value]) => fieldName === key && value)
     .map(([key, value]) => ({ key, value }));
 
+  if (fieldErrors.length === 0) {
+    return null;
+  }
+
   return (
-    <Form.Control.Feedback type="invalid">
+    <div className="text-error text-sm mt-1">
       {fieldErrors.map((fieldError, fieldErrorIndex) => {
         return (
           <div key={fieldError.key + fieldErrorIndex}>
@@ -23,6 +26,6 @@ export function FieldErrorsFeedback({ errors, fieldName }: FieldErrorProps) {
           </div>
         );
       })}
-    </Form.Control.Feedback>
+    </div>
   );
 }

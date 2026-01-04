@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { Form } from 'react-bootstrap';
 import { useDebounce } from '@aegis/shared';
 
 type SearchProps = {
@@ -18,10 +17,10 @@ export function SearchInput({ placeholder, value, className, onSearchChange }: S
   }, [debouncedValue, onSearchChange]);
 
   return (
-    <Form.Control
+    <input
       type="text"
       placeholder={placeholder}
-      className={className}
+      className={`input input-bordered w-full ${className || ''}`}
       value={searchTerm}
       onChange={(e) => setSearchTerm(e.target.value)}
     />

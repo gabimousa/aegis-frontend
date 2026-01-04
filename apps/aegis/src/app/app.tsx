@@ -5,11 +5,13 @@ import { CountriesProvider } from './shared';
 
 export function App() {
   return (
-    <CountriesProvider>
-      <DialogProvider>
-        <RouterProvider router={router} />
-      </DialogProvider>
-    </CountriesProvider>
+    <div className="bg-base-100 min-h-screen">
+      <CountriesProvider>
+        <DialogProvider>
+          <RouterProvider router={router} />
+        </DialogProvider>
+      </CountriesProvider>
+    </div>
   );
 }
 
