@@ -14,3 +14,11 @@ body {
   min-height: 100vh;
   overflow: hidden;
 }
+
+html {
+  scrollbar-gutter: auto !important;
+}
+
+.modal[open] {
+  scrollbar-gutter: unset !important;
+}
