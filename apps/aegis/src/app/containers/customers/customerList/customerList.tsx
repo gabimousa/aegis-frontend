@@ -25,16 +25,18 @@ export function CustomerList() {
   });
   const { mutate: deactivate } = useDeactivateCustomer();
   const actions = (
-    <button className="btn btn-primary whitespace-nowrap" onClick={() => navigate('./NEW')}>
-      <Plus size={16} className="mr-2" />
-      {t('common.add')}
+    <button
+      className="btn btn-lg btn-primary btn-outline btn-circle"
+      onClick={() => navigate('./NEW')}
+    >
+      <Plus size={24} />
     </button>
   );
 
   const title = (
     <div className="flex items-center">
       <Users size={32} className="mr-3" />
-      <h2 className="text-2xl font-bold mb-0">{t('customers.title')}</h2>
+      <h2 className="mb-0 text-2xl font-bold">{t('customers.title')}</h2>
     </div>
   );
 
@@ -67,7 +69,7 @@ export function CustomerList() {
         onDelete={async (item) => {
           const confirmed = await confirm(
             t('customers.deactivateCustomerTitle'),
-            t('customers.deactivateCustomerMessage', { name: item.name })
+            t('customers.deactivateCustomerMessage', { name: item.name }),
           );
           if (confirmed) {
             deactivate(item.id);

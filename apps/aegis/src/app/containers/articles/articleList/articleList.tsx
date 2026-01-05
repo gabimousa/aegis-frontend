@@ -1,9 +1,9 @@
 import { useConfirm } from '@aegis/shared';
 import { DataGrid, ListView } from '@aegis/ui';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router';
 import { Plus, Users } from 'tabler-icons-react';
-import { useState } from 'react';
 import { useArticlesQuery, useDiscontinueArticle } from '../data';
 
 export function ArticleList() {
@@ -19,16 +19,18 @@ export function ArticleList() {
   const { mutate: discontinue } = useDiscontinueArticle();
 
   const actions = (
-    <button className="btn btn-primary whitespace-nowrap" onClick={() => navigate('./NEW')}>
-      <Plus size={16} className="mr-2" />
-      {t('common.add')}
+    <button
+      className="btn btn-lg btn-primary btn-outline btn-circle"
+      onClick={() => navigate('./NEW')}
+    >
+      <Plus size={24} />
     </button>
   );
 
   const title = (
     <div className="flex items-center">
       <Users size={32} className="mr-3" />
-      <h2 className="text-2xl font-bold mb-0">{t('articles.title')}</h2>
+      <h2 className="mb-0 text-2xl font-bold">{t('articles.title')}</h2>
     </div>
   );
 
@@ -58,7 +60,7 @@ export function ArticleList() {
         onDelete={async (item) => {
           const confirmed = await confirm(
             t('articles.discontinueArticleTitle'),
-            t('articles.discontinueArticleMessage', { name: item.name })
+            t('articles.discontinueArticleMessage', { name: item.name }),
           );
           if (confirmed) {
             discontinue(item.id);
