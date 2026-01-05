@@ -107,6 +107,7 @@ const nl = {
       visiting: 'Bezoek',
       mailing: 'Post',
       delivery: 'Levering',
+      noAddresses: 'Geen adressen toegevoegd.',
     },
     articles: {
       title: 'Artikelen',

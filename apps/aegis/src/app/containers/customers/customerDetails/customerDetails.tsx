@@ -182,7 +182,9 @@ export function CustomerDetails() {
       {activeTab === 'addresses' && (
         <Dropdown
           items={addressTypes}
-          label="Add Address"
+          label={t('addresses.addAddress')}
+          position="top"
+          align="start"
           disabled={!canAppendAddress}
           labelSelector={(item) => {
             switch (item) {
@@ -268,15 +270,19 @@ export function CustomerDetails() {
               role="tabpanel"
               className="tab-content bg-base-100 border-base-300 rounded-box p-6"
             >
-              {fields.map((address, index) => (
-                <div className="mt-2" key={fields[index].id}>
-                  <AddressForm
-                    index={index}
-                    address={address}
-                    onRemove={() => remove(index)}
-                  ></AddressForm>
-                </div>
-              ))}
+              {fields.length ? (
+                fields.map((address, index) => (
+                  <div className="mt-2" key={fields[index].id}>
+                    <AddressForm
+                      index={index}
+                      address={address}
+                      onRemove={() => remove(index)}
+                    ></AddressForm>
+                  </div>
+                ))
+              ) : (
+                <p className="text-gray-500">{t('addresses.noAddresses')}</p>
+              )}
             </div>
           </div>
         </form>

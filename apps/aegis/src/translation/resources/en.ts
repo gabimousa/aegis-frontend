@@ -107,6 +107,7 @@ const en = {
       visiting: 'Visiting',
       mailing: 'Mailing',
       delivery: 'Delivery',
+      noAddresses: 'No addresses added.',
     },
     articles: {
       title: 'Articles',
