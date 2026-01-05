@@ -20,7 +20,7 @@ export function SearchInput({ placeholder, value, className, onSearchChange }: S
     <input
       type="text"
       placeholder={placeholder}
-      className={`input input-bordered w-full ${className || ''}`}
+      className={`input input-bordered w-full ${className || ''} outline-none`}
       value={searchTerm}
       onChange={(e) => setSearchTerm(e.target.value)}
     />

@@ -1,20 +1,21 @@
-import { ReactNode } from 'react';
+import { useDialog } from '@aegis/shared';
 import { useTranslation } from 'react-i18next';
-import { useDialog } from '../useDialog/useDialog';
+import { SelectSuppliersDialog } from './SelectSuppliersDialog';
 
-export const useConfirm = () => {
+export const useSelectSuppliersDialog = () => {
   const { showDialog, closeDialog } = useDialog();
   const { t } = useTranslation();
 
-  const confirm = (title: string | ReactNode, message: string | ReactNode): Promise<boolean> => {
+  const openDialog = () => {
     return new Promise((resolve) => {
       const id = showDialog({
-        title,
-        content: message,
+        fullscreen: true,
+        size: 'xl',
+        content: <SelectSuppliersDialog />,
         actions: (
           <>
             <button
-              className="btn btn-outline btn-secondary"
+              className="btn btn-secondary"
               onClick={() => {
                 closeDialog(id);
                 resolve(false);
@@ -23,7 +24,7 @@ export const useConfirm = () => {
               {t('common.cancel')}
             </button>
             <button
-              className="btn btn-outline btn-primary"
+              className="btn btn-primary"
               onClick={() => {
                 closeDialog(id);
                 resolve(true);
@@ -36,6 +37,5 @@ export const useConfirm = () => {
       });
     });
   };
-
-  return { confirm };
+  return { openDialog };
 };

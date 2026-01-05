@@ -31,15 +31,15 @@ export function ListView({
       setSearchTerm(value);
       onSearchChange?.(value);
     },
-    [onSearchChange]
+    [onSearchChange],
   );
 
   return (
-    <div className="h-full overflow-hidden flex flex-col p-4">
+    <div className="flex h-full flex-col overflow-hidden">
       {/* Header row with title and actions */}
       <div className="mb-4">
-        <div className="flex items-center justify-between flex-wrap gap-4">
-          <div className="flex-grow min-w-0">{header}</div>
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <div className="min-w-0 flex-grow">{header}</div>
           <div className="flex-shrink-0">{actions}</div>
         </div>
       </div>
@@ -66,10 +66,10 @@ export function ListView({
 
       {/* Main content card */}
       <div className="flex-grow overflow-auto">
-        <div className="card bg-base-100 shadow-xl h-full flex flex-col">
+        <div className="card bg-base-100 flex h-full flex-col shadow-xl">
           <div className="card-body flex-grow overflow-auto p-0">{children}</div>
           {showFooter && (
-            <div className="card-actions justify-end p-4 border-t">
+            <div className="card-actions justify-end border-t p-4">
               <div className="text-sm opacity-70">{footerLabel}</div>
             </div>
           )}

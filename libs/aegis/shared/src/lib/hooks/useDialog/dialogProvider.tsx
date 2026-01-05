@@ -84,17 +84,25 @@ export const DialogProvider = ({ children }: PropsWithChildren) => {
             }
           }}
         >
-          <div className={`modal-box relative ${getSizeClass(dialog.size)}`}>
-            <span
-              className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
-              onClick={() => closeDialog(dialog.id)}
-            >
-              <X size={20} />
-            </span>
+          <div
+            className={`modal-box relative flex ${dialog.fullscreen ? 'h-[90vh]' : 'max-h-[90vh]'} flex-col ${getSizeClass(dialog.size)}`}
+          >
+            {/* Fixed Header */}
+            <div className="relative shrink-0">
+              <span
+                className="btn btn-sm btn-circle btn-ghost absolute top-2 right-2 z-10"
+                onClick={() => closeDialog(dialog.id)}
+              >
+                <X size={20} />
+              </span>
+              {dialog.title && <h3 className="mb-4 pr-12 text-lg font-bold">{dialog.title}</h3>}
+            </div>
 
-            {dialog.title && <h3 className="font-bold text-lg mb-4">{dialog.title}</h3>}
-            {dialog.content && <div className="py-4">{dialog.content}</div>}
-            {dialog.actions && <div className="modal-action">{dialog.actions}</div>}
+            {/* Scrollable Content - Always fills remaining space */}
+            <div className="min-h-0 flex-1 overflow-y-auto px-4">{dialog.content}</div>
+
+            {/* Fixed Actions */}
+            {dialog.actions && <div className="modal-action mt-4 shrink-0">{dialog.actions}</div>}
           </div>
 
           {/* Optional backdrop disabling */}

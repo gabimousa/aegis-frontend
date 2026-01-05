@@ -8,6 +8,7 @@ import {
 } from '@aegis/shared';
 import { useEffect, useId, useState } from 'react';
 
+import { Dropdown } from '@aegis/ui';
 import { FormProvider, useFieldArray, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useMatch, useNavigate } from 'react-router';
@@ -27,6 +28,8 @@ const serverErrorMap: Record<string, string> = {
   IBAN: 'iban',
   BIC: 'bic',
 };
+
+const addressTypes = ['VISITING', 'MAILING', 'DELIVERY'] as const;
 
 export function CustomerDetails() {
   const [activeTab, setActiveTab] = useState('details');
@@ -108,7 +111,7 @@ export function CustomerDetails() {
 
   const getCustomerInputWithAddresses = (
     formState: CustomerDetailsModel,
-    customerInput: RegisterCustomerInput | UpdateCustomerDetailsInput
+    customerInput: RegisterCustomerInput | UpdateCustomerDetailsInput,
   ): RegisterCustomerInput | UpdateCustomerDetailsInput => {
     const getAddressBase = (address: AddressModel): Partial<CreateAddressInput> => {
       return {
@@ -177,40 +180,23 @@ export function CustomerDetails() {
   const actions = (
     <>
       {activeTab === 'addresses' && (
-        <div className="dropdown dropdown-top mr-2">
-          <button disabled={!canAppendAddress} className="btn btn-secondary" tabIndex={0}>
-            {t('addresses.addAddress')}
-          </button>
-          <ul
-            tabIndex={-1}
-            className="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow"
-          >
-            <li>
-              <button
-                disabled={!canAppendAddressTypes('VISITING')}
-                onClick={() => appendAddress('VISITING')}
-              >
-                {t('addresses.visiting')}
-              </button>
-            </li>
-            <li>
-              <button
-                disabled={!canAppendAddressTypes('MAILING')}
-                onClick={() => appendAddress('MAILING')}
-              >
-                {t('addresses.mailing')}
-              </button>
-            </li>
-            <li>
-              <button
-                disabled={!canAppendAddressTypes('DELIVERY')}
-                onClick={() => appendAddress('DELIVERY')}
-              >
-                {t('addresses.delivery')}
-              </button>
-            </li>
-          </ul>
-        </div>
+        <Dropdown
+          items={addressTypes}
+          label="Add Address"
+          disabled={!canAppendAddress}
+          labelSelector={(item) => {
+            switch (item) {
+              case 'VISITING':
+                return t('addresses.visiting');
+              case 'MAILING':
+                return t('addresses.mailing');
+              case 'DELIVERY':
+                return t('addresses.delivery');
+            }
+          }}
+          onSelect={(item) => appendAddress(item)}
+          isItemDisabled={(item) => !canAppendAddressTypes(item)}
+        />
       )}
       <button className="btn btn-secondary" onClick={() => navigate('..')}>
         {t('common.cancel')}

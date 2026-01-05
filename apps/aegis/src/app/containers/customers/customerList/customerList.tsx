@@ -1,15 +1,28 @@
-import { useConfirm } from '@aegis/shared';
 import { DataGrid, ListView } from '@aegis/ui';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router';
 import { Plus, Users } from 'tabler-icons-react';
-import { useCustomersQuery, useDeactivateCustomer } from '../data';
+import { useCustomersQuery } from '../data';
+import { CustomerModel } from '../model';
 
-export function CustomerList() {
+type CustomerListProps = {
+  enabledAdd?: boolean;
+  enabledDelete?: boolean;
+  enabledEdit?: boolean;
+  onAdd?: () => void;
+  onDelete?: (customer: CustomerModel) => void;
+  onEdit?: (customer: CustomerModel) => void;
+};
+
+export function CustomerList({
+  enabledAdd,
+  enabledDelete,
+  enabledEdit,
+  onAdd,
+  onDelete,
+  onEdit,
+}: CustomerListProps) {
   const [searchTerm, setSearchTerm] = useState('');
-  const { confirm } = useConfirm();
-  const navigate = useNavigate();
   const { t } = useTranslation();
   const {
     customers,
@@ -23,15 +36,15 @@ export function CustomerList() {
     pageSize: 50,
     filters: searchTerm ? { name: { contains: searchTerm } } : undefined,
   });
-  const { mutate: deactivate } = useDeactivateCustomer();
-  const actions = (
+
+  const actions = enabledAdd ? (
     <button
       className="btn btn-lg btn-primary btn-outline btn-circle"
-      onClick={() => navigate('./NEW')}
+      onClick={() => onAdd && onAdd()}
     >
       <Plus size={24} />
     </button>
-  );
+  ) : undefined;
 
   const title = (
     <div className="flex items-center">
@@ -65,16 +78,8 @@ export function CustomerList() {
           { header: t('common.bic'), field: 'bic', width: 100 },
         ]}
         data={customers}
-        onEdit={(item) => navigate(`./${encodeURIComponent(item.id)}`)}
-        onDelete={async (item) => {
-          const confirmed = await confirm(
-            t('customers.deactivateCustomerTitle'),
-            t('customers.deactivateCustomerMessage', { name: item.name }),
-          );
-          if (confirmed) {
-            deactivate(item.id);
-          }
-        }}
+        onEdit={enabledEdit ? (item) => onEdit && onEdit(item) : undefined}
+        onDelete={enabledDelete ? (item) => onDelete && onDelete(item) : undefined}
         canLoadMore={hasNextPage && !isFetchingNextPage}
         onLoadMore={() => fetchNextPage()}
         loading={isLoading}

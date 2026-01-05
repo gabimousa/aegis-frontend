@@ -4,9 +4,27 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router';
 import { Plus, Users } from 'tabler-icons-react';
-import { useArticlesQuery, useDiscontinueArticle } from '../data';
+import { useSelectSuppliersDialog } from '../../selectSuppliersDialog';
+import { useArticlesQuery } from '../data';
+import { ArticleModel } from '../model';
 
-export function ArticleList() {
+type ArticleListProps = {
+  enabledAdd?: boolean;
+  enabledDelete?: boolean;
+  enabledEdit?: boolean;
+  onAdd?: () => void;
+  onDelete?: (article: ArticleModel) => void;
+  onEdit?: (article: ArticleModel) => void;
+};
+
+export function ArticleList({
+  enabledAdd,
+  enabledDelete,
+  enabledEdit,
+  onAdd,
+  onDelete,
+  onEdit,
+}: ArticleListProps) {
   const [searchTerm, setSearchTerm] = useState('');
   const { confirm } = useConfirm();
   const navigate = useNavigate();
@@ -16,16 +34,17 @@ export function ArticleList() {
       pageSize: 50,
       filters: searchTerm ? { name: { contains: searchTerm } } : undefined,
     });
-  const { mutate: discontinue } = useDiscontinueArticle();
 
-  const actions = (
+  const { openDialog } = useSelectSuppliersDialog();
+
+  const actions = enabledAdd ? (
     <button
       className="btn btn-lg btn-primary btn-outline btn-circle"
       onClick={() => navigate('./NEW')}
     >
       <Plus size={24} />
     </button>
-  );
+  ) : undefined;
 
   const title = (
     <div className="flex items-center">
@@ -56,16 +75,8 @@ export function ArticleList() {
           { header: t('common.sellingUnit'), field: 'sellingUnit', width: 100 },
         ]}
         data={articles}
-        onEdit={(item) => navigate(`./${encodeURIComponent(item.id)}`)}
-        onDelete={async (item) => {
-          const confirmed = await confirm(
-            t('articles.discontinueArticleTitle'),
-            t('articles.discontinueArticleMessage', { name: item.name }),
-          );
-          if (confirmed) {
-            discontinue(item.id);
-          }
-        }}
+        onEdit={enabledEdit ? (item) => onEdit && onEdit(item) : undefined}
+        onDelete={enabledDelete ? (item) => onDelete && onDelete(item) : undefined}
         canLoadMore={hasNextPage && !isFetchingNextPage}
         onLoadMore={() => fetchNextPage()}
         loading={isLoading}
