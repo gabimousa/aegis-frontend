@@ -8,7 +8,7 @@ import {
 } from '@aegis/shared';
 import { useEffect, useId, useState } from 'react';
 
-import { Dropdown } from '@aegis/ui';
+import { Dropdown, Tabs } from '@aegis/ui';
 import { FormProvider, useFieldArray, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useMatch, useNavigate } from 'react-router';
@@ -240,35 +240,18 @@ export function CustomerDetails() {
         ))}
       <FormProvider {...formProps}>
         <form id={detailsFormId} noValidate onSubmit={handleSubmit(onSubmit)}>
-          <div role="tablist" className="tabs tabs-lifted">
-            <input
-              type="radio"
-              name="customer_tabs"
-              role="tab"
-              className="tab"
-              aria-label={t('common.details')}
-              checked={activeTab === 'details'}
-              onChange={() => setActiveTab('details')}
-            />
-            <div
-              role="tabpanel"
-              className="tab-content bg-base-100 border-base-300 rounded-box p-6"
+          <Tabs>
+            <Tabs.Tab
+              label={t('common.details')}
+              active={activeTab === 'details'}
+              onSelect={() => setActiveTab('details')}
             >
               {isError ? <p>Error: {error.message}</p> : <CustomerForm />}
-            </div>
-
-            <input
-              type="radio"
-              name="customer_tabs"
-              role="tab"
-              className="tab"
-              aria-label={t('common.addresses')}
-              checked={activeTab === 'addresses'}
-              onChange={() => setActiveTab('addresses')}
-            />
-            <div
-              role="tabpanel"
-              className="tab-content bg-base-100 border-base-300 rounded-box p-6"
+            </Tabs.Tab>
+            <Tabs.Tab
+              label={t('common.addresses')}
+              active={activeTab === 'addresses'}
+              onSelect={() => setActiveTab('addresses')}
             >
               {fields.length ? (
                 fields.map((address, index) => (
@@ -283,8 +266,8 @@ export function CustomerDetails() {
               ) : (
                 <p className="text-gray-500">{t('addresses.noAddresses')}</p>
               )}
-            </div>
-          </div>
+            </Tabs.Tab>
+          </Tabs>
         </form>
       </FormProvider>
     </DetailsPanel>

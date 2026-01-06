@@ -13,18 +13,18 @@ export function TopBar() {
   const suppliersIsActive = useMatch('/suppliers/*');
 
   return (
-    <header className="bg-blue-600 text-white shadow-lg">
+    <header className="bg-primary text-white shadow-lg">
       <div className="px-4 py-3">
         <div className="flex items-center justify-between">
           {/* Brand and Mobile Menu */}
           <div className="flex items-center space-x-4">
             {/* Mobile Menu Button */}
             <button
-              className="lg:hidden p-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-white"
+              className="rounded-md p-2 hover:bg-blue-700 focus:ring-2 focus:ring-white focus:outline-none lg:hidden"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               aria-label="Toggle mobile menu"
             >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -35,25 +35,30 @@ export function TopBar() {
             </button>
 
             {/* Brand */}
-            <Link to="/" className="text-xl font-bold hover:text-blue-200 transition-colors">
+            <Link
+              to="/"
+              className="hover:text-primary-content/70 text-xl font-bold transition-colors"
+            >
               Aegis
             </Link>
           </div>
 
           {/* Desktop Navigation */}
-          <nav className="hidden lg:flex space-x-6">
+          <nav className="hidden space-x-6 lg:flex">
             <Link
               to="/"
-              className={`px-3 py-2 rounded-md transition-colors ${
-                homeIsActive ? 'bg-blue-700 text-white' : 'hover:bg-blue-700'
+              className={`rounded-md px-3 py-2 transition-colors ${
+                homeIsActive ? 'bg-primary-content/20 text-white' : 'hover:bg-primary-content/10'
               }`}
             >
               {t('common.home')}
             </Link>
             <Link
               to="/suppliers"
-              className={`px-3 py-2 rounded-md transition-colors flex items-center space-x-2 ${
-                suppliersIsActive ? 'bg-blue-700 text-white' : 'hover:bg-blue-700'
+              className={`flex items-center space-x-2 rounded-md px-3 py-2 transition-colors ${
+                suppliersIsActive
+                  ? 'bg-primary-content/20 text-white'
+                  : 'hover:bg-primary-content/10'
               }`}
             >
               <TruckDelivery size={16} />
@@ -61,8 +66,10 @@ export function TopBar() {
             </Link>
             <Link
               to="/articles"
-              className={`px-3 py-2 rounded-md transition-colors flex items-center space-x-2 ${
-                articlesIsActive ? 'bg-blue-700 text-white' : 'hover:bg-blue-700'
+              className={`flex items-center space-x-2 rounded-md px-3 py-2 transition-colors ${
+                articlesIsActive
+                  ? 'bg-primary-content/20 text-white'
+                  : 'hover:bg-primary-content/10'
               }`}
             >
               <Package size={16} />
@@ -70,8 +77,10 @@ export function TopBar() {
             </Link>
             <Link
               to="/customers"
-              className={`px-3 py-2 rounded-md transition-colors flex items-center space-x-2 ${
-                customersIsActive ? 'bg-blue-700 text-white' : 'hover:bg-blue-700'
+              className={`flex items-center space-x-2 rounded-md px-3 py-2 transition-colors ${
+                customersIsActive
+                  ? 'bg-primary-content/20 text-white'
+                  : 'hover:bg-primary-content/10'
               }`}
             >
               <Users size={16} />
@@ -84,7 +93,7 @@ export function TopBar() {
             {/* Language Switcher */}
             <div className="relative">
               <button
-                className="p-2 rounded-full hover:bg-blue-700 transition-colors"
+                className="rounded-full p-2 transition-colors hover:bg-blue-700"
                 onClick={() => {
                   const newLang = i18n.language === 'en' ? 'nl' : 'en';
                   i18n.changeLanguage(newLang);
@@ -102,11 +111,11 @@ export function TopBar() {
 
         {/* Mobile Navigation Menu */}
         {mobileMenuOpen && (
-          <div className="lg:hidden mt-4 border-t border-blue-500 pt-4">
+          <div className="mt-4 border-t border-blue-500 pt-4 lg:hidden">
             <nav className="flex flex-col space-y-2">
               <Link
                 to="/"
-                className={`px-3 py-2 rounded-md transition-colors ${
+                className={`rounded-md px-3 py-2 transition-colors ${
                   homeIsActive ? 'bg-blue-700 text-white' : 'hover:bg-blue-700'
                 }`}
                 onClick={() => setMobileMenuOpen(false)}
@@ -115,7 +124,7 @@ export function TopBar() {
               </Link>
               <Link
                 to="/suppliers"
-                className={`px-3 py-2 rounded-md transition-colors flex items-center space-x-2 ${
+                className={`flex items-center space-x-2 rounded-md px-3 py-2 transition-colors ${
                   suppliersIsActive ? 'bg-blue-700 text-white' : 'hover:bg-blue-700'
                 }`}
                 onClick={() => setMobileMenuOpen(false)}
@@ -125,7 +134,7 @@ export function TopBar() {
               </Link>
               <Link
                 to="/articles"
-                className={`px-3 py-2 rounded-md transition-colors flex items-center space-x-2 ${
+                className={`flex items-center space-x-2 rounded-md px-3 py-2 transition-colors ${
                   articlesIsActive ? 'bg-blue-700 text-white' : 'hover:bg-blue-700'
                 }`}
                 onClick={() => setMobileMenuOpen(false)}
@@ -135,7 +144,7 @@ export function TopBar() {
               </Link>
               <Link
                 to="/customers"
-                className={`px-3 py-2 rounded-md transition-colors flex items-center space-x-2 ${
+                className={`flex items-center space-x-2 rounded-md px-3 py-2 transition-colors ${
                   customersIsActive ? 'bg-blue-700 text-white' : 'hover:bg-blue-700'
                 }`}
                 onClick={() => setMobileMenuOpen(false)}

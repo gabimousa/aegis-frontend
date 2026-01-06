@@ -16,11 +16,9 @@ export function DetailsPanel({
   onClose,
 }: PropsWithChildren<DetailsPanelProps>) {
   return (
-    <div className="flex flex-col w-full h-full border-l border-base-300 relative">
-      <div className="p-3 border-b border-base-300 flex items-center justify-between">
-        <div className="text-xl font-medium grow flex items-center text-blue-600 dark:text-blue-400">
-          {title}
-        </div>
+    <div className="border-base-300 relative flex h-full w-full flex-col border-l">
+      <div className="border-base-300 flex items-center justify-between border-b p-3">
+        <div className="text-primary flex grow items-center text-xl font-medium">{title}</div>
         <button
           className="btn btn-ghost btn-sm text-red-500 hover:text-red-600"
           onClick={() => onClose && onClose()}
@@ -28,12 +26,12 @@ export function DetailsPanel({
           <X size={20}></X>
         </button>
       </div>
-      <div className="grow p-4 overflow-y-auto">{children}</div>
+      <div className="grow overflow-y-auto p-4">{children}</div>
       {actions && (
-        <div className="mb-2 p-4 border-t border-base-300 flex justify-end gap-2">{actions}</div>
+        <div className="border-base-300 mb-2 flex justify-end gap-2 border-t p-4">{actions}</div>
       )}
       {loading && (
-        <div className="absolute top-0 left-0 w-full h-full bg-white/70 dark:bg-gray-800/70 flex items-center justify-center z-10">
+        <div className="absolute top-0 left-0 z-10 flex h-full w-full items-center justify-center bg-white/70 dark:bg-gray-800/70">
           <span className="loading loading-spinner loading-lg">
             <span className="sr-only">Loading...</span>
           </span>

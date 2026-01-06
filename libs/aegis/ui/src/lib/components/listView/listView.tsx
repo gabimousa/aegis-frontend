@@ -39,8 +39,8 @@ export function ListView({
       {/* Header row with title and actions */}
       <div className="mb-4">
         <div className="flex flex-wrap items-center justify-between gap-4">
-          <div className="min-w-0 flex-grow">{header}</div>
-          <div className="flex-shrink-0">{actions}</div>
+          <div className="text-primary min-w-0 grow">{header}</div>
+          <div className="shrink-0">{actions}</div>
         </div>
       </div>
 
