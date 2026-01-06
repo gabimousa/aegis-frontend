@@ -1,33 +1,48 @@
-import { ReactNode } from 'react';
+import { ReactNode, useState } from 'react';
 import { DotsVertical } from 'tabler-icons-react';
 import { Dropdown } from '../dropdown';
 import { DataGridColumn } from './dataGridColumn';
+
+type Action = {
+  key: string;
+  label?: string | ReactNode;
+};
 
 export type DataGridProps<T> = {
   keyAccessor: keyof T | ((item: T) => string | number);
   columns: DataGridColumn<T>[];
   data: T[] | undefined;
-  onEdit?: (item: T) => void;
-  onDelete?: (item: T) => void;
+  customActions?: Action[];
   editLabel?: string | ReactNode;
   deleteLabel?: string | ReactNode;
   canLoadMore?: boolean;
-  onLoadMore?: () => void;
   loading?: boolean;
+  enableSelect?: boolean;
+  onSelect?: (item: T) => void;
+  onEdit?: (item: T) => void;
+  onDelete?: (item: T) => void;
+  onAction?: (action: Action, item: T) => void;
+  onLoadMore?: () => void;
 };
 
 export function DataGrid<T>({
   columns,
   data,
   keyAccessor,
-  onEdit,
-  onDelete,
+  customActions,
   editLabel,
   deleteLabel,
-  canLoadMore,
-  onLoadMore,
   loading,
+  canLoadMore,
+  onEdit,
+  onDelete,
+  onLoadMore,
+  onAction,
+  enableSelect,
+  onSelect,
 }: DataGridProps<T>) {
+  const [selectedItem, setSelectedItem] = useState<T | null>(null);
+
   const getKey = (item: T, index: number): string | number => {
     if (typeof item === 'object' && item !== null) {
       if (typeof keyAccessor === 'function') {
@@ -55,14 +70,29 @@ export function DataGrid<T>({
     }
   };
 
-  const hasActionColumn = Boolean(onEdit || onDelete);
-  const actions: { key: string; label: string | ReactNode }[] = [];
+  const actions: (Action | 'SEPARATOR')[] = [];
   if (onEdit) {
     actions.push({ key: 'edit', label: editLabel });
   }
   if (onDelete) {
     actions.push({ key: 'delete', label: deleteLabel });
   }
+
+  if (actions.length && customActions?.length) {
+    actions.push('SEPARATOR');
+  }
+
+  if (customActions?.length) {
+    actions.push(...customActions);
+  }
+
+  const getRowClasses = (item: T, index: number) => {
+    if (selectedItem && getKey(item, index) === getKey(selectedItem, -1)) {
+      return 'bg-primary/50 hover:bg-primary/80!';
+    } else {
+      return 'bg-base-100 hover:bg-primary-content!';
+    }
+  };
 
   return (
     <div className="relative h-full w-full">
@@ -84,12 +114,21 @@ export function DataGrid<T>({
                   {column.header}
                 </th>
               ))}
-              {hasActionColumn && <th style={{ width: `${actions.length * 50}px` }}></th>}
+              {!!actions.length && <th style={{ width: `50px` }}></th>}
             </tr>
           </thead>
           <tbody>
             {data?.map((item, index) => (
-              <tr className="bg-base-100 hover:bg-base-300" key={`${getKey(item, index)}-${index}`}>
+              <tr
+                className={getRowClasses(item, index)}
+                key={`${getKey(item, index)}-${index}`}
+                onClick={() => {
+                  if (enableSelect) {
+                    setSelectedItem(item);
+                    onSelect && onSelect(item);
+                  }
+                }}
+              >
                 {columns.map((column) => (
                   <td
                     className="align-middle whitespace-nowrap"
@@ -104,7 +143,7 @@ export function DataGrid<T>({
                       : column.field && String(item[column.field] ?? '')}
                   </td>
                 ))}
-                {hasActionColumn && (
+                {!!actions.length && (
                   // Fix 1 pix border on action column to separate from data columns */}
                   <th className="bg-inherit py-0 pl-0 font-normal shadow-[1px_0_0_0_var(--color-base-100)]">
                     <Dropdown
@@ -117,29 +156,12 @@ export function DataGrid<T>({
                           onEdit(item);
                         } else if (action.key === 'delete' && onDelete) {
                           onDelete(item);
+                        } else {
+                          onAction && onAction(action, item);
                         }
                       }}
                       position="left"
                     ></Dropdown>
-
-                    {/* <div className="join join-horizontal pr-0">
-                      {onEdit && (
-                        <button
-                          className="btn btn-ghost btn-warning btn-sm join-item"
-                          onClick={() => onEdit(item)}
-                        >
-                          <Edit size="16" />
-                        </button>
-                      )}
-                      {onDelete && (
-                        <button
-                          className="btn btn-ghost btn-error btn-sm join-item"
-                          onClick={() => onDelete(item)}
-                        >
-                          <Trash size="16" />
-                        </button>
-                      )}
-                    </div> */}
                   </th>
                 )}
               </tr>

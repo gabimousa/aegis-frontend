@@ -133,6 +133,8 @@ const nl = {
       priceTooHigh: 'Artikelprijs is te hoog',
       sellingUnitTooHigh: 'Artikel verkoopeenheid is te hoog',
       sellingUnitIsRequired: 'Artikel verkoopeenheid is verplicht',
+      linkSupplier: 'Koppel Leverancier',
+      unlinkSupplier: 'Ontkoppel Leverancier',
     },
   },
 };

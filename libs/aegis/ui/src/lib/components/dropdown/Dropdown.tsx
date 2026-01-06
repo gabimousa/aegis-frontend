@@ -13,7 +13,7 @@ type DropdownProps<T> = {
     | 'error';
   btnStyle?: 'outline' | 'dash' | 'soft' | 'ghost' | 'link';
   buttonSize?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
-  items: Array<T> | ReadonlyArray<T>;
+  items: Array<T | 'SEPARATOR'> | ReadonlyArray<T | 'SEPARATOR'>;
   labelSelector: (item: T) => string | ReactNode;
   disabled?: boolean;
   onSelect?: (item: T) => void;
@@ -22,7 +22,7 @@ type DropdownProps<T> = {
   align?: 'start' | 'center' | 'end';
 };
 
-export function Dropdown<T>({
+export function Dropdown<T = 'SEPARATOR'>({
   label,
   variant,
   btnStyle,
@@ -123,13 +123,17 @@ export function Dropdown<T>({
       <ul tabIndex={-1} className={`${getDropdownContentClasses()}`}>
         {items.map((item, index) => (
           <li key={index}>
-            <button
-              className={`${isItemDisabled && isItemDisabled(item) ? 'bg-base-100 cursor-not-allowed text-gray-300' : ''}`}
-              disabled={isItemDisabled ? isItemDisabled(item) : false}
-              onClick={() => handleItemClick(item)}
-            >
-              {labelSelector(item)}
-            </button>
+            {item === 'SEPARATOR' ? (
+              <button disabled={true} className="btn h-0"></button>
+            ) : (
+              <button
+                className={`${isItemDisabled && isItemDisabled(item) ? 'bg-base-100 cursor-not-allowed text-gray-300' : ''}`}
+                disabled={isItemDisabled ? isItemDisabled(item) : false}
+                onClick={() => handleItemClick(item)}
+              >
+                {labelSelector(item)}
+              </button>
+            )}
           </li>
         ))}
       </ul>

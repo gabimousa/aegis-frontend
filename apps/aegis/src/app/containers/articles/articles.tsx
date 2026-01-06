@@ -30,6 +30,7 @@ export function Articles() {
         enabledAdd
         enabledDelete
         enabledEdit
+        enableCustomActions={true}
         onAdd={() => navigate('./NEW')}
         onDelete={(article) => confirmDiscontinue(article)}
         onEdit={(article) => navigate(`./${encodeURIComponent(article.id)}`)}

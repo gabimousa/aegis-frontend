@@ -133,6 +133,8 @@ const en = {
       priceTooHigh: 'Article price is too high',
       sellingUnitTooHigh: 'Article selling unit is too high',
       sellingUnitIsRequired: 'Article selling unit is required',
+      linkSupplier: 'Link Supplier',
+      unlinkSupplier: 'Unlink Supplier',
     },
   },
 };

@@ -9,18 +9,22 @@ type SupplierListProps = {
   enabledAdd: boolean;
   enabledDelete: boolean;
   enabledEdit: boolean;
+  enableSelect?: boolean;
   onAdd?: () => void;
   onDelete?: (supplier: SupplierModel) => void;
   onEdit?: (supplier: SupplierModel) => void;
+  onSelect?: (supplier: SupplierModel) => void;
 };
 
 export function SupplierList({
   enabledAdd,
   enabledDelete,
   enabledEdit,
+  enableSelect,
   onAdd,
   onDelete,
   onEdit,
+  onSelect,
 }: SupplierListProps) {
   const [searchTerm, setSearchTerm] = useState('');
   const { t } = useTranslation();
@@ -93,6 +97,8 @@ export function SupplierList({
         canLoadMore={hasNextPage && !isFetchingNextPage}
         onLoadMore={() => fetchNextPage()}
         loading={isLoading}
+        enableSelect={enableSelect}
+        onSelect={onSelect}
       />
     </ListView>
   );

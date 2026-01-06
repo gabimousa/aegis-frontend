@@ -1,9 +1,8 @@
-import { useConfirm } from '@aegis/shared';
 import { DataGrid, ListView } from '@aegis/ui';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router';
-import { Pencil, Plus, Trash, Users } from 'tabler-icons-react';
+import { Link, Pencil, Plus, Trash, Unlink, Users } from 'tabler-icons-react';
 import { useSelectSuppliersDialog } from '../../selectSuppliersDialog';
 import { useArticlesQuery } from '../data';
 import { ArticleModel } from '../model';
@@ -12,6 +11,7 @@ type ArticleListProps = {
   enabledAdd?: boolean;
   enabledDelete?: boolean;
   enabledEdit?: boolean;
+  enableCustomActions?: boolean;
   onAdd?: () => void;
   onDelete?: (article: ArticleModel) => void;
   onEdit?: (article: ArticleModel) => void;
@@ -21,6 +21,7 @@ export function ArticleList({
   enabledAdd,
   enabledDelete,
   enabledEdit,
+  enableCustomActions,
   onAdd,
   onDelete,
   onEdit,
@@ -86,6 +87,34 @@ export function ArticleList({
             <Trash size={16}></Trash> {t('common.delete')}
           </>
         }
+        customActions={
+          enableCustomActions
+            ? [
+                {
+                  key: 'LINK_SUPPLIER',
+                  label: (
+                    <>
+                      <Link size={16} /> {t('articles.linkSupplier')}
+                    </>
+                  ),
+                },
+                {
+                  key: 'UNLINK_SUPPLIER',
+                  label: (
+                    <>
+                      <Unlink size={16} /> {t('articles.unlinkSupplier')}
+                    </>
+                  ),
+                },
+              ]
+            : undefined
+        }
+        onAction={async (action, article) => {
+          if (action.key === 'LINK_SUPPLIER') {
+            const supplier = await openDialog();
+            console.log('Selected supplier to link:', supplier, article);
+          }
+        }}
         canLoadMore={hasNextPage && !isFetchingNextPage}
         onLoadMore={() => fetchNextPage()}
         loading={isLoading}
