@@ -1,6 +1,5 @@
-import { FieldErrorsFeedback } from '@aegis/ui';
 import { useTranslation } from 'react-i18next';
-import { FloatingLabelInput } from '../../../../components';
+import { Input } from '../../../../components';
 import useSupplierDetailsFormConfig from '../useSupplierDetailsFormConfig';
 
 export function SupplierForm() {
@@ -17,8 +16,8 @@ export function SupplierForm() {
   } = useSupplierDetailsFormConfig();
 
   return (
-    <>
-      <FloatingLabelInput
+    <fieldset className="fieldset border-base-100 rounded-box w-full">
+      <Input
         label={t('common.code')}
         type="text"
         placeholder={t('suppliers.enterSupplierCode')}
@@ -28,7 +27,7 @@ export function SupplierForm() {
         fieldName="code"
       />
 
-      <FloatingLabelInput
+      <Input
         label={t('common.name')}
         type="text"
         placeholder={t('suppliers.enterSupplierName')}
@@ -38,7 +37,7 @@ export function SupplierForm() {
         fieldName="name"
       />
 
-      <FloatingLabelInput
+      <Input
         label={t('common.website')}
         type="text"
         placeholder={t('suppliers.enterSupplierWebsite')}
@@ -48,7 +47,7 @@ export function SupplierForm() {
         fieldName="website"
       />
 
-      <FloatingLabelInput
+      <Input
         label={t('common.email')}
         type="email"
         placeholder={t('suppliers.enterSupplierEmail')}
@@ -58,7 +57,7 @@ export function SupplierForm() {
         fieldName="email"
       />
 
-      <FloatingLabelInput
+      <Input
         label={t('common.phoneNumber')}
         type="tel"
         placeholder={t('suppliers.enterSupplierPhoneNumber')}
@@ -68,7 +67,7 @@ export function SupplierForm() {
         fieldName="phoneNumber"
       />
 
-      <FloatingLabelInput
+      <Input
         label={t('common.iban')}
         type="text"
         placeholder={t('suppliers.enterSupplierIban')}
@@ -78,7 +77,7 @@ export function SupplierForm() {
         fieldName="iban"
       />
 
-      <FloatingLabelInput
+      <Input
         label={t('common.bic')}
         type="text"
         placeholder={t('suppliers.enterSupplierBic')}
@@ -87,6 +86,6 @@ export function SupplierForm() {
         errors={errors}
         fieldName="bic"
       />
-    </>
+    </fieldset>
   );
 }

@@ -26,9 +26,11 @@ export function DetailsPanel({
           <X size={20}></X>
         </button>
       </div>
-      <div className="grow overflow-y-auto p-4">{children}</div>
+      <div className="grow overflow-y-auto p-2">{children}</div>
       {actions && (
-        <div className="border-base-300 mb-2 flex justify-end gap-2 border-t p-4">{actions}</div>
+        <div className="border-base-300 mb-2 flex justify-end gap-2 border-t px-4 py-3">
+          {actions}
+        </div>
       )}
       {loading && (
         <div className="absolute top-0 left-0 z-10 flex h-full w-full items-center justify-center bg-white/70 dark:bg-gray-800/70">

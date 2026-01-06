@@ -2,12 +2,21 @@ import { ReactNode } from 'react';
 
 type DropdownProps<T> = {
   label: ReactNode;
-  buttonColor?: 'primary' | 'secondary' | 'accent' | 'ghost';
+  variant?:
+    | 'neutral'
+    | 'primary'
+    | 'secondary'
+    | 'accent'
+    | 'info'
+    | 'success'
+    | 'warning'
+    | 'error';
+  btnStyle?: 'outline' | 'dash' | 'soft' | 'ghost' | 'link';
   buttonSize?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
   items: Array<T> | ReadonlyArray<T>;
-  labelSelector: (item: T) => string;
+  labelSelector: (item: T) => string | ReactNode;
   disabled?: boolean;
-  onSelect: (item: T) => void;
+  onSelect?: (item: T) => void;
   isItemDisabled?: (item: T) => boolean;
   position?: 'top' | 'bottom' | 'left' | 'right';
   align?: 'start' | 'center' | 'end';
@@ -15,7 +24,8 @@ type DropdownProps<T> = {
 
 export function Dropdown<T>({
   label,
-  buttonColor,
+  variant,
+  btnStyle,
   buttonSize = 'md',
   items,
   disabled,
@@ -26,7 +36,7 @@ export function Dropdown<T>({
   align = 'start',
 }: DropdownProps<T>) {
   const handleItemClick = (item: T) => {
-    onSelect(item);
+    onSelect?.(item);
     // Remove focus to close dropdown
     (document.activeElement as HTMLElement)?.blur();
   };
@@ -88,19 +98,33 @@ export function Dropdown<T>({
     return classes;
   };
 
+  const getButtonClasses = () => {
+    let classes = 'btn ';
+    if (btnStyle) {
+      classes += `btn-${btnStyle} `;
+    }
+
+    if (variant) {
+      classes += `btn-${variant} `;
+    }
+
+    return classes;
+  };
+
   return (
     <div className={getDropdownClasses()}>
       <div
         tabIndex={0}
         role="button"
-        className={`btn ${buttonColor ? `btn-${buttonColor}` : ''} ${`btn-${buttonSize}`} ${disabled ? 'btn-disabled' : ''}`}
+        className={`${getButtonClasses()} ${`btn-${buttonSize}`} ${disabled ? 'btn-disabled' : ''}`}
       >
         {label}
       </div>
-      <ul tabIndex={-1} className={getDropdownContentClasses()}>
+      <ul tabIndex={-1} className={`${getDropdownContentClasses()}`}>
         {items.map((item, index) => (
           <li key={index}>
             <button
+              className={`${isItemDisabled && isItemDisabled(item) ? 'bg-base-100 cursor-not-allowed text-gray-300' : ''}`}
               disabled={isItemDisabled ? isItemDisabled(item) : false}
               onClick={() => handleItemClick(item)}
             >

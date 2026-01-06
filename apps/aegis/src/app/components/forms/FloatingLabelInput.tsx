@@ -1,5 +1,5 @@
-import { forwardRef, ReactNode } from 'react';
 import { FieldErrorsFeedback } from '@aegis/ui';
+import { forwardRef, ReactNode } from 'react';
 import { FieldErrors } from 'react-hook-form';
 
 interface FloatingLabelInputProps {
@@ -26,17 +26,15 @@ export const FloatingLabelInput = forwardRef<HTMLInputElement, FloatingLabelInpu
       children,
       ...props
     },
-    ref
+    ref,
   ) => {
     const hasError = errors && fieldName && errors[fieldName];
 
     if (children) {
       // For select/textarea elements passed as children
       return (
-        <div className={`form-control w-full ${className}`}>
-          <label className="label">
-            <span className="label-text">{label}</span>
-          </label>
+        <div className={`w-full ${className}`}>
+          <label className="label">{label}</label>
           {children}
           {errors && fieldName && <FieldErrorsFeedback errors={errors} fieldName={fieldName} />}
         </div>
@@ -44,22 +42,20 @@ export const FloatingLabelInput = forwardRef<HTMLInputElement, FloatingLabelInpu
     }
 
     return (
-      <div className={`form-control w-full ${className}`}>
-        <label className="label">
-          <span className="label-text">{label}</span>
-        </label>
+      <div className={`w-full ${className}`}>
+        <label className="label">{label}</label>
         <input
           ref={ref}
           type={type}
           placeholder={placeholder || label}
-          className={`input input-bordered w-full ${hasError ? 'input-error' : ''}`}
+          className={`input w-full ${hasError ? 'input-error' : ''}`}
           disabled={disabled}
           {...props}
         />
         {errors && fieldName && <FieldErrorsFeedback errors={errors} fieldName={fieldName} />}
       </div>
     );
-  }
+  },
 );
 
 FloatingLabelInput.displayName = 'FloatingLabelInput';

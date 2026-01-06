@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { FloatingLabelInput } from '../../../../components/forms';
+import { Input } from '../../../../components/forms';
 import useCustomerDetailsFormConfig from '../useCustomerDetailsFormConfig';
 
 export function CustomerForm() {
@@ -16,8 +16,8 @@ export function CustomerForm() {
   } = useCustomerDetailsFormConfig();
 
   return (
-    <div className="space-y-4">
-      <FloatingLabelInput
+    <fieldset className="fieldset border-base-100 rounded-box w-full">
+      <Input
         label={t('common.code')}
         type="text"
         placeholder={t('customers.enterCustomerCode')}
@@ -26,7 +26,7 @@ export function CustomerForm() {
         {...codeConfig.registerConfig}
       />
 
-      <FloatingLabelInput
+      <Input
         label={t('common.name')}
         type="text"
         placeholder={t('customers.enterCustomerName')}
@@ -35,7 +35,7 @@ export function CustomerForm() {
         {...nameConfig.registerConfig}
       />
 
-      <FloatingLabelInput
+      <Input
         label={t('common.website')}
         type="text"
         placeholder={t('customers.enterCustomerWebsite')}
@@ -44,7 +44,7 @@ export function CustomerForm() {
         {...websiteConfig.registerConfig}
       />
 
-      <FloatingLabelInput
+      <Input
         label={t('common.email')}
         type="email"
         placeholder={t('customers.enterCustomerEmail')}
@@ -53,7 +53,7 @@ export function CustomerForm() {
         {...emailConfig.registerConfig}
       />
 
-      <FloatingLabelInput
+      <Input
         label={t('common.phoneNumber')}
         type="tel"
         placeholder={t('customers.enterCustomerPhoneNumber')}
@@ -62,7 +62,7 @@ export function CustomerForm() {
         {...phoneNumberConfig.registerConfig}
       />
 
-      <FloatingLabelInput
+      <Input
         label={t('common.iban')}
         type="text"
         placeholder={t('customers.enterCustomerIban')}
@@ -71,7 +71,7 @@ export function CustomerForm() {
         {...ibanConfig.registerConfig}
       />
 
-      <FloatingLabelInput
+      <Input
         label={t('common.bic')}
         type="text"
         placeholder={t('customers.enterCustomerBic')}
@@ -79,6 +79,6 @@ export function CustomerForm() {
         fieldName="bic"
         {...bicConfig.registerConfig}
       />
-    </div>
+    </fieldset>
   );
 }

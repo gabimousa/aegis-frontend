@@ -3,7 +3,7 @@ import { DataGrid, ListView } from '@aegis/ui';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router';
-import { Plus, Users } from 'tabler-icons-react';
+import { Pencil, Plus, Trash, Users } from 'tabler-icons-react';
 import { useSelectSuppliersDialog } from '../../selectSuppliersDialog';
 import { useArticlesQuery } from '../data';
 import { ArticleModel } from '../model';
@@ -26,7 +26,6 @@ export function ArticleList({
   onEdit,
 }: ArticleListProps) {
   const [searchTerm, setSearchTerm] = useState('');
-  const { confirm } = useConfirm();
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { articles, totalCount, isLoading, error, fetchNextPage, hasNextPage, isFetchingNextPage } =
@@ -76,7 +75,17 @@ export function ArticleList({
         ]}
         data={articles}
         onEdit={enabledEdit ? (item) => onEdit && onEdit(item) : undefined}
+        editLabel={
+          <>
+            <Pencil size={16}></Pencil> {t('common.edit')}
+          </>
+        }
         onDelete={enabledDelete ? (item) => onDelete && onDelete(item) : undefined}
+        deleteLabel={
+          <>
+            <Trash size={16}></Trash> {t('common.delete')}
+          </>
+        }
         canLoadMore={hasNextPage && !isFetchingNextPage}
         onLoadMore={() => fetchNextPage()}
         loading={isLoading}

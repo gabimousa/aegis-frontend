@@ -1,7 +1,7 @@
 import { DataGrid, ListView } from '@aegis/ui';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Plus, Users } from 'tabler-icons-react';
+import { Pencil, Plus, Trash, Users } from 'tabler-icons-react';
 import { useCustomersQuery } from '../data';
 import { CustomerModel } from '../model';
 
@@ -79,7 +79,17 @@ export function CustomerList({
         ]}
         data={customers}
         onEdit={enabledEdit ? (item) => onEdit && onEdit(item) : undefined}
+        editLabel={
+          <>
+            <Pencil className="text-accent" size={16}></Pencil> {t('common.edit')}
+          </>
+        }
         onDelete={enabledDelete ? (item) => onDelete && onDelete(item) : undefined}
+        deleteLabel={
+          <>
+            <Trash className="text-error" size={16}></Trash> {t('common.delete')}
+          </>
+        }
         canLoadMore={hasNextPage && !isFetchingNextPage}
         onLoadMore={() => fetchNextPage()}
         loading={isLoading}

@@ -1,6 +1,5 @@
-import { FieldErrorsFeedback } from '@aegis/ui';
 import { useTranslation } from 'react-i18next';
-import { FloatingLabelInput } from '../../../../components';
+import { Input, TextArea } from '../../../../components';
 import useArticleDetailsFormConfig from '../useArticleDetailsFormConfig';
 
 export function ArticleForm() {
@@ -15,8 +14,8 @@ export function ArticleForm() {
   } = useArticleDetailsFormConfig();
 
   return (
-    <>
-      <FloatingLabelInput
+    <fieldset className="fieldset border-base-100 rounded-box w-full">
+      <Input
         label={t('common.code')}
         type="text"
         placeholder={t('articles.enterArticleCode')}
@@ -26,7 +25,7 @@ export function ArticleForm() {
         fieldName="code"
       />
 
-      <FloatingLabelInput
+      <Input
         label={t('common.name')}
         type="text"
         placeholder={t('articles.enterArticleName')}
@@ -36,24 +35,18 @@ export function ArticleForm() {
         fieldName="name"
       />
 
-      <FloatingLabelInput
+      <TextArea
         label={t('common.description')}
+        placeholder={t('articles.enterArticleDescription')}
         className="mb-2"
         errors={errors}
         fieldName="description"
-      >
-        <textarea
-          rows={5}
-          style={{ height: '100px' }}
-          className={`textarea textarea-bordered w-full ${
-            errors.description ? 'textarea-error' : ''
-          }`}
-          placeholder={t('articles.enterArticleDescription')}
-          {...descriptionConfig.registerConfig}
-        />
-      </FloatingLabelInput>
+        {...descriptionConfig.registerConfig}
+        rows={5}
+        style={{ height: '100px' }}
+      ></TextArea>
 
-      <FloatingLabelInput
+      <Input
         label={t('common.price')}
         type="number"
         placeholder={t('articles.enterArticlePrice')}
@@ -63,15 +56,15 @@ export function ArticleForm() {
         fieldName="price"
       />
 
-      <FloatingLabelInput
+      <Input
         label={t('common.sellingUnit')}
-        type="tel"
+        type="number"
         placeholder={t('articles.enterArticleSellingUnit')}
         className="mb-2"
         {...sellingUnitConfig.registerConfig}
         errors={errors}
         fieldName="sellingUnit"
       />
-    </>
+    </fieldset>
   );
 }

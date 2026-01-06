@@ -1,4 +1,5 @@
 import { RegisterArticleInput, setFieldErrors, UpdateArticleDetailsInput } from '@aegis/shared';
+import { Tabs } from '@aegis/ui';
 import { useEffect, useId, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -130,19 +131,15 @@ export function ArticleDetails() {
         ))}
       <FormProvider {...formProps}>
         <form id={detailsFormId} noValidate onSubmit={handleSubmit(onSubmit)}>
-          <div className="tabs tabs-bordered">
-            <button
-              type="button"
-              className={`tab tab-bordered ${activeTab === 'details' ? 'tab-active' : ''}`}
-              onClick={() => setActiveTab('details')}
+          <Tabs>
+            <Tabs.Tab
+              label={t('common.details')}
+              active={activeTab === 'details'}
+              onSelect={() => setActiveTab('details')}
             >
-              {t('common.details')}
-            </button>
-          </div>
-          <div className="pt-6">
-            {activeTab === 'details' &&
-              (isError ? <p className="text-error">Error: {error?.message}</p> : <ArticleForm />)}
-          </div>
+              {isError ? <p className="text-error">Error: {error?.message}</p> : <ArticleForm />}
+            </Tabs.Tab>
+          </Tabs>
         </form>
       </FormProvider>
     </DetailsPanel>

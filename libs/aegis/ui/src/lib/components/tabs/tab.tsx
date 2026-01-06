@@ -24,7 +24,7 @@ export function Tab({ label, active: isActive, onSelect, disabled, children }: T
       >
         <span className={`text-base-content`}>{label}</span>
       </span>
-      <div role="tabpanel" className="tab-content bg-base-100 border-base-300 p-6">
+      <div role="tabpanel" className="tab-content bg-base-100 p-2">
         {children}
       </div>
     </>
