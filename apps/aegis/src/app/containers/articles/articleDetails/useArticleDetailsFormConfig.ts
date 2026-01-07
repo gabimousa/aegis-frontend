@@ -27,9 +27,12 @@ function useArticleDetailsFormConfig() {
       message: t('articles.pleaseProvideValidPrice'),
     },
     max: { value: 999999999999999, message: t('articles.priceTooHigh') },
+    validate: (value) => parseFloat(value) > 0 || t('articles.pleaseProvideValidPrice'),
     required: t('articles.priceIsRequired'),
     onBlur: (e) => {
-      setValue('price', formatNumber(e.target.value ? Number(e.target.value) : 0));
+      setValue('price', formatNumber(e.target.value ? Number(e.target.value) : 0), {
+        shouldValidate: true,
+      });
     },
   });
   const sellingUnitFormConfig = register('sellingUnit', {
@@ -38,9 +41,12 @@ function useArticleDetailsFormConfig() {
       message: t('articles.pleaseProvideValidSellingUnit'),
     },
     max: { value: 999999999999999, message: t('articles.sellingUnitTooHigh') },
+    validate: (value) => parseFloat(value) > 0 || t('articles.pleaseProvideValidSellingUnit'),
     required: t('articles.sellingUnitIsRequired'),
     onBlur: (e) => {
-      setValue('sellingUnit', formatNumber(e.target.value ? Number(e.target.value) : 0));
+      setValue('sellingUnit', formatNumber(e.target.value ? Number(e.target.value) : 0), {
+        shouldValidate: true,
+      });
     },
   });
 
