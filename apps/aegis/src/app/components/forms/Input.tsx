@@ -30,7 +30,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             ref={ref}
             type={type}
             placeholder={placeholder || label}
-            className={`input w-full ${hasError ? 'input-error' : ''}`}
+            className={`input input-sm w-full ${hasError ? 'input-error' : ''}`}
             disabled={disabled}
             {...props}
           />

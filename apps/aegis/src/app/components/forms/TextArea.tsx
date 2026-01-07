@@ -25,7 +25,7 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
           <textarea
             ref={ref}
             placeholder={placeholder || label}
-            className={`textarea w-full ${hasError ? 'textarea-error' : ''}`}
+            className={`textarea textarea-sm w-full ${hasError ? 'textarea-error' : ''}`}
             disabled={disabled}
             {...props}
           />

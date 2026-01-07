@@ -39,7 +39,7 @@ function SelectInner<T>(
       <div className="mt-1">
         <select
           ref={ref}
-          className={`select w-full ${className} ${hasError ? 'select-error' : ''}`}
+          className={`select select-sm w-full ${className} ${hasError ? 'select-error' : ''}`}
           disabled={disabled}
           {...rest}
         >
