@@ -135,6 +135,9 @@ const en = {
       sellingUnitIsRequired: 'Article selling unit is required',
       linkSupplier: 'Link Supplier',
       unlinkSupplier: 'Unlink Supplier',
+      confirmUnlinkSupplierTitle: 'Confirm Unlink Supplier',
+      confirmUnlinkSupplier:
+        'Are you sure you want to unlink supplier "{{supplierName}}" from this article?',
     },
   },
 };

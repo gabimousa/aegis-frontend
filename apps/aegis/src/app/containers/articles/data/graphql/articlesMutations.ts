@@ -54,3 +54,55 @@ export const DISCONTINUE_ARTICLE_MUTATION = graphql(`
     }
   }
 `);
+
+export const LINK_TO_SUPPLIER_MUTATION = graphql(`
+  mutation linkToSupplier($input: LinkToSupplierInput!) {
+    linkToSupplier(input: $input) {
+      article {
+        ...ArticleFields
+        suppliers {
+          nodes {
+            id
+            code
+            name
+          }
+        }
+      }
+      errors {
+        ... on ApplicationError {
+          code
+          description
+          type
+          fieldName
+          message
+        }
+      }
+    }
+  }
+`);
+
+export const UNLINK_FROM_SUPPLIER_MUTATION = graphql(`
+  mutation unlinkFromSupplier($input: UnlinkFromSupplierInput!) {
+    unlinkFromSupplier(input: $input) {
+      article {
+        ...ArticleFields
+        suppliers {
+          nodes {
+            id
+            code
+            name
+          }
+        }
+      }
+      errors {
+        ... on ApplicationError {
+          code
+          description
+          type
+          fieldName
+          message
+        }
+      }
+    }
+  }
+`);

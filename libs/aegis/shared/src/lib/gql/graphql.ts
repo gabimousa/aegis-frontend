@@ -1099,6 +1099,20 @@ export type ArticleFieldsFragment = {
   sellingUnit: any;
 } & { ' $fragmentName'?: 'ArticleFieldsFragment' };
 
+export type ArticleDetailsFieldsFragment = {
+  __typename?: 'Article';
+  id: string;
+  code: string;
+  name: string;
+  description?: string | null;
+  price: any;
+  sellingUnit: any;
+  suppliers?: {
+    __typename?: 'SuppliersConnection';
+    nodes?: Array<{ __typename?: 'Supplier'; id: string; code: string; name: string }> | null;
+  } | null;
+} & { ' $fragmentName'?: 'ArticleDetailsFieldsFragment' };
+
 export type RegisterArticleMutationVariables = Exact<{
   input: RegisterArticleInput;
 }>;
@@ -1167,6 +1181,72 @@ export type DiscontinueArticleMutation = {
   };
 };
 
+export type LinkToSupplierMutationVariables = Exact<{
+  input: LinkToSupplierInput;
+}>;
+
+export type LinkToSupplierMutation = {
+  __typename?: 'Mutation';
+  linkToSupplier: {
+    __typename?: 'LinkToSupplierPayload';
+    article?:
+      | ({
+          __typename?: 'Article';
+          suppliers?: {
+            __typename?: 'SuppliersConnection';
+            nodes?: Array<{
+              __typename?: 'Supplier';
+              id: string;
+              code: string;
+              name: string;
+            }> | null;
+          } | null;
+        } & { ' $fragmentRefs'?: { ArticleFieldsFragment: ArticleFieldsFragment } })
+      | null;
+    errors?: Array<{
+      __typename?: 'ApplicationError';
+      code: string;
+      description: string;
+      type: ErrorType;
+      fieldName?: string | null;
+      message: string;
+    }> | null;
+  };
+};
+
+export type UnlinkFromSupplierMutationVariables = Exact<{
+  input: UnlinkFromSupplierInput;
+}>;
+
+export type UnlinkFromSupplierMutation = {
+  __typename?: 'Mutation';
+  unlinkFromSupplier: {
+    __typename?: 'UnlinkFromSupplierPayload';
+    article?:
+      | ({
+          __typename?: 'Article';
+          suppliers?: {
+            __typename?: 'SuppliersConnection';
+            nodes?: Array<{
+              __typename?: 'Supplier';
+              id: string;
+              code: string;
+              name: string;
+            }> | null;
+          } | null;
+        } & { ' $fragmentRefs'?: { ArticleFieldsFragment: ArticleFieldsFragment } })
+      | null;
+    errors?: Array<{
+      __typename?: 'ApplicationError';
+      code: string;
+      description: string;
+      type: ErrorType;
+      fieldName?: string | null;
+      message: string;
+    }> | null;
+  };
+};
+
 export type ArticlesQueryVariables = Exact<{
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
@@ -1203,9 +1283,13 @@ export type ArticleDetailsQueryVariables = Exact<{
 export type ArticleDetailsQuery = {
   __typename?: 'Query';
   articleById?:
-    | ({ __typename?: 'Article' } & {
-        ' $fragmentRefs'?: { ArticleFieldsFragment: ArticleFieldsFragment };
-      })
+    | ({
+        __typename?: 'Article';
+        suppliers?: {
+          __typename?: 'SuppliersConnection';
+          nodes?: Array<{ __typename?: 'Supplier'; id: string; code: string; name: string }> | null;
+        } | null;
+      } & { ' $fragmentRefs'?: { ArticleFieldsFragment: ArticleFieldsFragment } })
     | null;
 };
 
@@ -1590,6 +1674,48 @@ export const ArticleFieldsFragmentDoc = {
     },
   ],
 } as unknown as DocumentNode<ArticleFieldsFragment, unknown>;
+export const ArticleDetailsFieldsFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'ArticleDetailsFields' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Article' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'code' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'description' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'price' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'sellingUnit' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'suppliers' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'nodes' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'code' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<ArticleDetailsFieldsFragment, unknown>;
 export const CustomerFieldsFragmentDoc = {
   kind: 'Document',
   definitions: [
@@ -1936,6 +2062,234 @@ export const DiscontinueArticleDocument = {
     },
   ],
 } as unknown as DocumentNode<DiscontinueArticleMutation, DiscontinueArticleMutationVariables>;
+export const LinkToSupplierDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'linkToSupplier' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'input' } },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'LinkToSupplierInput' } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'linkToSupplier' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'input' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'input' } },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'article' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'FragmentSpread', name: { kind: 'Name', value: 'ArticleFields' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'suppliers' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'nodes' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                                  { kind: 'Field', name: { kind: 'Name', value: 'code' } },
+                                  { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'errors' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'InlineFragment',
+                        typeCondition: {
+                          kind: 'NamedType',
+                          name: { kind: 'Name', value: 'ApplicationError' },
+                        },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            { kind: 'Field', name: { kind: 'Name', value: 'code' } },
+                            { kind: 'Field', name: { kind: 'Name', value: 'description' } },
+                            { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                            { kind: 'Field', name: { kind: 'Name', value: 'fieldName' } },
+                            { kind: 'Field', name: { kind: 'Name', value: 'message' } },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'ArticleFields' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Article' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'code' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'description' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'price' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'sellingUnit' } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<LinkToSupplierMutation, LinkToSupplierMutationVariables>;
+export const UnlinkFromSupplierDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'unlinkFromSupplier' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'input' } },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'UnlinkFromSupplierInput' } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'unlinkFromSupplier' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'input' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'input' } },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'article' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'FragmentSpread', name: { kind: 'Name', value: 'ArticleFields' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'suppliers' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'nodes' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                                  { kind: 'Field', name: { kind: 'Name', value: 'code' } },
+                                  { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'errors' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'InlineFragment',
+                        typeCondition: {
+                          kind: 'NamedType',
+                          name: { kind: 'Name', value: 'ApplicationError' },
+                        },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            { kind: 'Field', name: { kind: 'Name', value: 'code' } },
+                            { kind: 'Field', name: { kind: 'Name', value: 'description' } },
+                            { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                            { kind: 'Field', name: { kind: 'Name', value: 'fieldName' } },
+                            { kind: 'Field', name: { kind: 'Name', value: 'message' } },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'ArticleFields' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Article' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'code' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'description' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'price' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'sellingUnit' } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<UnlinkFromSupplierMutation, UnlinkFromSupplierMutationVariables>;
 export const ArticlesDocument = {
   kind: 'Document',
   definitions: [
@@ -2104,6 +2458,27 @@ export const ArticleDetailsDocument = {
               kind: 'SelectionSet',
               selections: [
                 { kind: 'FragmentSpread', name: { kind: 'Name', value: 'ArticleFields' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'suppliers' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'nodes' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                            { kind: 'Field', name: { kind: 'Name', value: 'code' } },
+                            { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
               ],
             },
           },

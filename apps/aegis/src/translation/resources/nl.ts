@@ -135,6 +135,8 @@ const nl = {
       sellingUnitIsRequired: 'Artikel verkoopeenheid is verplicht',
       linkSupplier: 'Koppel Leverancier',
       unlinkSupplier: 'Ontkoppel Leverancier',
+      confirmUnlinkSupplierTitle: 'Leverancier ontkoppelen',
+      confirmUnlinkSupplier: 'Weet u zeker dat u leverancier "{{supplierName}}" wilt ontkoppelen?',
     },
   },
 };

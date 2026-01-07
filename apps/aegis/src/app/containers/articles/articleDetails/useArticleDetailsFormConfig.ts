@@ -1,11 +1,11 @@
 import { formatNumber } from '@aegis/utils';
 import { useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { ArticleModel } from '../model';
+import { ArticleDetailsModel } from '../model';
 
 function useArticleDetailsFormConfig() {
   const { t } = useTranslation();
-  const { register, setValue, formState } = useFormContext<ArticleModel>();
+  const { register, setValue, formState } = useFormContext<ArticleDetailsModel>();
 
   const codeFormConfig = register('code', {
     maxLength: { value: 50, message: t('articles.codeTooLong') },

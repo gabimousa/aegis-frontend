@@ -42,6 +42,13 @@ export const ARTICLE_DETAILS_QUERY = graphql(`
   query ArticleDetails($id: ID!) {
     articleById(id: $id) {
       ...ArticleFields
+      suppliers {
+        nodes {
+          id
+          code
+          name
+        }
+      }
     }
   }
 `);

@@ -1,13 +1,24 @@
-import { RegisterArticleInput, setFieldErrors, UpdateArticleDetailsInput } from '@aegis/shared';
+import {
+  RegisterArticleInput,
+  setFieldErrors,
+  UpdateArticleDetailsInput,
+  useConfirm,
+} from '@aegis/shared';
 import { Tabs } from '@aegis/ui';
 import { useEffect, useId, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useMatch, useNavigate } from 'react-router';
-import { User } from 'tabler-icons-react';
+import { Link, Unlink, User } from 'tabler-icons-react';
 import { DetailsPanel } from '../../../components';
-import { useArticleDetailsQuery, useSaveArticle } from '../data';
-import { ArticleModel } from '../model';
+import { useSelectSuppliersDialog } from '../../selectSuppliersDialog';
+import {
+  useArticleDetailsQuery,
+  useLinkToSupplier,
+  useSaveArticle,
+  useUnlinkFromSupplier,
+} from '../data';
+import { ArticleDetailsModel } from '../model';
 import { ArticleForm } from './articleForm';
 
 const serverErrorMap: Record<string, string> = {
@@ -24,8 +35,11 @@ export function ArticleDetails() {
   const navigate = useNavigate();
   const match = useMatch('/articles/:id');
   const { t } = useTranslation();
+  const { openDialog } = useSelectSuppliersDialog();
+  const { confirm } = useConfirm();
   const {
     data: article,
+    suppliers,
     isError,
     isLoading,
     error,
@@ -37,7 +51,10 @@ export function ArticleDetails() {
     isSuccess: saveArticleSuccess,
   } = useSaveArticle();
 
-  const formProps = useForm<ArticleModel>({
+  const { mutate: linkToSupplier } = useLinkToSupplier();
+  const { mutate: unlinkFromSupplier } = useUnlinkFromSupplier();
+
+  const formProps = useForm<ArticleDetailsModel>({
     mode: 'all',
     defaultValues: {
       code: '',
@@ -64,7 +81,7 @@ export function ArticleDetails() {
     }
   }, [saveArticleSuccess, navigate]);
 
-  const onSubmit = async (formState: ArticleModel) => {
+  const onSubmit = async (formState: ArticleDetailsModel) => {
     console.log('Submitting article details:', formState);
     const idInput = formState?.id ? { id: formState.id } : {};
     try {
@@ -85,6 +102,23 @@ export function ArticleDetails() {
 
   const actions = (
     <div className="flex gap-2">
+      {activeTab === 'suppliers' && (
+        <button
+          className="btn btn-secondary"
+          onClick={async () => {
+            const result = await openDialog();
+            if (result) {
+              linkToSupplier({
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                articleId: article!.id,
+                supplierId: result.id,
+              });
+            }
+          }}
+        >
+          <Link></Link> {t('articles.linkSupplier')}
+        </button>
+      )}
       <button className="btn btn-secondary" onClick={() => navigate('...')}>
         {t('common.cancel')}
       </button>
@@ -139,6 +173,53 @@ export function ArticleDetails() {
             >
               {isError ? <p className="text-error">Error: {error?.message}</p> : <ArticleForm />}
             </Tabs.Tab>
+            {article && (
+              <Tabs.Tab
+                label={t('suppliers.title')}
+                active={activeTab === 'suppliers'}
+                onSelect={() => setActiveTab('suppliers')}
+              >
+                <table className="table w-full">
+                  <thead>
+                    <tr>
+                      <th>{t('common.code')}</th>
+                      <th>{t('common.name')}</th>
+                      <th className="max-w-4"></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {suppliers?.map((supplier) => (
+                      <tr key={supplier.id} className="hover:bg-base-300">
+                        <td className="w-16">{supplier.code}</td>
+                        <td className="w-full">{supplier.name}</td>
+                        <td>
+                          <span
+                            className="btn btn-ghost btn-xs btn-error"
+                            onClick={async () => {
+                              const confirmed = await confirm(
+                                t('articles.confirmUnlinkSupplierTitle'),
+                                t('articles.confirmUnlinkSupplier', {
+                                  supplierName: supplier.name,
+                                }),
+                              );
+                              if (confirmed) {
+                                unlinkFromSupplier({
+                                  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                                  articleId: article!.id,
+                                  supplierId: supplier.id,
+                                });
+                              }
+                            }}
+                          >
+                            <Unlink></Unlink>
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </Tabs.Tab>
+            )}
           </Tabs>
         </form>
       </FormProvider>

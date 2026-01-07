@@ -21,7 +21,7 @@ export const useMutateCache = <T extends { id: string }>() => {
       ...connection,
       nodes:
         connection.nodes?.map((node) =>
-          node.id === updatedNode.id ? { ...node, ...updatedNode } : node
+          node.id === updatedNode.id ? { ...node, ...updatedNode } : node,
         ) ?? [],
     };
   };
@@ -60,7 +60,7 @@ export const useMutateCache = <T extends { id: string }>() => {
     queryClient.setQueriesData({ queryKey }, (oldData: InfiniteData<Page<T>>) => {
       if (!oldData || !node) return oldData;
       const exists = oldData.pages.some((page) =>
-        page[connectionKey].nodes?.some((n) => n.id === node.id)
+        page[connectionKey].nodes?.some((n) => n.id === node.id),
       );
 
       if (exists) {
@@ -85,7 +85,7 @@ export const useMutateCache = <T extends { id: string }>() => {
           ...oldData,
           pages: newPages,
         };
-      }
+      },
     );
   };
 
@@ -97,5 +97,6 @@ export const useMutateCache = <T extends { id: string }>() => {
     updateInInfiniteData,
     upsertInfiniteData,
     removeFromInfiniteData,
+    queryClient,
   };
 };

@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
 import { gqlClient } from '../../../../shared';
-import { ArticleModel } from '../../model';
+import { ArticleDetailsModel, ArticleSupplierModel } from '../../model';
 import { ARTICLE_DETAILS_QUERY, ARTICLE_DETAILS_QUERY_KEY } from '../graphql';
 
 export interface UseArticleDetailsQueryProps {
@@ -23,8 +23,12 @@ export const useArticleDetailsQuery = ({ id }: UseArticleDetailsQueryProps) => {
   });
 
   const article = useMemo(() => {
-    return result.data?.articleById as ArticleModel | undefined;
+    return result.data?.articleById as ArticleDetailsModel | undefined;
   }, [result.data]);
 
-  return { ...result, data: article };
+  const suppliers = useMemo(() => {
+    return result.data?.articleById?.suppliers?.nodes ?? ([] as ArticleSupplierModel[]);
+  }, [result.data]);
+
+  return { ...result, data: article, suppliers };
 };
