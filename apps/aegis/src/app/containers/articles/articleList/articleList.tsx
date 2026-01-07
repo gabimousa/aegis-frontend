@@ -71,8 +71,8 @@ export function ArticleList({
         columns={[
           { header: t('common.code'), field: 'code', width: 150 },
           { header: t('common.name'), field: 'name' },
-          { header: t('common.price'), field: 'price', width: 150 },
-          { header: t('common.sellingUnit'), field: 'sellingUnit', width: 100 },
+          { header: t('common.price'), field: 'price', width: 150, align: 'right' },
+          { header: t('common.sellingUnit'), field: 'sellingUnit', width: 100, align: 'right' },
         ]}
         data={articles}
         onEdit={enabledEdit ? (item) => onEdit && onEdit(item) : undefined}

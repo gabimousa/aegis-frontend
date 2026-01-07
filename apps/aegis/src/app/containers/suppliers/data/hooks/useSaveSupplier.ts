@@ -1,4 +1,9 @@
-import { RegisterSupplierInput, UpdateSupplierDetailsInput, useMutateCache } from '@aegis/shared';
+import {
+  RegisterSupplierInput,
+  UpdateSupplierDetailsInput,
+  useMutateCache,
+  useToast,
+} from '@aegis/shared';
 import { toGroup } from '@aegis/utils';
 import { useMutation } from '@tanstack/react-query';
 import { gqlClient } from '../../../../shared';
@@ -8,9 +13,13 @@ import {
   SUPPLIERS_QUERY_KEY,
   UPDATE_SUPPLIER_DETAILS_MUTATION,
 } from '../graphql';
+import { useTranslation } from 'react-i18next';
 
 export const useSaveSupplier = () => {
   const { upsertInfiniteData, updateInInfiniteData } = useMutateCache<SupplierModel>();
+  const { success, error } = useToast();
+  const { t } = useTranslation();
+
   return useMutation({
     mutationFn: async (input: RegisterSupplierInput | UpdateSupplierDetailsInput) => {
       if ('id' in input) {
@@ -29,6 +38,8 @@ export const useSaveSupplier = () => {
     onSuccess: (data) => {
       if (!data) return;
 
+      success(t('suppliers.saveSupplierSuccess'));
+
       if ('registerSupplier' in data) {
         const savedSupplier = data.registerSupplier.supplier as SupplierModel;
         upsertInfiniteData(savedSupplier, SUPPLIERS_QUERY_KEY(), 'suppliers');
@@ -36,6 +47,9 @@ export const useSaveSupplier = () => {
         const savedSupplier = data.updateSupplierDetails.supplier as SupplierModel;
         updateInInfiniteData(savedSupplier, SUPPLIERS_QUERY_KEY(), 'suppliers');
       }
+    },
+    onError: () => {
+      error(t('suppliers.saveSupplierError'));
     },
   });
 };

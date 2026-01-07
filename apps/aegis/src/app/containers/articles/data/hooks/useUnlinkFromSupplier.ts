@@ -1,10 +1,13 @@
-import { ArticleDetailsFieldsFragment, UnlinkFromSupplierInput } from '@aegis/shared';
+import { ArticleDetailsFieldsFragment, UnlinkFromSupplierInput, useToast } from '@aegis/shared';
 import { toGroup } from '@aegis/utils';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useTranslation } from 'react-i18next';
 import { gqlClient } from '../../../../shared';
 import { ARTICLE_DETAILS_QUERY_KEY, UNLINK_FROM_SUPPLIER_MUTATION } from '../graphql';
 export const useUnlinkFromSupplier = () => {
   const queryClient = useQueryClient();
+  const { success, error } = useToast();
+  const { t } = useTranslation();
 
   return useMutation({
     mutationFn: async (input: UnlinkFromSupplierInput) => {
@@ -17,6 +20,7 @@ export const useUnlinkFromSupplier = () => {
       return result;
     },
     onSuccess: (data, input) => {
+      success(t('articles.unlinkFromSupplierSuccess'));
       queryClient.setQueryData(
         ARTICLE_DETAILS_QUERY_KEY(input.articleId),
         (oldData: { linkToSupplier: ArticleDetailsFieldsFragment }) => {
@@ -27,6 +31,9 @@ export const useUnlinkFromSupplier = () => {
           };
         },
       );
+    },
+    onError: () => {
+      error(t('articles.unlinkFromSupplierError'));
     },
   });
 };

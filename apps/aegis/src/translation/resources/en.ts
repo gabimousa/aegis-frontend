@@ -58,6 +58,10 @@ const en = {
       phoneNumberTooLong: 'Customer phone number is too long',
       ibanTooLong: 'Customer IBAN is too long',
       bicTooLong: 'Customer BIC is too long',
+      saveCustomerSuccess: 'Customer saved successfully.',
+      saveCustomerError: 'Error saving customer.',
+      deactivateCustomerSuccess: 'Customer deactivated successfully.',
+      deactivateCustomerError: 'Error deactivating customer.',
     },
     suppliers: {
       title: 'Suppliers',
@@ -87,6 +91,10 @@ const en = {
       phoneNumberTooLong: 'Supplier phone number is too long',
       ibanTooLong: 'Supplier IBAN is too long',
       bicTooLong: 'Supplier BIC is too long',
+      saveSupplierSuccess: 'Supplier saved successfully.',
+      saveSupplierError: 'Error saving supplier.',
+      deactivateSupplierSuccess: 'Supplier deactivated successfully.',
+      deactivateSupplierError: 'Error deactivating supplier.',
     },
     addresses: {
       street: 'Street',
@@ -138,6 +146,14 @@ const en = {
       confirmUnlinkSupplierTitle: 'Confirm Unlink Supplier',
       confirmUnlinkSupplier:
         'Are you sure you want to unlink supplier "{{supplierName}}" from this article?',
+      saveArticleSuccess: 'Article saved successfully.',
+      saveArticleError: 'Error saving article.',
+      linkToSupplierSuccess: 'Supplier linked to article successfully.',
+      linkToSupplierError: 'Error linking supplier to article.',
+      unlinkFromSupplierSuccess: 'Supplier unlinked from article successfully.',
+      unlinkFromSupplierError: 'Error unlinking supplier from article.',
+      discontinueArticleSuccess: 'Article discontinued successfully.',
+      discontinueArticleError: 'Error discontinuing article.',
     },
   },
 };

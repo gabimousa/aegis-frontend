@@ -1,4 +1,4 @@
-import { DialogProvider } from '@aegis/shared';
+import { DialogProvider, ToastProvider } from '@aegis/shared';
 import { RouterProvider } from 'react-router';
 import { router } from './router';
 import { CountriesProvider } from './shared';
@@ -7,9 +7,11 @@ export function App() {
   return (
     <div className="bg-base-100 min-h-screen">
       <CountriesProvider>
-        <DialogProvider>
-          <RouterProvider router={router} />
-        </DialogProvider>
+        <ToastProvider defaultPosition="toast-bottom toast-end" defaultDuration={5000}>
+          <DialogProvider>
+            <RouterProvider router={router} />
+          </DialogProvider>
+        </ToastProvider>
       </CountriesProvider>
     </div>
   );

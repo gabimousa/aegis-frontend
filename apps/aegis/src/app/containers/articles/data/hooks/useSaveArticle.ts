@@ -1,4 +1,9 @@
-import { RegisterArticleInput, UpdateArticleDetailsInput, useMutateCache } from '@aegis/shared';
+import {
+  RegisterArticleInput,
+  UpdateArticleDetailsInput,
+  useMutateCache,
+  useToast,
+} from '@aegis/shared';
 import { toGroup } from '@aegis/utils';
 import { useMutation } from '@tanstack/react-query';
 import { gqlClient } from '../../../../shared';
@@ -8,9 +13,12 @@ import {
   REGISTER_ARTICLE_MUTATION,
   UPDATE_ARTICLE_DETAILS_MUTATION,
 } from '../graphql';
+import { useTranslation } from 'react-i18next';
 
 export const useSaveArticle = () => {
   const { upsertInfiniteData, updateInInfiniteData } = useMutateCache<ArticleModel>();
+  const { success, error } = useToast();
+  const { t } = useTranslation();
 
   return useMutation({
     mutationFn: async (input: RegisterArticleInput | UpdateArticleDetailsInput) => {
@@ -29,6 +37,7 @@ export const useSaveArticle = () => {
     },
     onSuccess: (data) => {
       if (!data) return;
+      success(t('articles.saveArticleSuccess'));
 
       if ('registerArticle' in data) {
         const savedArticle = data.registerArticle.article as ArticleModel;
@@ -37,6 +46,9 @@ export const useSaveArticle = () => {
         const savedArticle = data.updateArticleDetails.article as ArticleModel;
         updateInInfiniteData(savedArticle, ARTICLES_QUERY_KEY(), 'articles');
       }
+    },
+    onError: () => {
+      error(t('articles.saveArticleError'));
     },
   });
 };
