@@ -46,7 +46,7 @@ export const useArticlesQuery = ({ pageSize, filters }: UseArticlesQueryProps) =
 
   const totalCount = useMemo(() => {
     return result.data?.pages
-      ? result.data.pages[result.data.pages.length - 1].articles?.totalCount ?? 0
+      ? (result.data.pages[result.data.pages.length - 1].articles?.totalCount ?? 0)
       : 0;
   }, [result.data]);
 

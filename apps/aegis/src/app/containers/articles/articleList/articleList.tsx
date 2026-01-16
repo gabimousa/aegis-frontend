@@ -1,8 +1,7 @@
 import { DataGrid, ListView } from '@aegis/ui';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router';
-import { Link, Pencil, Plus, Trash, Unlink, Users } from 'tabler-icons-react';
+import { Pencil, Plus, Trash, Users } from 'tabler-icons-react';
 import { useSelectSuppliersDialog } from '../../selectSuppliersDialog';
 import { useArticlesQuery } from '../data';
 import { ArticleModel } from '../model';
@@ -27,7 +26,6 @@ export function ArticleList({
   onEdit,
 }: ArticleListProps) {
   const [searchTerm, setSearchTerm] = useState('');
-  const navigate = useNavigate();
   const { t } = useTranslation();
   const { articles, totalCount, isLoading, error, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useArticlesQuery({
@@ -40,7 +38,7 @@ export function ArticleList({
   const actions = enabledAdd ? (
     <button
       className="btn btn-lg btn-primary btn-outline btn-circle"
-      onClick={() => navigate('./NEW')}
+      onClick={() => onAdd && onAdd()}
     >
       <Plus size={24} />
     </button>
@@ -78,43 +76,43 @@ export function ArticleList({
         onEdit={enabledEdit ? (item) => onEdit && onEdit(item) : undefined}
         editLabel={
           <>
-            <Pencil size={16}></Pencil> {t('common.edit')}
+            <Pencil className="text-accent" size={16}></Pencil> {t('common.edit')}
           </>
         }
         onDelete={enabledDelete ? (item) => onDelete && onDelete(item) : undefined}
         deleteLabel={
           <>
-            <Trash size={16}></Trash> {t('common.delete')}
+            <Trash className="text-error" size={16}></Trash> {t('common.delete')}
           </>
         }
-        customActions={
-          enableCustomActions
-            ? [
-                {
-                  key: 'LINK_SUPPLIER',
-                  label: (
-                    <>
-                      <Link size={16} /> {t('articles.linkSupplier')}
-                    </>
-                  ),
-                },
-                {
-                  key: 'UNLINK_SUPPLIER',
-                  label: (
-                    <>
-                      <Unlink size={16} /> {t('articles.unlinkSupplier')}
-                    </>
-                  ),
-                },
-              ]
-            : undefined
-        }
-        onAction={async (action, article) => {
-          if (action.key === 'LINK_SUPPLIER') {
-            const supplier = await openDialog();
-            console.log('Selected supplier to link:', supplier, article);
-          }
-        }}
+        // customActions={
+        //   enableCustomActions
+        //     ? [
+        //         {
+        //           key: 'LINK_SUPPLIER',
+        //           label: (
+        //             <>
+        //               <Link size={16} /> {t('articles.linkSupplier')}
+        //             </>
+        //           ),
+        //         },
+        //         {
+        //           key: 'UNLINK_SUPPLIER',
+        //           label: (
+        //             <>
+        //               <Unlink size={16} /> {t('articles.unlinkSupplier')}
+        //             </>
+        //           ),
+        //         },
+        //       ]
+        //     : undefined
+        // }
+        // onAction={async (action, article) => {
+        //   if (action.key === 'LINK_SUPPLIER') {
+        //     const supplier = await openDialog();
+        //     console.log('Selected supplier to link:', supplier, article);
+        //   }
+        // }}
         canLoadMore={hasNextPage && !isFetchingNextPage}
         onLoadMore={() => fetchNextPage()}
         loading={isLoading}

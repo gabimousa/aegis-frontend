@@ -22,10 +22,13 @@ export const CountriesProvider = ({ children }: PropsWithChildren) => {
 
   const createMap = (countries: Country[]): Record<Alpha3Code, string> => {
     return (
-      countries.reduce((map, { code, name }) => {
-        map[code] = name;
-        return map;
-      }, {} as Record<Alpha3Code, string>) || {}
+      countries.reduce(
+        (map, { code, name }) => {
+          map[code] = name;
+          return map;
+        },
+        {} as Record<Alpha3Code, string>,
+      ) || {}
     );
   };
 
