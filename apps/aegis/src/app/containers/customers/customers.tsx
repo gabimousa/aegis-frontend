@@ -31,8 +31,8 @@ export function Customers() {
         enabledDelete
         enabledEdit
         onAdd={() => navigate('./NEW')}
-        onDelete={(customer) => confirmDeactivate(customer)}
         onEdit={(customer) => navigate(`./${encodeURIComponent(customer.id)}`)}
+        onDelete={confirmDeactivate}
       />
     </MasterDetail>
   );

@@ -207,6 +207,8 @@ const en = {
       boolean: 'Boolean',
       datetime: 'DateTime',
       enum: 'Enum',
+      deleteFieldDefinitionTitle: 'Delete Field Definition',
+      deleteFieldDefinitionMessage: 'Are you sure you want to delete field definition "{{key}}"?',
     },
   },
 };

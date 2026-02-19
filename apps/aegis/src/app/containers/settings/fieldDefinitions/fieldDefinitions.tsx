@@ -15,8 +15,8 @@ export function FieldDefinitions() {
 
   const confirmDelete = async (fieldDefinition: FieldDefinitionModel) => {
     const confirmed = await confirm(
-      t('settings.fieldDefinitions.deleteFieldDefinitionTitle'),
-      t('settings.fieldDefinitions.deleteFieldDefinitionMessage', { key: fieldDefinition.key }),
+      t('fieldDefinitions.deleteFieldDefinitionTitle'),
+      t('fieldDefinitions.deleteFieldDefinitionMessage', { key: fieldDefinition.key }),
     );
     if (confirmed) {
       deleteFieldDefinition(fieldDefinition.id);
@@ -30,7 +30,7 @@ export function FieldDefinitions() {
         enabledEdit
         enabledDelete
         onAdd={() => navigate('./NEW')}
-        onEdit={(fieldDefinition) => navigate(`/settings/field-definitions/${fieldDefinition.id}`)}
+        onEdit={(fieldDefinition) => navigate(`./${encodeURIComponent(fieldDefinition.id)}`)}
         onDelete={confirmDelete}
       />
     </MasterDetail>

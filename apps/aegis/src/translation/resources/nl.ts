@@ -208,6 +208,8 @@ const nl = {
       boolean: 'Boolean',
       datetime: 'Datum/tijd',
       enum: 'Enum',
+      deleteFieldDefinitionTitle: 'Velddefinitie verwijderen',
+      deleteFieldDefinitionMessage: 'Weet u zeker dat u velddefinitie "{{key}}" wilt verwijderen?',
     },
   },
 };
