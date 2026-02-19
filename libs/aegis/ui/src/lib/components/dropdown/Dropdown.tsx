@@ -13,6 +13,7 @@ type DropdownProps<T> = {
     | 'error';
   btnStyle?: 'outline' | 'dash' | 'soft' | 'ghost' | 'link';
   buttonSize?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+  buttonClasses?: string;
   items: Array<T | 'SEPARATOR'> | ReadonlyArray<T | 'SEPARATOR'>;
   labelSelector: (item: T) => string | ReactNode;
   disabled?: boolean;
@@ -27,6 +28,7 @@ export function Dropdown<T = 'SEPARATOR'>({
   variant,
   btnStyle,
   buttonSize = 'md',
+  buttonClasses,
   items,
   disabled,
   onSelect,
@@ -77,7 +79,7 @@ export function Dropdown<T = 'SEPARATOR'>({
   };
 
   const getDropdownContentClasses = () => {
-    let classes = 'dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow';
+    let classes = 'dropdown-content menu bg-base-100 rounded-box z-[9999] w-52 p-2 shadow';
 
     // Add spacing based on position
     switch (position) {
@@ -99,13 +101,18 @@ export function Dropdown<T = 'SEPARATOR'>({
   };
 
   const getButtonClasses = () => {
-    let classes = 'btn ';
-    if (btnStyle) {
-      classes += `btn-${btnStyle} `;
-    }
+    let classes = '';
+    if (buttonClasses) {
+      classes += `${buttonClasses} `;
+    } else {
+      classes = 'btn ';
+      if (btnStyle) {
+        classes += `btn-${btnStyle} `;
+      }
 
-    if (variant) {
-      classes += `btn-${variant} `;
+      if (variant) {
+        classes += `btn-${variant} `;
+      }
     }
 
     return classes;
@@ -122,12 +129,12 @@ export function Dropdown<T = 'SEPARATOR'>({
       </div>
       <ul tabIndex={-1} className={`${getDropdownContentClasses()}`}>
         {items.map((item, index) => (
-          <li key={index}>
+          <li key={index} className="p-0">
             {item === 'SEPARATOR' ? (
               <button disabled={true} className="btn h-0"></button>
             ) : (
               <button
-                className={`${isItemDisabled && isItemDisabled(item) ? 'bg-base-100 cursor-not-allowed text-gray-300' : 'text-base-content'}`}
+                className={`${isItemDisabled && isItemDisabled(item) ? 'bg-base-100 cursor-not-allowed text-gray-300' : 'text-base-content active:bg-base-300'}`}
                 disabled={isItemDisabled ? isItemDisabled(item) : false}
                 onClick={() => handleItemClick(item)}
               >

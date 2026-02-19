@@ -1,7 +1,7 @@
 import { Dropdown } from '@aegis/ui';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link, useMatch } from 'react-router';
+import { Link, useMatch, useNavigate } from 'react-router';
 import { CodeCircle, Package, Settings, TruckDelivery, Users, World } from 'tabler-icons-react';
 import { ThemeSwitcher } from '../../../ThemeSwitcher';
 
@@ -12,20 +12,23 @@ export function TopBar() {
   const customersIsActive = useMatch('/customers/*');
   const articlesIsActive = useMatch('/articles/*');
   const suppliersIsActive = useMatch('/suppliers/*');
+  const navigate = useNavigate();
   const menuItems = [
     {
       label: (
-        <Link to="settings/field-definitions" className="inline-flex items-center">
+        <span className="inline-flex items-center">
           <CodeCircle className="mr-2" size={20} /> {t('common.fieldDefinitions')}
-        </Link>
+        </span>
       ),
+      to: '/settings/field-definitions',
     },
     {
       label: (
-        <Link to="settings/custom-fields" className="inline-flex items-center">
+        <span className="inline-flex items-center">
           <Settings className="mr-2" size={20} /> {t('common.customFields')}
-        </Link>
+        </span>
       ),
+      to: '/settings/custom-fields',
     },
   ];
 
@@ -127,10 +130,11 @@ export function TopBar() {
             {/* Settings dropdown */}
             <Dropdown
               items={menuItems}
-              btnStyle="ghost"
+              buttonClasses="rounded-full p-2 transition-colors hover:bg-blue-700"
               align="end"
               label={<Settings size={20} />}
               labelSelector={(item) => item.label}
+              onSelect={(item) => navigate(item.to)}
             />
           </div>
         </div>
