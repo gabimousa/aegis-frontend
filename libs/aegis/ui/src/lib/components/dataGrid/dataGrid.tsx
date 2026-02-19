@@ -90,7 +90,7 @@ export function DataGrid<T>({
     if (selectedItem && getKey(item, index) === getKey(selectedItem, -1)) {
       return 'bg-primary/50 hover:bg-primary/80!';
     } else {
-      return 'bg-base-100 hover:bg-primary-content!';
+      return 'bg-base-100 hover:bg-primary! hover:text-primary-content';
     }
   };
 

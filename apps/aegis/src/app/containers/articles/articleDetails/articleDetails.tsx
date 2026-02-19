@@ -49,6 +49,7 @@ export function ArticleDetails() {
     mutate: saveArticleDetails,
     isPending: savingArticleDetails,
     isSuccess: saveArticleSuccess,
+    error: saveArticleError,
   } = useSaveArticle();
 
   const { mutate: linkToSupplier } = useLinkToSupplier();
@@ -81,23 +82,26 @@ export function ArticleDetails() {
     }
   }, [saveArticleSuccess, navigate]);
 
+  useEffect(() => {
+    if (saveArticleError) {
+      setFieldErrors(saveArticleError, setError, serverErrorMap);
+    }
+  }, [saveArticleError, setError]);
+
   const onSubmit = async (formState: ArticleDetailsModel) => {
     console.log('Submitting article details:', formState);
     const idInput = formState?.id ? { id: formState.id } : {};
-    try {
-      const articleInput = {
-        ...idInput,
-        code: formState.code,
-        name: formState.name,
-        description: formState.description,
-        price: Number.parseFloat(formState.price),
-        sellingUnit: Number.parseFloat(formState.sellingUnit),
-      } as RegisterArticleInput | UpdateArticleDetailsInput;
 
-      saveArticleDetails(articleInput);
-    } catch (error) {
-      setFieldErrors(error, setError, serverErrorMap);
-    }
+    const articleInput = {
+      ...idInput,
+      code: formState.code,
+      name: formState.name,
+      description: formState.description,
+      price: Number.parseFloat(formState.price),
+      sellingUnit: Number.parseFloat(formState.sellingUnit),
+    } as RegisterArticleInput | UpdateArticleDetailsInput;
+
+    saveArticleDetails(articleInput);
   };
 
   const actions = (

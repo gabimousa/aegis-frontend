@@ -1,4 +1,5 @@
 import { FieldErrorsFeedback } from '@aegis/ui';
+import { getNestedProperty, NestedPath } from '@aegis/utils';
 import { DetailedHTMLProps, forwardRef } from 'react';
 import { FieldErrors } from 'react-hook-form';
 
@@ -6,13 +7,13 @@ interface InputProps extends DetailedHTMLProps<
   React.InputHTMLAttributes<HTMLInputElement>,
   HTMLInputElement
 > {
-  label: string;
+  label?: string;
   type?: string;
   placeholder?: string;
   className?: string;
   disabled?: boolean;
   errors?: FieldErrors;
-  fieldName?: string;
+  fieldName?: NestedPath<FieldErrors>;
 }
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(
@@ -20,11 +21,11 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
     { label, type = 'text', placeholder, className = '', disabled, errors, fieldName, ...props },
     ref,
   ) => {
-    const hasError = errors && fieldName && errors[fieldName];
+    const hasError = errors && fieldName && !!getNestedProperty(errors, fieldName);
 
     return (
       <div>
-        <label className="label">{label}</label>
+        {label && <label className="label">{label}</label>}
         <div className="mt-1">
           <input
             ref={ref}
@@ -35,7 +36,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             {...props}
           />
         </div>
-        {errors && fieldName && <FieldErrorsFeedback errors={errors} fieldName={fieldName} />}
+        {hasError && <FieldErrorsFeedback errors={errors} errorField={fieldName} />}
       </div>
     );
   },

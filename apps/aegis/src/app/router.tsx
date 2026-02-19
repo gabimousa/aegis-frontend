@@ -2,6 +2,12 @@ import { createBrowserRouter } from 'react-router';
 import { AppShell } from './components';
 import { ArticleDetails, Articles } from './containers/articles';
 import { CustomerDetails, Customers } from './containers/customers';
+import {
+  CustomFields,
+  FieldDefinitionDetails,
+  FieldDefinitions,
+  Settings,
+} from './containers/settings';
 import { SupplierDetails, Suppliers } from './containers/suppliers';
 
 export const router = createBrowserRouter([
@@ -13,32 +19,52 @@ export const router = createBrowserRouter([
         element: <div>Home</div>,
       },
       {
-        path: '/suppliers',
+        path: 'suppliers',
         element: <Suppliers />,
         children: [
           {
-            path: '/suppliers/:id',
+            path: ':id',
             element: <SupplierDetails />,
           },
         ],
       },
       {
-        path: '/customers',
+        path: 'customers',
         element: <Customers />,
         children: [
           {
-            path: '/customers/:id',
+            path: ':id',
             element: <CustomerDetails />,
           },
         ],
       },
       {
-        path: '/articles',
+        path: 'articles',
         element: <Articles />,
         children: [
           {
-            path: '/articles/:id',
+            path: ':id',
             element: <ArticleDetails />,
+          },
+        ],
+      },
+      {
+        path: 'settings',
+        element: <Settings />,
+        children: [
+          {
+            path: 'field-definitions',
+            element: <FieldDefinitions />,
+            children: [
+              {
+                path: ':id',
+                element: <FieldDefinitionDetails />,
+              },
+            ],
+          },
+          {
+            path: 'custom-fields',
+            element: <CustomFields />,
           },
         ],
       },

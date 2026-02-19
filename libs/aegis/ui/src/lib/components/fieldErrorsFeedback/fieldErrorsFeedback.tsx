@@ -1,31 +1,22 @@
+import { getNestedProperty, NestedPath } from '@aegis/utils';
 import { FieldErrors } from 'react-hook-form';
 
 type FieldErrorProps = {
   errors: FieldErrors;
-  fieldName: string;
+  errorField: NestedPath<FieldErrors>;
 };
 
-export function FieldErrorsFeedback({ errors, fieldName }: FieldErrorProps) {
-  const fieldErrors = Object.entries(errors)
-    .filter(([key, value]) => fieldName === key && value)
-    .map(([key, value]) => ({ key, value }));
-
-  if (fieldErrors.length === 0) {
-    return null;
-  }
+export function FieldErrorsFeedback({ errors, errorField }: FieldErrorProps) {
+  const fieldError = getNestedProperty(errors, errorField);
 
   return (
-    <div className="text-error text-sm mt-1">
-      {fieldErrors.map((fieldError, fieldErrorIndex) => {
-        return (
-          <div key={fieldError.key + fieldErrorIndex}>
-            {fieldError.value?.message && <div>{`${fieldError.value.message}`}</div>}
-            {Object.values(fieldError.value?.types || {}).map((errorMessage, idx) => (
-              <div key={idx}>{errorMessage}</div>
-            ))}
-          </div>
-        );
-      })}
-    </div>
+    fieldError && (
+      <div className="text-error mt-1 text-sm">
+        {fieldError.message && <div>{`${fieldError.message}`}</div>}
+        {Object.values(fieldError.types || {}).map((errorMessage, idx) => (
+          <div key={idx}>{errorMessage}</div>
+        ))}
+      </div>
+    )
   );
 }

@@ -18,10 +18,13 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean };
   Int: { input: number; output: number };
   Float: { input: number; output: number };
+  Any: { input: any; output: any };
   /** The `DateTime` scalar represents an ISO-8601 compliant date time type. */
   DateTime: { input: any; output: any };
   /** The `Decimal` scalar type represents a decimal floating-point number. */
   Decimal: { input: any; output: any };
+  JSON: { input: any; output: any };
+  UUID: { input: any; output: any };
 };
 
 export type AddAddressToCustomerError = ApplicationError;
@@ -350,6 +353,7 @@ export type ApplicationError = Error & {
 export type Article = Node & {
   __typename?: 'Article';
   code: Scalars['String']['output'];
+  customFieldValues: Array<CustomFieldValue>;
   description?: Maybe<Scalars['String']['output']>;
   discontinued: Scalars['Boolean']['output'];
   id: Scalars['ID']['output'];
@@ -357,6 +361,7 @@ export type Article = Node & {
   price: Scalars['Decimal']['output'];
   sellingUnit: Scalars['Decimal']['output'];
   suppliers?: Maybe<SuppliersConnection>;
+  totalStock: Scalars['Decimal']['output'];
 };
 
 export type ArticleSuppliersArgs = {
@@ -436,6 +441,65 @@ export type CreateAddressInput = {
   street?: InputMaybe<Scalars['String']['input']>;
   type: AddressType;
   zipCode?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type CreateCustomFieldInput = {
+  assignedFieldId: Scalars['ID']['input'];
+  isRequired: Scalars['Boolean']['input'];
+  metadata?: InputMaybe<Scalars['JSON']['input']>;
+};
+
+export type CreateFieldDefinitionError = ApplicationError;
+
+export type CreateFieldDefinitionInput = {
+  configuration?: InputMaybe<Scalars['JSON']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  key: Scalars['String']['input'];
+  label: Scalars['String']['input'];
+  type: CustomFieldType;
+};
+
+export type CreateFieldDefinitionPayload = {
+  __typename?: 'CreateFieldDefinitionPayload';
+  errors?: Maybe<Array<CreateFieldDefinitionError>>;
+  fieldDefinition?: Maybe<FieldDefinition>;
+};
+
+export type CustomField = {
+  __typename?: 'CustomField';
+  assignedField: FieldDefinition;
+  discriminator: Scalars['String']['output'];
+  id: Scalars['ID']['output'];
+  isRequired: Scalars['Boolean']['output'];
+  metadata?: Maybe<Scalars['JSON']['output']>;
+};
+
+export const CustomFieldType = {
+  Boolean: 'BOOLEAN',
+  DateTime: 'DATE_TIME',
+  Enum: 'ENUM',
+  Number: 'NUMBER',
+  String: 'STRING',
+} as const;
+
+export type CustomFieldType = (typeof CustomFieldType)[keyof typeof CustomFieldType];
+export type CustomFieldTypeOperationFilterInput = {
+  eq?: InputMaybe<CustomFieldType>;
+  in?: InputMaybe<Array<CustomFieldType>>;
+  neq?: InputMaybe<CustomFieldType>;
+  nin?: InputMaybe<Array<CustomFieldType>>;
+};
+
+export type CustomFieldValue = {
+  __typename?: 'CustomFieldValue';
+  customField: CustomField;
+  entityId: Scalars['ID']['output'];
+  value?: Maybe<Scalars['Any']['output']>;
+};
+
+export type CustomFieldValueInput = {
+  customFieldId: Scalars['ID']['input'];
+  value?: InputMaybe<Scalars['Any']['input']>;
 };
 
 export type Customer = Node & {
@@ -566,6 +630,38 @@ export type DecimalOperationFilterInput = {
   nlte?: InputMaybe<Scalars['Decimal']['input']>;
 };
 
+export type DeductStockError = ApplicationError;
+
+export type DeductStockInput = {
+  articleId: Scalars['ID']['input'];
+  batchNumber?: InputMaybe<Scalars['String']['input']>;
+  mutationType: MutationType;
+  quantity: Scalars['Decimal']['input'];
+  reason: Scalars['String']['input'];
+};
+
+export type DeductStockPayload = {
+  __typename?: 'DeductStockPayload';
+  article?: Maybe<Article>;
+  errors?: Maybe<Array<DeductStockError>>;
+};
+
+export type DeleteCustomFieldInput = {
+  id: Scalars['ID']['input'];
+};
+
+export type DeleteFieldDefinitionError = ApplicationError;
+
+export type DeleteFieldDefinitionInput = {
+  id: Scalars['ID']['input'];
+};
+
+export type DeleteFieldDefinitionPayload = {
+  __typename?: 'DeleteFieldDefinitionPayload';
+  boolean?: Maybe<Scalars['Boolean']['output']>;
+  errors?: Maybe<Array<DeleteFieldDefinitionError>>;
+};
+
 export type DiscontinueArticleError = ApplicationError;
 
 export type DiscontinueArticleInput = {
@@ -595,6 +691,66 @@ export const ErrorType = {
 } as const;
 
 export type ErrorType = (typeof ErrorType)[keyof typeof ErrorType];
+export type FieldDefinition = Node & {
+  __typename?: 'FieldDefinition';
+  configuration?: Maybe<Scalars['JSON']['output']>;
+  description?: Maybe<Scalars['String']['output']>;
+  id: Scalars['ID']['output'];
+  isDeleted: Scalars['Boolean']['output'];
+  key: Scalars['String']['output'];
+  label: Scalars['String']['output'];
+  type: CustomFieldType;
+};
+
+export type FieldDefinitionDeletedPayload = {
+  __typename?: 'FieldDefinitionDeletedPayload';
+  id: Scalars['ID']['output'];
+};
+
+export type FieldDefinitionFilterInput = {
+  and?: InputMaybe<Array<FieldDefinitionFilterInput>>;
+  configuration?: InputMaybe<JsonElementFilterInput>;
+  description?: InputMaybe<StringOperationFilterInput>;
+  id?: InputMaybe<IdOperationFilterInput>;
+  isDeleted?: InputMaybe<BooleanOperationFilterInput>;
+  key?: InputMaybe<StringOperationFilterInput>;
+  label?: InputMaybe<StringOperationFilterInput>;
+  or?: InputMaybe<Array<FieldDefinitionFilterInput>>;
+  type?: InputMaybe<CustomFieldTypeOperationFilterInput>;
+};
+
+export type FieldDefinitionSortInput = {
+  configuration?: InputMaybe<SortEnumType>;
+  description?: InputMaybe<SortEnumType>;
+  id?: InputMaybe<SortEnumType>;
+  isDeleted?: InputMaybe<SortEnumType>;
+  key?: InputMaybe<SortEnumType>;
+  label?: InputMaybe<SortEnumType>;
+  type?: InputMaybe<SortEnumType>;
+};
+
+/** A connection to a list of items. */
+export type FieldDefinitionsConnection = {
+  __typename?: 'FieldDefinitionsConnection';
+  /** A list of edges. */
+  edges?: Maybe<Array<FieldDefinitionsEdge>>;
+  /** A flattened list of the nodes. */
+  nodes?: Maybe<Array<FieldDefinition>>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** Identifies the total count of items in the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** An edge in a connection. */
+export type FieldDefinitionsEdge = {
+  __typename?: 'FieldDefinitionsEdge';
+  /** A cursor for use in pagination. */
+  cursor: Scalars['String']['output'];
+  /** The item at the end of the edge. */
+  node: FieldDefinition;
+};
+
 export type IdInputOfGuidInput = {
   id: Scalars['ID']['input'];
 };
@@ -604,6 +760,31 @@ export type IdOperationFilterInput = {
   in?: InputMaybe<Array<InputMaybe<Scalars['ID']['input']>>>;
   neq?: InputMaybe<Scalars['ID']['input']>;
   nin?: InputMaybe<Array<InputMaybe<Scalars['ID']['input']>>>;
+};
+
+export type JsonElementFilterInput = {
+  and?: InputMaybe<Array<JsonElementFilterInput>>;
+  or?: InputMaybe<Array<JsonElementFilterInput>>;
+  valueKind?: InputMaybe<JsonValueKindOperationFilterInput>;
+};
+
+export const JsonValueKind = {
+  Array: 'ARRAY',
+  False: 'FALSE',
+  Null: 'NULL',
+  Number: 'NUMBER',
+  Object: 'OBJECT',
+  String: 'STRING',
+  True: 'TRUE',
+  Undefined: 'UNDEFINED',
+} as const;
+
+export type JsonValueKind = (typeof JsonValueKind)[keyof typeof JsonValueKind];
+export type JsonValueKindOperationFilterInput = {
+  eq?: InputMaybe<JsonValueKind>;
+  in?: InputMaybe<Array<JsonValueKind>>;
+  neq?: InputMaybe<JsonValueKind>;
+  nin?: InputMaybe<Array<JsonValueKind>>;
 };
 
 export type LinkToSupplierError = ApplicationError;
@@ -623,19 +804,26 @@ export type Mutation = {
   __typename?: 'Mutation';
   addAddressToCustomer: AddAddressToCustomerPayload;
   addAddressToSupplier: AddAddressToSupplierPayload;
+  createFieldDefinition: CreateFieldDefinitionPayload;
   deactivateCustomer: DeactivateCustomerPayload;
   deactivateSupplier: DeactivateSupplierPayload;
+  deductStock: DeductStockPayload;
+  deleteFieldDefinition: DeleteFieldDefinitionPayload;
   discontinueArticle: DiscontinueArticlePayload;
   linkToSupplier: LinkToSupplierPayload;
+  receiveStock: ReceiveStockPayload;
   registerArticle: RegisterArticlePayload;
   registerCustomer: RegisterCustomerPayload;
   registerSupplier: RegisterSupplierPayload;
   removeAddressFromCustomer: RemoveAddressFromCustomerPayload;
   removeAddressFromSupplier: RemoveAddressFromSupplierPayload;
+  saveArticleCustomFieldValues: SaveArticleCustomFieldValuesPayload;
+  saveArticleCustomFields: SaveArticleCustomFieldsPayload;
   unlinkFromSupplier: UnlinkFromSupplierPayload;
   updateArticleDetails: UpdateArticleDetailsPayload;
   updateCustomerAddress: UpdateCustomerAddressPayload;
   updateCustomerDetails: UpdateCustomerDetailsPayload;
+  updateFieldDefinition: UpdateFieldDefinitionPayload;
   updateSupplierAddress: UpdateSupplierAddressPayload;
   updateSupplierDetails: UpdateSupplierDetailsPayload;
 };
@@ -648,6 +836,10 @@ export type MutationAddAddressToSupplierArgs = {
   input: AddAddressToSupplierInput;
 };
 
+export type MutationCreateFieldDefinitionArgs = {
+  input: CreateFieldDefinitionInput;
+};
+
 export type MutationDeactivateCustomerArgs = {
   input: DeactivateCustomerInput;
 };
@@ -656,12 +848,24 @@ export type MutationDeactivateSupplierArgs = {
   input: DeactivateSupplierInput;
 };
 
+export type MutationDeductStockArgs = {
+  input: DeductStockInput;
+};
+
+export type MutationDeleteFieldDefinitionArgs = {
+  input: DeleteFieldDefinitionInput;
+};
+
 export type MutationDiscontinueArticleArgs = {
   input: DiscontinueArticleInput;
 };
 
 export type MutationLinkToSupplierArgs = {
   input: LinkToSupplierInput;
+};
+
+export type MutationReceiveStockArgs = {
+  input: ReceiveStockInput;
 };
 
 export type MutationRegisterArticleArgs = {
@@ -684,6 +888,14 @@ export type MutationRemoveAddressFromSupplierArgs = {
   input: RemoveAddressFromSupplierInput;
 };
 
+export type MutationSaveArticleCustomFieldValuesArgs = {
+  input: SaveArticleCustomFieldValuesInput;
+};
+
+export type MutationSaveArticleCustomFieldsArgs = {
+  input: SaveArticleCustomFieldsInput;
+};
+
 export type MutationUnlinkFromSupplierArgs = {
   input: UnlinkFromSupplierInput;
 };
@@ -700,6 +912,10 @@ export type MutationUpdateCustomerDetailsArgs = {
   input: UpdateCustomerDetailsInput;
 };
 
+export type MutationUpdateFieldDefinitionArgs = {
+  input: UpdateFieldDefinitionInput;
+};
+
 export type MutationUpdateSupplierAddressArgs = {
   input: UpdateSupplierAddressInput;
 };
@@ -708,6 +924,20 @@ export type MutationUpdateSupplierDetailsArgs = {
   input: UpdateSupplierDetailsInput;
 };
 
+export const MutationType = {
+  CustomerReturn: 'CUSTOMER_RETURN',
+  InternalConsumption: 'INTERNAL_CONSUMPTION',
+  InventoryGain: 'INVENTORY_GAIN',
+  PurchaseReceipt: 'PURCHASE_RECEIPT',
+  SalesDispatch: 'SALES_DISPATCH',
+  Scrap: 'SCRAP',
+  SupplierReturn: 'SUPPLIER_RETURN',
+  Theft: 'THEFT',
+  TransferIn: 'TRANSFER_IN',
+  TransferOut: 'TRANSFER_OUT',
+} as const;
+
+export type MutationType = (typeof MutationType)[keyof typeof MutationType];
 /** The node interface is implemented by entities that have a global unique identifier. */
 export type Node = {
   id: Scalars['ID']['output'];
@@ -729,10 +959,14 @@ export type PageInfo = {
 export type Query = {
   __typename?: 'Query';
   articleById?: Maybe<Article>;
+  articleCustomFieldValues: Array<CustomFieldValue>;
+  articleCustomFields: Array<CustomField>;
   articles?: Maybe<ArticlesConnection>;
   countries: Array<Country>;
   customerById?: Maybe<Customer>;
   customers?: Maybe<CustomersConnection>;
+  fieldDefinitionById?: Maybe<FieldDefinition>;
+  fieldDefinitions?: Maybe<FieldDefinitionsConnection>;
   /** Fetches an object given its ID. */
   node?: Maybe<Node>;
   supplierById?: Maybe<Supplier>;
@@ -741,6 +975,10 @@ export type Query = {
 
 export type QueryArticleByIdArgs = {
   id: Scalars['ID']['input'];
+};
+
+export type QueryArticleCustomFieldValuesArgs = {
+  entityId: Scalars['ID']['input'];
 };
 
 export type QueryArticlesArgs = {
@@ -765,6 +1003,19 @@ export type QueryCustomersArgs = {
   where?: InputMaybe<CustomerFilterInput>;
 };
 
+export type QueryFieldDefinitionByIdArgs = {
+  id: Scalars['ID']['input'];
+};
+
+export type QueryFieldDefinitionsArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  before?: InputMaybe<Scalars['String']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  order?: InputMaybe<Array<FieldDefinitionSortInput>>;
+  where?: InputMaybe<FieldDefinitionFilterInput>;
+};
+
 export type QueryNodeArgs = {
   id: Scalars['ID']['input'];
 };
@@ -782,10 +1033,28 @@ export type QuerySuppliersArgs = {
   where?: InputMaybe<SupplierFilterInput>;
 };
 
+export type ReceiveStockError = ApplicationError;
+
+export type ReceiveStockInput = {
+  articleId: Scalars['ID']['input'];
+  batchNumber: Scalars['String']['input'];
+  expiryDate: Scalars['DateTime']['input'];
+  mutationType: MutationType;
+  quantity: Scalars['Decimal']['input'];
+  reason: Scalars['String']['input'];
+};
+
+export type ReceiveStockPayload = {
+  __typename?: 'ReceiveStockPayload';
+  article?: Maybe<Article>;
+  errors?: Maybe<Array<ReceiveStockError>>;
+};
+
 export type RegisterArticleError = ApplicationError;
 
 export type RegisterArticleInput = {
   code: Scalars['String']['input'];
+  customFieldValues?: InputMaybe<Array<CustomFieldValueInput>>;
   description?: InputMaybe<Scalars['String']['input']>;
   name: Scalars['String']['input'];
   price: Scalars['Decimal']['input'];
@@ -863,6 +1132,38 @@ export type RemoveAddressFromSupplierPayload = {
   supplier?: Maybe<Supplier>;
 };
 
+export type SaveArticleCustomFieldValuesError = ApplicationError;
+
+export type SaveArticleCustomFieldValuesInput = {
+  customFieldValues: Array<SaveCustomFieldValueInput>;
+  entityId: Scalars['String']['input'];
+};
+
+export type SaveArticleCustomFieldValuesPayload = {
+  __typename?: 'SaveArticleCustomFieldValuesPayload';
+  boolean?: Maybe<Scalars['Boolean']['output']>;
+  errors?: Maybe<Array<SaveArticleCustomFieldValuesError>>;
+};
+
+export type SaveArticleCustomFieldsError = ApplicationError;
+
+export type SaveArticleCustomFieldsInput = {
+  addedFields?: InputMaybe<Array<CreateCustomFieldInput>>;
+  deletedFields?: InputMaybe<Array<DeleteCustomFieldInput>>;
+  updatedFields?: InputMaybe<Array<UpdateCustomFieldInput>>;
+};
+
+export type SaveArticleCustomFieldsPayload = {
+  __typename?: 'SaveArticleCustomFieldsPayload';
+  boolean?: Maybe<Scalars['Boolean']['output']>;
+  errors?: Maybe<Array<SaveArticleCustomFieldsError>>;
+};
+
+export type SaveCustomFieldValueInput = {
+  customFieldId: Scalars['UUID']['input'];
+  value?: InputMaybe<Scalars['Any']['input']>;
+};
+
 export const SortEnumType = {
   Asc: 'ASC',
   Desc: 'DESC',
@@ -896,6 +1197,11 @@ export type Subscription = {
   onCustomerDeactivated: CustomerDeactivatedPayload;
   onCustomerDetailsUpdated: Customer;
   onCustomerRegistered: Customer;
+  onFieldDefinitionDeleted: FieldDefinitionDeletedPayload;
+  onFieldDefinitionDetailsUpdated: FieldDefinition;
+  onFieldDefinitionRegistered: FieldDefinition;
+  onStockDeducted: Article;
+  onStockReceived: Article;
   onSupplierDeactivated: SupplierDeactivatedPayload;
   onSupplierDetailsUpdated: Supplier;
   onSupplierLinkedToArticle: Article;
@@ -1005,6 +1311,7 @@ export type UpdateArticleDetailsError = ApplicationError;
 export type UpdateArticleDetailsInput = {
   addedSuppliers?: InputMaybe<Array<IdInputOfGuidInput>>;
   code?: InputMaybe<Scalars['String']['input']>;
+  customFieldValues?: InputMaybe<Array<CustomFieldValueInput>>;
   description?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['ID']['input'];
   name?: InputMaybe<Scalars['String']['input']>;
@@ -1017,6 +1324,12 @@ export type UpdateArticleDetailsPayload = {
   __typename?: 'UpdateArticleDetailsPayload';
   article?: Maybe<Article>;
   errors?: Maybe<Array<UpdateArticleDetailsError>>;
+};
+
+export type UpdateCustomFieldInput = {
+  id: Scalars['ID']['input'];
+  isRequired: Scalars['Boolean']['input'];
+  metadata?: InputMaybe<Scalars['JSON']['input']>;
 };
 
 export type UpdateCustomerAddressError = ApplicationError;
@@ -1052,6 +1365,22 @@ export type UpdateCustomerDetailsPayload = {
   __typename?: 'UpdateCustomerDetailsPayload';
   customer?: Maybe<Customer>;
   errors?: Maybe<Array<UpdateCustomerDetailsError>>;
+};
+
+export type UpdateFieldDefinitionError = ApplicationError;
+
+export type UpdateFieldDefinitionInput = {
+  configuration?: InputMaybe<Scalars['JSON']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['ID']['input'];
+  key?: Scalars['String']['input'];
+  label?: Scalars['String']['input'];
+};
+
+export type UpdateFieldDefinitionPayload = {
+  __typename?: 'UpdateFieldDefinitionPayload';
+  errors?: Maybe<Array<UpdateFieldDefinitionError>>;
+  fieldDefinition?: Maybe<FieldDefinition>;
 };
 
 export type UpdateSupplierAddressError = ApplicationError;
@@ -1482,6 +1811,126 @@ export type OnCustomerDeactivatedSubscription = {
   onCustomerDeactivated: { __typename?: 'CustomerDeactivatedPayload'; id: string };
 };
 
+export type FieldDefinitionFieldsFragment = {
+  __typename?: 'FieldDefinition';
+  id: string;
+  key: string;
+  label: string;
+  description?: string | null;
+  type: CustomFieldType;
+  configuration?: any | null;
+} & { ' $fragmentName'?: 'FieldDefinitionFieldsFragment' };
+
+export type FieldDefinitionsQueryVariables = Exact<{
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  after?: InputMaybe<Scalars['String']['input']>;
+  before?: InputMaybe<Scalars['String']['input']>;
+  where?: InputMaybe<FieldDefinitionFilterInput>;
+  order?: InputMaybe<Array<FieldDefinitionSortInput> | FieldDefinitionSortInput>;
+}>;
+
+export type FieldDefinitionsQuery = {
+  __typename?: 'Query';
+  fieldDefinitions?: {
+    __typename?: 'FieldDefinitionsConnection';
+    totalCount: number;
+    nodes?: Array<
+      { __typename?: 'FieldDefinition' } & {
+        ' $fragmentRefs'?: { FieldDefinitionFieldsFragment: FieldDefinitionFieldsFragment };
+      }
+    > | null;
+    pageInfo: {
+      __typename?: 'PageInfo';
+      hasNextPage: boolean;
+      hasPreviousPage: boolean;
+      startCursor?: string | null;
+      endCursor?: string | null;
+    };
+  } | null;
+};
+
+export type FieldDefinitionDetailsQueryVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+export type FieldDefinitionDetailsQuery = {
+  __typename?: 'Query';
+  fieldDefinitionById?:
+    | ({ __typename?: 'FieldDefinition' } & {
+        ' $fragmentRefs'?: { FieldDefinitionFieldsFragment: FieldDefinitionFieldsFragment };
+      })
+    | null;
+};
+
+export type CreateFieldDefinitionMutationVariables = Exact<{
+  input: CreateFieldDefinitionInput;
+}>;
+
+export type CreateFieldDefinitionMutation = {
+  __typename?: 'Mutation';
+  createFieldDefinition: {
+    __typename?: 'CreateFieldDefinitionPayload';
+    fieldDefinition?:
+      | ({ __typename?: 'FieldDefinition' } & {
+          ' $fragmentRefs'?: { FieldDefinitionFieldsFragment: FieldDefinitionFieldsFragment };
+        })
+      | null;
+    errors?: Array<{
+      __typename?: 'ApplicationError';
+      code: string;
+      description: string;
+      type: ErrorType;
+      fieldName?: string | null;
+      message: string;
+    }> | null;
+  };
+};
+
+export type UpdateFieldDefinitionMutationVariables = Exact<{
+  input: UpdateFieldDefinitionInput;
+}>;
+
+export type UpdateFieldDefinitionMutation = {
+  __typename?: 'Mutation';
+  updateFieldDefinition: {
+    __typename?: 'UpdateFieldDefinitionPayload';
+    fieldDefinition?:
+      | ({ __typename?: 'FieldDefinition' } & {
+          ' $fragmentRefs'?: { FieldDefinitionFieldsFragment: FieldDefinitionFieldsFragment };
+        })
+      | null;
+    errors?: Array<{
+      __typename?: 'ApplicationError';
+      code: string;
+      description: string;
+      type: ErrorType;
+      fieldName?: string | null;
+      message: string;
+    }> | null;
+  };
+};
+
+export type DeleteFieldDefinitionMutationVariables = Exact<{
+  input: DeleteFieldDefinitionInput;
+}>;
+
+export type DeleteFieldDefinitionMutation = {
+  __typename?: 'Mutation';
+  deleteFieldDefinition: {
+    __typename?: 'DeleteFieldDefinitionPayload';
+    boolean?: boolean | null;
+    errors?: Array<{
+      __typename?: 'ApplicationError';
+      code: string;
+      description: string;
+      type: ErrorType;
+      fieldName?: string | null;
+      message: string;
+    }> | null;
+  };
+};
+
 export type SupplierFieldsFragment = {
   __typename?: 'Supplier';
   id: string;
@@ -1762,6 +2211,27 @@ export const CustomerAddressFieldsFragmentDoc = {
     },
   ],
 } as unknown as DocumentNode<CustomerAddressFieldsFragment, unknown>;
+export const FieldDefinitionFieldsFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'FieldDefinitionFields' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'FieldDefinition' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'key' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'description' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'configuration' } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<FieldDefinitionFieldsFragment, unknown>;
 export const SupplierFieldsFragmentDoc = {
   kind: 'Document',
   definitions: [
@@ -3223,6 +3693,473 @@ export const OnCustomerDeactivatedDocument = {
   OnCustomerDeactivatedSubscription,
   OnCustomerDeactivatedSubscriptionVariables
 >;
+export const FieldDefinitionsDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'fieldDefinitions' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'first' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'last' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'after' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'before' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'where' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'FieldDefinitionFilterInput' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'order' } },
+          type: {
+            kind: 'ListType',
+            type: {
+              kind: 'NonNullType',
+              type: {
+                kind: 'NamedType',
+                name: { kind: 'Name', value: 'FieldDefinitionSortInput' },
+              },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'fieldDefinitions' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'first' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'first' } },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'last' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'last' } },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'after' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'after' } },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'before' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'before' } },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'where' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'where' } },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'order' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'order' } },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'nodes' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'FieldDefinitionFields' },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'pageInfo' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'hasNextPage' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'hasPreviousPage' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'startCursor' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'endCursor' } },
+                    ],
+                  },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'totalCount' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'FieldDefinitionFields' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'FieldDefinition' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'key' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'description' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'configuration' } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<FieldDefinitionsQuery, FieldDefinitionsQueryVariables>;
+export const FieldDefinitionDetailsDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FieldDefinitionDetails' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'fieldDefinitionById' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'id' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'FieldDefinitionFields' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'FieldDefinitionFields' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'FieldDefinition' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'key' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'description' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'configuration' } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<FieldDefinitionDetailsQuery, FieldDefinitionDetailsQueryVariables>;
+export const CreateFieldDefinitionDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'createFieldDefinition' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'input' } },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'CreateFieldDefinitionInput' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'createFieldDefinition' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'input' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'input' } },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'fieldDefinition' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'FieldDefinitionFields' },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'errors' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'InlineFragment',
+                        typeCondition: {
+                          kind: 'NamedType',
+                          name: { kind: 'Name', value: 'ApplicationError' },
+                        },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            { kind: 'Field', name: { kind: 'Name', value: 'code' } },
+                            { kind: 'Field', name: { kind: 'Name', value: 'description' } },
+                            { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                            { kind: 'Field', name: { kind: 'Name', value: 'fieldName' } },
+                            { kind: 'Field', name: { kind: 'Name', value: 'message' } },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'FieldDefinitionFields' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'FieldDefinition' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'key' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'description' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'configuration' } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<CreateFieldDefinitionMutation, CreateFieldDefinitionMutationVariables>;
+export const UpdateFieldDefinitionDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'updateFieldDefinition' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'input' } },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'UpdateFieldDefinitionInput' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'updateFieldDefinition' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'input' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'input' } },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'fieldDefinition' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'FieldDefinitionFields' },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'errors' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'InlineFragment',
+                        typeCondition: {
+                          kind: 'NamedType',
+                          name: { kind: 'Name', value: 'ApplicationError' },
+                        },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            { kind: 'Field', name: { kind: 'Name', value: 'code' } },
+                            { kind: 'Field', name: { kind: 'Name', value: 'description' } },
+                            { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                            { kind: 'Field', name: { kind: 'Name', value: 'fieldName' } },
+                            { kind: 'Field', name: { kind: 'Name', value: 'message' } },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'FieldDefinitionFields' },
+      typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'FieldDefinition' } },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'key' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'description' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'configuration' } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<UpdateFieldDefinitionMutation, UpdateFieldDefinitionMutationVariables>;
+export const DeleteFieldDefinitionDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'deleteFieldDefinition' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'input' } },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'DeleteFieldDefinitionInput' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'deleteFieldDefinition' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'input' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'input' } },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'boolean' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'errors' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'InlineFragment',
+                        typeCondition: {
+                          kind: 'NamedType',
+                          name: { kind: 'Name', value: 'ApplicationError' },
+                        },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            { kind: 'Field', name: { kind: 'Name', value: 'code' } },
+                            { kind: 'Field', name: { kind: 'Name', value: 'description' } },
+                            { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                            { kind: 'Field', name: { kind: 'Name', value: 'fieldName' } },
+                            { kind: 'Field', name: { kind: 'Name', value: 'message' } },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<DeleteFieldDefinitionMutation, DeleteFieldDefinitionMutationVariables>;
 export const RegisterSupplierDocument = {
   kind: 'Document',
   definitions: [

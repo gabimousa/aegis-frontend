@@ -9,10 +9,12 @@ function useSupplierDetailsFormConfig() {
   const codeFormConfig = register('code', {
     maxLength: { value: 50, message: t('suppliers.codeTooLong') },
     required: t('suppliers.codeIsRequired'),
+    pattern: { value: /^(?!\s*$).+/, message: t('suppliers.codeCannotBeEmpty') },
   });
   const nameFormConfig = register('name', {
     maxLength: { value: 100, message: t('suppliers.nameTooLong') },
     required: t('suppliers.nameIsRequired'),
+    pattern: { value: /^(?!\s*$).+/, message: t('suppliers.nameCannotBeEmpty') },
   });
   const websiteFormConfig = register('website', {
     maxLength: { value: 150, message: t('suppliers.websiteTooLong') },

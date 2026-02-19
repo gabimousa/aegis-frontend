@@ -48,6 +48,7 @@ export function CustomerDetails() {
     mutate: saveCustomerDetails,
     isPending: savingCustomerDetails,
     isSuccess: saveCustomerSuccess,
+    error: saveCustomerError,
   } = useSaveCustomer();
 
   const formProps = useForm<CustomerDetailsModel>({
@@ -86,6 +87,12 @@ export function CustomerDetails() {
       navigate('..');
     }
   }, [saveCustomerSuccess, navigate]);
+
+  useEffect(() => {
+    if (saveCustomerError) {
+      setFieldErrors(saveCustomerError, setError, serverErrorMap);
+    }
+  }, [saveCustomerError, setError]);
 
   const canAppendAddressTypes = (addressType: 'VISITING' | 'MAILING' | 'DELIVERY') => {
     return !fields.some((address) => address.type === addressType);
@@ -159,22 +166,19 @@ export function CustomerDetails() {
 
   const onSubmit = (formState: CustomerDetailsModel) => {
     const idInput = formState?.id ? { id: formState.id } : {};
-    try {
-      const customerInput = {
-        ...idInput,
-        code: formState.code,
-        name: formState.name,
-        website: formState.website,
-        email: formState.email,
-        phoneNumber: formState.phoneNumber,
-        iban: formState.iban,
-        bic: formState.bic,
-      } as RegisterCustomerInput | UpdateCustomerDetailsInput;
 
-      saveCustomerDetails(getCustomerInputWithAddresses(formState, customerInput));
-    } catch (error) {
-      setFieldErrors(error, setError, serverErrorMap);
-    }
+    const customerInput = {
+      ...idInput,
+      code: formState.code,
+      name: formState.name,
+      website: formState.website,
+      email: formState.email,
+      phoneNumber: formState.phoneNumber,
+      iban: formState.iban,
+      bic: formState.bic,
+    } as RegisterCustomerInput | UpdateCustomerDetailsInput;
+
+    saveCustomerDetails(getCustomerInputWithAddresses(formState, customerInput));
   };
 
   const actions = (

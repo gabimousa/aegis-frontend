@@ -1,7 +1,8 @@
+import { Dropdown } from '@aegis/ui';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useMatch } from 'react-router';
-import { Package, TruckDelivery, Users, World } from 'tabler-icons-react';
+import { CodeCircle, Package, Settings, TruckDelivery, Users, World } from 'tabler-icons-react';
 import { ThemeSwitcher } from '../../../ThemeSwitcher';
 
 export function TopBar() {
@@ -11,6 +12,22 @@ export function TopBar() {
   const customersIsActive = useMatch('/customers/*');
   const articlesIsActive = useMatch('/articles/*');
   const suppliersIsActive = useMatch('/suppliers/*');
+  const menuItems = [
+    {
+      label: (
+        <Link to="settings/field-definitions" className="inline-flex items-center">
+          <CodeCircle className="mr-2" size={20} /> {t('common.fieldDefinitions')}
+        </Link>
+      ),
+    },
+    {
+      label: (
+        <Link to="settings/custom-fields" className="inline-flex items-center">
+          <Settings className="mr-2" size={20} /> {t('common.customFields')}
+        </Link>
+      ),
+    },
+  ];
 
   return (
     <header className="bg-primary text-white shadow-lg">
@@ -106,6 +123,15 @@ export function TopBar() {
 
             {/* Theme Switcher */}
             <ThemeSwitcher />
+
+            {/* Settings dropdown */}
+            <Dropdown
+              items={menuItems}
+              btnStyle="ghost"
+              align="end"
+              label={<Settings size={20} />}
+              labelSelector={(item) => item.label}
+            />
           </div>
         </div>
 

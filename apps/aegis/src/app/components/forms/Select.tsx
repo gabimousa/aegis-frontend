@@ -51,7 +51,7 @@ function SelectInner<T>(
         </select>
       </div>
 
-      {errors && fieldName && <FieldErrorsFeedback errors={errors} fieldName={fieldName} />}
+      {errors && fieldName && <FieldErrorsFeedback errors={errors} errorField={fieldName} />}
     </div>
   );
 }

@@ -36,6 +36,12 @@ type Documents = {
   '\n  subscription OnCustomerRegistered {\n    onCustomerRegistered {\n      ...CustomerFields\n    }\n  }\n': typeof types.OnCustomerRegisteredDocument;
   '\n  subscription onCustomerDetailsUpdated {\n    onCustomerDetailsUpdated {\n      ...CustomerFields\n    }\n  }\n': typeof types.OnCustomerDetailsUpdatedDocument;
   '\n  subscription OnCustomerDeactivated {\n    onCustomerDeactivated {\n      id\n    }\n  }\n': typeof types.OnCustomerDeactivatedDocument;
+  '\n  fragment FieldDefinitionFields on FieldDefinition {\n    id\n    key\n    label\n    description\n    type\n    configuration\n  }\n': typeof types.FieldDefinitionFieldsFragmentDoc;
+  '\n  query fieldDefinitions(\n    $first: Int\n    $last: Int\n    $after: String\n    $before: String\n    $where: FieldDefinitionFilterInput\n    $order: [FieldDefinitionSortInput!]\n  ) {\n    fieldDefinitions(\n      first: $first\n      last: $last\n      after: $after\n      before: $before\n      where: $where\n      order: $order\n    ) {\n      nodes {\n        ...FieldDefinitionFields\n      }\n      pageInfo {\n        hasNextPage\n        hasPreviousPage\n        startCursor\n        endCursor\n      }\n      totalCount\n    }\n  }\n': typeof types.FieldDefinitionsDocument;
+  '\n  query FieldDefinitionDetails($id: ID!) {\n    fieldDefinitionById(id: $id) {\n      ...FieldDefinitionFields\n    }\n  }\n': typeof types.FieldDefinitionDetailsDocument;
+  '\n  mutation createFieldDefinition($input: CreateFieldDefinitionInput!) {\n    createFieldDefinition(input: $input) {\n      fieldDefinition {\n        ...FieldDefinitionFields\n      }\n      errors {\n        ... on ApplicationError {\n          code\n          description\n          type\n          fieldName\n          message\n        }\n      }\n    }\n  }\n': typeof types.CreateFieldDefinitionDocument;
+  '\n  mutation updateFieldDefinition($input: UpdateFieldDefinitionInput!) {\n    updateFieldDefinition(input: $input) {\n      fieldDefinition {\n        ...FieldDefinitionFields\n      }\n      errors {\n        ... on ApplicationError {\n          code\n          description\n          type\n          fieldName\n          message\n        }\n      }\n    }\n  }\n': typeof types.UpdateFieldDefinitionDocument;
+  '\n  mutation deleteFieldDefinition($input: DeleteFieldDefinitionInput!) {\n    deleteFieldDefinition(input: $input) {\n      boolean\n      errors {\n        ... on ApplicationError {\n          code\n          description\n          type\n          fieldName\n          message\n        }\n      }\n    }\n  }\n': typeof types.DeleteFieldDefinitionDocument;
   '\n  fragment SupplierFields on Supplier {\n    id\n    code\n    name\n    website\n    email\n    phoneNumber\n    iban\n    bic\n  }\n': typeof types.SupplierFieldsFragmentDoc;
   '\n  fragment SupplierAddressFields on Address {\n    id\n    type\n    street\n    number\n    zipCode\n    city\n    state\n    countryCode\n  }\n': typeof types.SupplierAddressFieldsFragmentDoc;
   '\n  mutation registerSupplier($input: RegisterSupplierInput!) {\n    registerSupplier(input: $input) {\n      supplier {\n        ...SupplierFields\n      }\n      errors {\n        ... on ApplicationError {\n          code\n          description\n          type\n          fieldName\n          message\n        }\n      }\n    }\n  }\n': typeof types.RegisterSupplierDocument;
@@ -93,6 +99,18 @@ const documents: Documents = {
     types.OnCustomerDetailsUpdatedDocument,
   '\n  subscription OnCustomerDeactivated {\n    onCustomerDeactivated {\n      id\n    }\n  }\n':
     types.OnCustomerDeactivatedDocument,
+  '\n  fragment FieldDefinitionFields on FieldDefinition {\n    id\n    key\n    label\n    description\n    type\n    configuration\n  }\n':
+    types.FieldDefinitionFieldsFragmentDoc,
+  '\n  query fieldDefinitions(\n    $first: Int\n    $last: Int\n    $after: String\n    $before: String\n    $where: FieldDefinitionFilterInput\n    $order: [FieldDefinitionSortInput!]\n  ) {\n    fieldDefinitions(\n      first: $first\n      last: $last\n      after: $after\n      before: $before\n      where: $where\n      order: $order\n    ) {\n      nodes {\n        ...FieldDefinitionFields\n      }\n      pageInfo {\n        hasNextPage\n        hasPreviousPage\n        startCursor\n        endCursor\n      }\n      totalCount\n    }\n  }\n':
+    types.FieldDefinitionsDocument,
+  '\n  query FieldDefinitionDetails($id: ID!) {\n    fieldDefinitionById(id: $id) {\n      ...FieldDefinitionFields\n    }\n  }\n':
+    types.FieldDefinitionDetailsDocument,
+  '\n  mutation createFieldDefinition($input: CreateFieldDefinitionInput!) {\n    createFieldDefinition(input: $input) {\n      fieldDefinition {\n        ...FieldDefinitionFields\n      }\n      errors {\n        ... on ApplicationError {\n          code\n          description\n          type\n          fieldName\n          message\n        }\n      }\n    }\n  }\n':
+    types.CreateFieldDefinitionDocument,
+  '\n  mutation updateFieldDefinition($input: UpdateFieldDefinitionInput!) {\n    updateFieldDefinition(input: $input) {\n      fieldDefinition {\n        ...FieldDefinitionFields\n      }\n      errors {\n        ... on ApplicationError {\n          code\n          description\n          type\n          fieldName\n          message\n        }\n      }\n    }\n  }\n':
+    types.UpdateFieldDefinitionDocument,
+  '\n  mutation deleteFieldDefinition($input: DeleteFieldDefinitionInput!) {\n    deleteFieldDefinition(input: $input) {\n      boolean\n      errors {\n        ... on ApplicationError {\n          code\n          description\n          type\n          fieldName\n          message\n        }\n      }\n    }\n  }\n':
+    types.DeleteFieldDefinitionDocument,
   '\n  fragment SupplierFields on Supplier {\n    id\n    code\n    name\n    website\n    email\n    phoneNumber\n    iban\n    bic\n  }\n':
     types.SupplierFieldsFragmentDoc,
   '\n  fragment SupplierAddressFields on Address {\n    id\n    type\n    street\n    number\n    zipCode\n    city\n    state\n    countryCode\n  }\n':
@@ -263,6 +281,42 @@ export function graphql(
 export function graphql(
   source: '\n  subscription OnCustomerDeactivated {\n    onCustomerDeactivated {\n      id\n    }\n  }\n',
 ): (typeof documents)['\n  subscription OnCustomerDeactivated {\n    onCustomerDeactivated {\n      id\n    }\n  }\n'];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
+  source: '\n  fragment FieldDefinitionFields on FieldDefinition {\n    id\n    key\n    label\n    description\n    type\n    configuration\n  }\n',
+): (typeof documents)['\n  fragment FieldDefinitionFields on FieldDefinition {\n    id\n    key\n    label\n    description\n    type\n    configuration\n  }\n'];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
+  source: '\n  query fieldDefinitions(\n    $first: Int\n    $last: Int\n    $after: String\n    $before: String\n    $where: FieldDefinitionFilterInput\n    $order: [FieldDefinitionSortInput!]\n  ) {\n    fieldDefinitions(\n      first: $first\n      last: $last\n      after: $after\n      before: $before\n      where: $where\n      order: $order\n    ) {\n      nodes {\n        ...FieldDefinitionFields\n      }\n      pageInfo {\n        hasNextPage\n        hasPreviousPage\n        startCursor\n        endCursor\n      }\n      totalCount\n    }\n  }\n',
+): (typeof documents)['\n  query fieldDefinitions(\n    $first: Int\n    $last: Int\n    $after: String\n    $before: String\n    $where: FieldDefinitionFilterInput\n    $order: [FieldDefinitionSortInput!]\n  ) {\n    fieldDefinitions(\n      first: $first\n      last: $last\n      after: $after\n      before: $before\n      where: $where\n      order: $order\n    ) {\n      nodes {\n        ...FieldDefinitionFields\n      }\n      pageInfo {\n        hasNextPage\n        hasPreviousPage\n        startCursor\n        endCursor\n      }\n      totalCount\n    }\n  }\n'];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
+  source: '\n  query FieldDefinitionDetails($id: ID!) {\n    fieldDefinitionById(id: $id) {\n      ...FieldDefinitionFields\n    }\n  }\n',
+): (typeof documents)['\n  query FieldDefinitionDetails($id: ID!) {\n    fieldDefinitionById(id: $id) {\n      ...FieldDefinitionFields\n    }\n  }\n'];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
+  source: '\n  mutation createFieldDefinition($input: CreateFieldDefinitionInput!) {\n    createFieldDefinition(input: $input) {\n      fieldDefinition {\n        ...FieldDefinitionFields\n      }\n      errors {\n        ... on ApplicationError {\n          code\n          description\n          type\n          fieldName\n          message\n        }\n      }\n    }\n  }\n',
+): (typeof documents)['\n  mutation createFieldDefinition($input: CreateFieldDefinitionInput!) {\n    createFieldDefinition(input: $input) {\n      fieldDefinition {\n        ...FieldDefinitionFields\n      }\n      errors {\n        ... on ApplicationError {\n          code\n          description\n          type\n          fieldName\n          message\n        }\n      }\n    }\n  }\n'];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
+  source: '\n  mutation updateFieldDefinition($input: UpdateFieldDefinitionInput!) {\n    updateFieldDefinition(input: $input) {\n      fieldDefinition {\n        ...FieldDefinitionFields\n      }\n      errors {\n        ... on ApplicationError {\n          code\n          description\n          type\n          fieldName\n          message\n        }\n      }\n    }\n  }\n',
+): (typeof documents)['\n  mutation updateFieldDefinition($input: UpdateFieldDefinitionInput!) {\n    updateFieldDefinition(input: $input) {\n      fieldDefinition {\n        ...FieldDefinitionFields\n      }\n      errors {\n        ... on ApplicationError {\n          code\n          description\n          type\n          fieldName\n          message\n        }\n      }\n    }\n  }\n'];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
+  source: '\n  mutation deleteFieldDefinition($input: DeleteFieldDefinitionInput!) {\n    deleteFieldDefinition(input: $input) {\n      boolean\n      errors {\n        ... on ApplicationError {\n          code\n          description\n          type\n          fieldName\n          message\n        }\n      }\n    }\n  }\n',
+): (typeof documents)['\n  mutation deleteFieldDefinition($input: DeleteFieldDefinitionInput!) {\n    deleteFieldDefinition(input: $input) {\n      boolean\n      errors {\n        ... on ApplicationError {\n          code\n          description\n          type\n          fieldName\n          message\n        }\n      }\n    }\n  }\n'];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

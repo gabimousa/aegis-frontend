@@ -9,10 +9,12 @@ function useCustomerDetailsFormConfig() {
   const codeFormConfig = register('code', {
     maxLength: { value: 50, message: t('customers.codeTooLong') },
     required: t('customers.codeIsRequired'),
+    pattern: { value: /^(?!\s*$).+/, message: t('customers.codeCannotBeEmpty') },
   });
   const nameFormConfig = register('name', {
     maxLength: { value: 100, message: t('customers.nameTooLong') },
     required: t('customers.nameIsRequired'),
+    pattern: { value: /^(?!\s*$).+/, message: t('customers.nameCannotBeEmpty') },
   });
   const websiteFormConfig = register('website', {
     maxLength: { value: 150, message: t('customers.websiteTooLong') },

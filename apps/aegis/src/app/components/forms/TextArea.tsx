@@ -30,7 +30,7 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
             {...props}
           />
         </div>
-        {errors && fieldName && <FieldErrorsFeedback errors={errors} fieldName={fieldName} />}
+        {errors && fieldName && <FieldErrorsFeedback errors={errors} errorField={fieldName} />}
       </div>
     );
   },

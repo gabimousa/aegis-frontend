@@ -127,7 +127,7 @@ export function Dropdown<T = 'SEPARATOR'>({
               <button disabled={true} className="btn h-0"></button>
             ) : (
               <button
-                className={`${isItemDisabled && isItemDisabled(item) ? 'bg-base-100 cursor-not-allowed text-gray-300' : ''}`}
+                className={`${isItemDisabled && isItemDisabled(item) ? 'bg-base-100 cursor-not-allowed text-gray-300' : 'text-base-content'}`}
                 disabled={isItemDisabled ? isItemDisabled(item) : false}
                 onClick={() => handleItemClick(item)}
               >

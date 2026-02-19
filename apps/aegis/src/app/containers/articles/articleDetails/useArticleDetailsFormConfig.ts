@@ -10,11 +10,13 @@ function useArticleDetailsFormConfig() {
   const codeFormConfig = register('code', {
     maxLength: { value: 50, message: t('articles.codeTooLong') },
     required: t('articles.codeIsRequired'),
+    pattern: { value: /^(?!\s*$).+/, message: t('articles.codeCannotBeEmpty') },
   });
 
   const nameFormConfig = register('name', {
     maxLength: { value: 100, message: t('articles.nameTooLong') },
     required: t('articles.nameIsRequired'),
+    pattern: { value: /^(?!\s*$).+/, message: t('articles.nameCannotBeEmpty') },
   });
 
   const descriptionFormConfig = register('description', {
@@ -26,7 +28,7 @@ function useArticleDetailsFormConfig() {
       value: /^-?\d*\.?\d+$/,
       message: t('articles.pleaseProvideValidPrice'),
     },
-    max: { value: 999999999999999, message: t('articles.priceTooHigh') },
+    max: { value: Number.MAX_VALUE, message: t('articles.priceTooHigh') },
     validate: (value) => parseFloat(value) > 0 || t('articles.pleaseProvideValidPrice'),
     required: t('articles.priceIsRequired'),
     onBlur: (e) => {
@@ -40,7 +42,7 @@ function useArticleDetailsFormConfig() {
       value: /^-?\d*\.?\d+$/,
       message: t('articles.pleaseProvideValidSellingUnit'),
     },
-    max: { value: 999999999999999, message: t('articles.sellingUnitTooHigh') },
+    max: { value: Number.MAX_VALUE, message: t('articles.sellingUnitTooHigh') },
     validate: (value) => parseFloat(value) > 0 || t('articles.pleaseProvideValidSellingUnit'),
     required: t('articles.sellingUnitIsRequired'),
     onBlur: (e) => {

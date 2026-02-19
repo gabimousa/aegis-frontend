@@ -79,7 +79,6 @@ export function SupplierDetails() {
 
   useEffect(() => {
     if (saveSupplierErrorData) {
-      console.log('Setting field errors', saveSupplierErrorData);
       setFieldErrors(saveSupplierErrorData, setError, serverErrorMap);
     }
   }, [saveSupplierErrorData, setError]);
